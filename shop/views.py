@@ -224,3 +224,9 @@ def remove_from_cart(request, card_id):
     else:
         messages.warning(request, "Item was not in your cart.")
     return redirect('cart')
+
+
+@login_required
+def checkout(request):
+    # for now to just render a placeholder page
+    return render(request, 'shop/checkout.html')
