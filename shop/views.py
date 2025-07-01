@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Card
+from .models import Card, Purchase
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -175,13 +175,15 @@ def profile_view(request):
     viewed_cards = Card.objects.filter(id__in=viewed_card_ids)
 
     wishlist = user.wishlist_cards.all() if hasattr(user, 'wishlist_cards') else []
+    purchases = Purchase.objects.filter(user=request.user).order_by('-purchased_at')[:5]
 
     return render(request, 'shop/profile.html', {
-        'form': form,
-        'recent_ratings': recent_ratings,
-        'viewed_cards': viewed_cards,
-        'wishlist': wishlist,
-    })
+    'form': form,
+    'ratings': recent_ratings,
+    'viewed_cards': viewed_cards,
+    'wishlist': wishlist,
+    'purchases': purchases
+})
 
 @login_required
 def edit_profile(request):
@@ -228,5 +230,20 @@ def remove_from_cart(request, card_id):
 
 @login_required
 def checkout(request):
-    # for now to just render a placeholder page
-    return render(request, 'shop/checkout.html')
+    cart = request.session.get('cart', {})
+
+    if not cart:
+        return redirect('cart')  # No items, redirect to cart
+
+    for card_id, quantity in cart.items():
+        try:
+            card = Card.objects.get(id=card_id)
+            for _ in range(quantity):
+                Purchase.objects.create(user=request.user, card=card)
+        except Card.DoesNotExist:
+            continue  # Skip if card was removed
+
+    # Clear cart after checkout
+    request.session['cart'] = {}
+
+    return render(request, 'shop/thank_you.html')

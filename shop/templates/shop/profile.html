@@ -26,6 +26,8 @@
 
     <!-- Dashboard Info -->
     <div class="col-md-6">
+
+      <!-- Recent Ratings -->
       <div class="card shadow-sm mb-4">
         <div class="card-header">
           <strong>Recent Ratings</strong>
@@ -45,6 +47,7 @@
         </div>
       </div>
 
+      <!-- Recently Viewed -->
       <div class="card shadow-sm mb-4">
         <div class="card-header">
           <strong>Recently Viewed Cards</strong>
@@ -64,6 +67,7 @@
         </div>
       </div>
 
+      <!-- Wishlist -->
       <div class="card shadow-sm mb-4">
         <div class="card-header">
           <strong>Wishlist</strong>
@@ -80,6 +84,27 @@
           {% endif %}
         </div>
       </div>
+
+      <!-- Recent Purchases -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header">
+          <strong>Recent Purchases</strong>
+        </div>
+        <div class="card-body">
+          {% if purchases %}
+            <ul class="list-group">
+              {% for p in purchases %}
+                <li class="list-group-item">
+                  {{ p.card.name }} – {{ p.purchased_at|date:"M d, Y H:i" }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">No purchases yet.</p>
+          {% endif %}
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

@@ -31,3 +31,12 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'{self.user.username} rated {self.card.name} - {self.score}★'
+    
+
+class Purchase(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    card = models.ForeignKey('Card', on_delete=models.CASCADE)
+    purchased_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} bought {self.card.name}"

@@ -1,0 +1,9 @@
+{% extends 'shop/base.html' %}
+{% block title %}Thank You{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Thank you for your purchase! 🥳</h2>
+  <p>Your order has been recorded.</p>
+  <a href="{% url 'browse' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+</div>
+{% endblock %}
