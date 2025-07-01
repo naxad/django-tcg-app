@@ -24,8 +24,32 @@ from .models import WishlistItem
 def home(request):
     return render(request, 'shop/home.html')
 
+@login_required
 def browse(request):
-    return render(request, 'shop/browse.html')
+    query = request.GET.get('q')
+    brand = request.GET.get('brand')
+    max_price = request.GET.get('max_price')
+
+    cards = Card.objects.all()
+
+    if query:
+        cards = cards.filter(name__icontains=query)
+    if brand:
+        cards = cards.filter(brand=brand)
+    if max_price:
+        cards = cards.filter(price__lte=max_price)
+
+    wishlist_cards = []
+    if request.user.is_authenticated:
+        wishlist_cards = request.user.wishlist_cards.all()
+
+    brands = Card.objects.values_list('brand', flat=True).distinct()
+
+    return render(request, 'shop/browse.html', {
+        'cards': cards,
+        'brands': brands,
+        'wishlist_cards': wishlist_cards,
+    })
 
 def contact(request):
     return render(request, 'shop/contact.html')
@@ -303,3 +327,13 @@ def add_to_wishlist(request, card_id):
 def remove_from_wishlist(request, card_id):
     WishlistItem.objects.filter(user=request.user, card_id=card_id).delete()
     return redirect('profile')
+
+
+@login_required
+def toggle_wishlist(request, card_id):
+    card = get_object_or_404(Card, id=card_id)
+    if request.method == 'POST':
+        wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, card=card)
+        if not created:
+            wishlist_item.delete()
+        return redirect(request.META.get('HTTP_REFERER', 'browse'))

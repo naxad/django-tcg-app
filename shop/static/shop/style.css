@@ -91,3 +91,18 @@ nav a:hover {
 .card-img-container:hover .hover-overlay {
     opacity: 1;
 }
+
+
+
+.wishlist-btn {
+    background: white;
+    border: none;
+    font-size: 1.5rem;
+    color: red;
+    z-index: 10;
+}
+
+.card-hover:hover .wishlist-btn {
+    opacity: 1;
+    transition: opacity 0.3s;
+}

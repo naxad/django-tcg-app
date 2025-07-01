@@ -6,7 +6,6 @@
 
 {% block content %}
 <div class="container mt-4">
-
   <h2 class="mb-4">Browse Cards</h2>
 
   <!-- Search & Filter Form -->
@@ -36,9 +35,23 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
       {% for card in cards %}
         <div class="col" data-aos="fade-up">
-          <a href="{% url 'card_detail' card.id %}" class="text-decoration-none text-dark">
-            <div class="card h-100 shadow-sm card-hover">
+          <div class="card h-100 shadow-sm card-hover position-relative">
 
+            <!-- Wishlist Heart Button -->
+            {% if user.is_authenticated %}
+              <form method="POST" action="{% url 'toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm wishlist-btn">
+                  {% if card in wishlist_cards %}
+                    ♥
+                  {% else %}
+                    ♡
+                  {% endif %}
+                </button>
+              </form>
+            {% endif %}
+
+            <a href="{% url 'card_detail' card.id %}" class="text-decoration-none text-dark">
               <!-- Image with hover overlay -->
               <div class="card-img-container position-relative">
                 {% if card.image %}
@@ -53,7 +66,7 @@
                   <form method="post" action="{% url 'add_to_cart' card.id %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-success mt-2">Add to Cart</button>
-                </form>
+                  </form>
                 </div>
               </div>
 
@@ -62,7 +75,6 @@
                 <h5 class="card-title">{{ card.name }}</h5>
                 <p class="card-text"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
                 <p class="card-text"><strong>Price:</strong> €{{ card.price }}</p>
-
                 <p class="card-text">
                   <strong>Average Rating:</strong>
                   {% with card.rating_set.all as ratings %}
@@ -75,26 +87,26 @@
                   {% endwith %}
                 </p>
               </div>
+            </a>
 
-              <!-- Rating -->
-              {% if user.is_authenticated %}
-                <div class="card-footer bg-white">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <small>Rate:</small>
-                    <div class="rating-stars" data-card="{{ card.id }}">
-                      {% for i in "12345" %}
-                        <span class="star text-warning fs-5 me-1" data-value="{{ i }}">&#9733;</span>
-                      {% endfor %}
-                    </div>
+            <!-- Rating -->
+            {% if user.is_authenticated %}
+              <div class="card-footer bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                  <small>Rate:</small>
+                  <div class="rating-stars" data-card="{{ card.id }}">
+                    {% for i in "12345" %}
+                      <span class="star text-warning fs-5 me-1" data-value="{{ i }}">&#9733;</span>
+                    {% endfor %}
                   </div>
                 </div>
-              {% else %}
-                <div class="card-footer text-muted text-center">
-                  <small><em>Log in to rate this card.</em></small>
-                </div>
-              {% endif %}
-            </div>
-          </a>
+              </div>
+            {% else %}
+              <div class="card-footer text-muted text-center">
+                <small><em>Log in to rate this card.</em></small>
+              </div>
+            {% endif %}
+          </div>
         </div>
       {% endfor %}
     </div>
