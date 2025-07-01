@@ -15,7 +15,7 @@ from .models import Rating
 from django.shortcuts import get_object_or_404
 
 from django.contrib import messages
-
+from django.db.models import Avg
 
 from django.shortcuts import render
 from .models import Card
@@ -27,14 +27,17 @@ from .models import WishlistItem
 def home(request):
     return render(request, 'shop/home.html')
 
+
 @login_required
 def browse(request):
     query = request.GET.get('q')
     brand = request.GET.get('brand')
     max_price = request.GET.get('max_price')
+    sort = request.GET.get('sort')  # new!
 
     cards = Card.objects.all()
 
+    # Filters
     if query:
         cards = cards.filter(name__icontains=query)
     if brand:
@@ -44,6 +47,19 @@ def browse(request):
             cards = cards.filter(price__lte=float(max_price))
         except ValueError:
             pass
+
+    # Annotate with average rating so we can sort by it
+    cards = cards.annotate(avg_rating=Avg('rating__score'))
+
+    # Sorting
+    if sort == 'price_asc':
+        cards = cards.order_by('price')
+    elif sort == 'price_desc':
+        cards = cards.order_by('-price')
+    elif sort == 'rating_desc':
+        cards = cards.order_by('-avg_rating')
+    elif sort == 'newest':
+        cards = cards.order_by('-release_date')
 
     brands = Card.objects.values_list('brand', flat=True).distinct()
 
@@ -56,7 +72,6 @@ def browse(request):
         'brands': brands,
         'wishlist_cards': wishlist_cards
     })
-
 
 def contact(request):
     return render(request, 'shop/contact.html')

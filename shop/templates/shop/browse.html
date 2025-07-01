@@ -8,13 +8,13 @@
 <div class="container mt-4">
   <h2 class="mb-4">Browse Cards</h2>
 
-  <!-- Filter Form -->
+  <!-- Filter + Sort Form -->
   <form method="GET" class="mb-4">
     <div class="row g-2">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <input type="text" name="q" class="form-control" placeholder="Search by name..." value="{{ request.GET.q }}">
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <select name="brand" class="form-select">
           <option value="">All Brands</option>
           {% for b in brands %}
@@ -22,8 +22,18 @@
           {% endfor %}
         </select>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <input type="number" name="max_price" class="form-control" placeholder="Max price" value="{{ request.GET.max_price }}">
+      </div>
+      <!-- Sort Dropdown -->
+      <div class="col-md-3">
+        <select name="sort" class="form-select">
+          <option value="">Sort By</option>
+          <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Price: Low → High</option>
+          <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Price: High → Low</option>
+          <option value="rating_desc" {% if request.GET.sort == "rating_desc" %}selected{% endif %}>Rating: High → Low</option>
+          <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest</option>
+        </select>
       </div>
       <div class="col-md-2">
         <button type="submit" class="btn btn-primary w-100">Filter</button>
