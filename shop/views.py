@@ -255,3 +255,21 @@ def remove_from_cart(request, card_id):
         cart.remove(card_id)
         request.session['cart'] = cart
     return redirect('cart')
+
+@login_required
+def update_cart_quantity(request, card_id):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        cart = request.session.get('cart', {})
+        card_id_str = str(card_id)
+
+        if card_id_str in cart:
+            if action == 'increase':
+                cart[card_id_str] += 1
+            elif action == 'decrease':
+                cart[card_id_str] -= 1
+                if cart[card_id_str] <= 0:
+                    del cart[card_id_str]
+
+        request.session['cart'] = cart
+    return redirect('cart')

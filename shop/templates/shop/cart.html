@@ -27,7 +27,14 @@
                 {{ item.card.name }}
               </a>
             </td>
-            <td>{{ item.quantity }}</td>
+            <td>
+              <form method="post" action="{% url 'update_cart_quantity' item.card.id %}" class="d-flex align-items-center justify-content-center">
+                {% csrf_token %}
+                <button type="submit" name="action" value="decrease" class="btn btn-sm btn-outline-secondary me-2">−</button>
+                <span>{{ item.quantity }}</span>
+                <button type="submit" name="action" value="increase" class="btn btn-sm btn-outline-secondary ms-2">+</button>
+              </form>
+            </td>
             <td>€{{ item.card.price }}</td>
             <td>€{{ item.total }}</td>
             <td>
