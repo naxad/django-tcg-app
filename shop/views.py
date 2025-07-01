@@ -159,28 +159,31 @@ def view_cart(request):
     })
 
 @login_required
-def profile_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
+def profile(request):
+    user = request.user
+    form = UserUpdateForm(instance=user)
 
-    form = UserUpdateForm(instance=request.user)
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully.")
+            return redirect('profile')
 
-    # Load viewed cards
-    recent_ids = request.session.get('recently_viewed', [])
-    recently_viewed_cards = list(Card.objects.filter(id__in=recent_ids))
+    # Recent Ratings
+    recent_ratings = Rating.objects.filter(user=user).order_by('-timestamp')[:5]
 
-    # Sort them in the order stored in session
-    recently_viewed_cards.sort(key=lambda x: recent_ids.index(x.id))
-
-    # TODO: replace these with actual logic later
-    recent_ratings = []  # coming soon
-    wishlist = []        # coming soon
+    # Recently Viewed Cards (from session)
+    viewed_ids = request.session.get('recently_viewed', [])
+    viewed_cards = Card.objects.filter(id__in=viewed_ids)
+    # Ensure they’re in session order
+    viewed_cards = sorted(viewed_cards, key=lambda c: viewed_ids.index(c.id))
 
     context = {
         'form': form,
-        'recently_viewed_cards': recently_viewed_cards,
         'recent_ratings': recent_ratings,
-        'wishlist': wishlist,
+        'viewed_cards': viewed_cards,
+        'wishlist': [],  # Placeholder
     }
     return render(request, 'shop/profile.html', context)
 

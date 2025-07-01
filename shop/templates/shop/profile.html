@@ -31,11 +31,11 @@
           <strong>Recent Ratings</strong>
         </div>
         <div class="card-body">
-          {% if ratings %}
+          {% if recent_ratings %}
             <ul class="list-group">
-              {% for r in ratings %}
+              {% for r in recent_ratings %}
                 <li class="list-group-item">
-                  {{ r.card.name }} – {{ r.score }}★
+                  ⭐ {{ r.score }} for <a href="{% url 'card_detail' r.card.id %}">{{ r.card.name }}</a>
                 </li>
               {% endfor %}
             </ul>
@@ -53,22 +53,14 @@
           {% if viewed_cards %}
             <ul class="list-group">
               {% for card in viewed_cards %}
-                <li class="list-group-item">{{ card.name }}</li>
+                <li class="list-group-item">
+                  <a href="{% url 'card_detail' card.id %}">{{ card.name }}</a> – €{{ card.price }}
+                </li>
               {% endfor %}
             </ul>
           {% else %}
-            {% if recently_viewed_cards %}
-                <ul class="list-unstyled">
-                    {% for card in recently_viewed_cards %}
-                        <li>
-                            <a href="{% url 'card_detail' card.id %}">{{ card.name }}</a> – €{{ card.price }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                No viewed cards yet.
-            {% endif %}
-            {% endif %}
+            <p class="text-muted">No viewed cards yet.</p>
+          {% endif %}
         </div>
       </div>
 
