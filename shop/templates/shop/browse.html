@@ -8,6 +8,18 @@
 <div class="container mt-4">
   <h2 class="mb-4">Browse Cards</h2>
 
+  {% if current_sort %}
+    <p>
+      <span class="badge bg-info text-dark">
+        Sorted by: 
+        {% if current_sort == "price_asc" %}Price (Low → High){% endif %}
+        {% if current_sort == "price_desc" %}Price (High → Low){% endif %}
+        {% if current_sort == "rating_desc" %}Rating (High → Low){% endif %}
+        {% if current_sort == "newest" %}Newest Added{% endif %}
+      </span>
+    </p>
+  {% endif %}
+
   <!-- Filter + Sort Form -->
   <form method="GET" class="mb-4">
     <div class="row g-2">
@@ -25,7 +37,6 @@
       <div class="col-md-2">
         <input type="number" name="max_price" class="form-control" placeholder="Max price" value="{{ request.GET.max_price }}">
       </div>
-      <!-- Sort Dropdown -->
       <div class="col-md-3">
         <select name="sort" class="form-select">
           <option value="">Sort By</option>
@@ -35,8 +46,9 @@
           <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest</option>
         </select>
       </div>
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Filter</button>
+      <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-fill">Filter</button>
+        <a href="{% url 'browse' %}" class="btn btn-secondary flex-fill">Clear</a>
       </div>
     </div>
   </form>
@@ -47,7 +59,6 @@
         <div class="col" data-aos="fade-up">
           <div class="card h-100 shadow-sm card-hover position-relative">
 
-            <!-- Wishlist Heart -->
             {% if user.is_authenticated %}
               <form method="POST" action="{% url 'toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
                 {% csrf_token %}
@@ -57,7 +68,6 @@
               </form>
             {% endif %}
 
-            <!-- Card Image + Hover -->
             <div class="card-img-container position-relative">
               <a href="{% url 'card_detail' card.id %}">
                 {% if card.image %}
@@ -65,7 +75,6 @@
                 {% endif %}
               </a>
 
-              <!-- Hover overlay shows only on image -->
               <div class="hover-overlay">
                 <p><strong>Name:</strong> {{ card.name }}</p>
                 <p><strong>Rarity:</strong> {{ card.rarity }}</p>
@@ -80,7 +89,6 @@
               </div>
             </div>
 
-            <!-- Card Main Info (always visible) -->
             <div class="card-body">
               <h5 class="card-title">{{ card.name }}</h5>
               <p class="card-text"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
@@ -98,7 +106,6 @@
               </p>
             </div>
 
-            <!-- Rating Stars -->
             {% if user.is_authenticated %}
               <div class="card-footer bg-white">
                 <div class="d-flex justify-content-between align-items-center">

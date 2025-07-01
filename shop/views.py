@@ -33,11 +33,10 @@ def browse(request):
     query = request.GET.get('q')
     brand = request.GET.get('brand')
     max_price = request.GET.get('max_price')
-    sort = request.GET.get('sort')  # new!
+    sort = request.GET.get('sort')
 
     cards = Card.objects.all()
 
-    # Filters
     if query:
         cards = cards.filter(name__icontains=query)
     if brand:
@@ -48,18 +47,15 @@ def browse(request):
         except ValueError:
             pass
 
-    # Annotate with average rating so we can sort by it
-    cards = cards.annotate(avg_rating=Avg('rating__score'))
-
-    # Sorting
-    if sort == 'price_asc':
-        cards = cards.order_by('price')
-    elif sort == 'price_desc':
-        cards = cards.order_by('-price')
-    elif sort == 'rating_desc':
-        cards = cards.order_by('-avg_rating')
-    elif sort == 'newest':
-        cards = cards.order_by('-release_date')
+    # Sorting logic
+    if sort == "price_asc":
+        cards = cards.order_by("price")
+    elif sort == "price_desc":
+        cards = cards.order_by("-price")
+    elif sort == "rating_desc":
+        cards = sorted(cards, key=lambda c: c.average_rating() or 0, reverse=True)
+    elif sort == "newest":
+        cards = cards.order_by("-id")
 
     brands = Card.objects.values_list('brand', flat=True).distinct()
 
@@ -70,8 +66,10 @@ def browse(request):
     return render(request, 'shop/browse.html', {
         'cards': cards,
         'brands': brands,
-        'wishlist_cards': wishlist_cards
+        'wishlist_cards': wishlist_cards,
+        'current_sort': sort,
     })
+
 
 def contact(request):
     return render(request, 'shop/contact.html')
