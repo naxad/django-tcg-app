@@ -40,19 +40,23 @@ def browse(request):
     if brand:
         cards = cards.filter(brand=brand)
     if max_price:
-        cards = cards.filter(price__lte=max_price)
+        try:
+            cards = cards.filter(price__lte=float(max_price))
+        except ValueError:
+            pass
+
+    brands = Card.objects.values_list('brand', flat=True).distinct()
 
     wishlist_cards = []
     if request.user.is_authenticated:
-        wishlist_cards = request.user.wishlist_cards.all()
-
-    brands = Card.objects.values_list('brand', flat=True).distinct()
+        wishlist_cards = Card.objects.filter(wishlistitem__user=request.user)
 
     return render(request, 'shop/browse.html', {
         'cards': cards,
         'brands': brands,
-        'wishlist_cards': wishlist_cards,
+        'wishlist_cards': wishlist_cards
     })
+
 
 def contact(request):
     return render(request, 'shop/contact.html')
@@ -60,19 +64,6 @@ def contact(request):
 def sell(request):
     return render(request, 'shop/sell.html')
 
-def browse(request):
-    query = request.GET.get('q')
-    brand = request.GET.get('brand')
-
-    cards = Card.objects.all()
-
-    if query:
-        cards = cards.filter(name__icontains=query)
-
-    if brand:
-        cards = cards.filter(brand=brand)
-
-    return render(request, 'shop/browse.html', {'cards': cards})
 
 
 def register(request):
@@ -109,32 +100,6 @@ def rate_card(request):
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
-def browse(request):
-    cards = Card.objects.all()
-
-    q = request.GET.get("q")
-    brand = request.GET.get("brand")
-    max_price = request.GET.get("max_price")
-
-    if q:
-        cards = cards.filter(name__icontains=q)
-
-    if brand:
-        cards = cards.filter(brand=brand)
-
-    if max_price:
-        try:
-            cards = cards.filter(price__lte=float(max_price))
-        except ValueError:
-            pass
-
-    # get unique brands for the filter dropdown
-    brands = Card.objects.values_list('brand', flat=True).distinct()
-
-    return render(request, "shop/browse.html", {
-        "cards": cards,
-        "brands": brands,
-    })
 
 
 def card_detail(request, card_id):
