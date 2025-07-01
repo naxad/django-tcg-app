@@ -1,4 +1,3 @@
-/* shop/static/shop/style.css */
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f8f8;
@@ -44,7 +43,7 @@ nav a:hover {
     width: 200px;
 }
 
-
+/* Star rating */
 .star {
     font-size: 20px;
     color: gray;
@@ -61,20 +60,37 @@ nav a:hover {
 /* Card animation */
 .card-hover {
     transition: transform 0.3s;
+    position: relative;
 }
 
 .card-hover:hover {
     transform: translateY(-5px);
 }
 
-/* Hover overlay */
+/* Image container */
 .card-img-container {
     position: relative;
+    height: 100%;
     overflow: hidden;
 }
 
+/* Wishlist button */
+.wishlist-btn {
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+    color: #e63946;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+}
 
+.wishlist-btn:hover {
+    color: #c1121f;
+}
 
+/* Hover overlay */
 .hover-overlay {
     position: absolute;
     bottom: 0;
@@ -86,6 +102,7 @@ nav a:hover {
     font-size: 0.85rem;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
+    z-index: 2;
 }
 
 .card-img-container:hover .hover-overlay {
@@ -93,50 +110,21 @@ nav a:hover {
 }
 
 
-
-.wishlist-btn {
-    background: white;
-    border: none;
-    font-size: 1.5rem;
-    color: red;
-    z-index: 10;
-}
-
-.card-hover:hover .wishlist-btn {
-    opacity: 1;
-    transition: opacity 0.3s;
-}
-
-.card-hover .hover-overlay {
-    display: none;
+/* Smaller hover overlay at bottom of image */
+.hover-overlay-mini {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
-    background: rgba(255, 255, 255, 0.95);
     width: 100%;
-    height: 100%;
-    padding: 1rem;
+    background: rgba(255, 255, 255, 0.88);
+    color: #000;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
     z-index: 5;
-    transition: 0.3s;
-    overflow-y: auto;
 }
 
-.card-hover:hover .hover-overlay {
-    display: block;
-}
-
-.wishlist-btn {
-    border: none;
-    background: transparent;
-    font-size: 1.4rem;
-    color: #e63946;
-}
-
-.wishlist-btn:hover {
-    color: #c1121f;
-}
-
-.card-img-container {
-    position: relative;
-    height: 100%;
+.card-img-container:hover .hover-overlay-mini {
+    opacity: 1;
 }

@@ -5,46 +5,10 @@
 {% block title %}Browse Cards{% endblock %}
 
 {% block content %}
-<style>
-  .card-hover .hover-overlay {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(255, 255, 255, 0.95);
-    width: 100%;
-    height: 100%;
-    padding: 1rem;
-    z-index: 5;
-    transition: 0.3s;
-    overflow-y: auto;
-  }
-
-  .card-hover:hover .hover-overlay {
-    display: block;
-  }
-
-  .card-img-container {
-    position: relative;
-    height: 100%;
-  }
-
-  .wishlist-btn {
-    border: none;
-    background: transparent;
-    font-size: 1.3rem;
-    color: #e63946;
-  }
-
-  .wishlist-btn:hover {
-    color: #c1121f;
-  }
-</style>
-
 <div class="container mt-4">
   <h2 class="mb-4">Browse Cards</h2>
 
-  <!-- Search & Filter Form -->
+  <!-- Filter Form -->
   <form method="GET" class="mb-4">
     <div class="row g-2">
       <div class="col-md-4">
@@ -73,61 +37,58 @@
         <div class="col" data-aos="fade-up">
           <div class="card h-100 shadow-sm card-hover position-relative">
 
-            <a href="{% url 'card_detail' card.id %}" class="text-decoration-none text-dark">
-              <!-- Image with hover overlay -->
-              <div class="card-img-container position-relative">
+            <!-- Wishlist Heart -->
+            {% if user.is_authenticated %}
+              <form method="POST" action="{% url 'toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
+                {% csrf_token %}
+                <button type="submit" class="wishlist-btn">
+                  {% if card in wishlist_cards %}♥{% else %}♡{% endif %}
+                </button>
+              </form>
+            {% endif %}
+
+            <!-- Card Image + Hover -->
+            <div class="card-img-container position-relative">
+              <a href="{% url 'card_detail' card.id %}">
                 {% if card.image %}
                   <img src="{{ card.image.url }}" class="card-img-top" alt="{{ card.name }}">
                 {% endif %}
-                <div class="hover-overlay">
-                  <p><strong>Name:</strong> {{ card.name }}</p>
-                  <p><strong>Rarity:</strong> {{ card.rarity }}</p>
-                  <p><strong>Released:</strong> {{ card.release_date }}</p>
-                  <p><strong>Condition:</strong> {{ card.condition }}</p>
-                  <p><strong>Price:</strong> €{{ card.price }}</p>
+              </a>
 
-                  <!-- Add to Cart -->
-                  <form method="post" action="{% url 'add_to_cart' card.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-success mt-2">🛒 Add to Cart</button>
-                  </form>
+              <!-- Hover overlay shows only on image -->
+              <div class="hover-overlay">
+                <p><strong>Name:</strong> {{ card.name }}</p>
+                <p><strong>Rarity:</strong> {{ card.rarity }}</p>
+                <p><strong>Released:</strong> {{ card.release_date }}</p>
+                <p><strong>Condition:</strong> {{ card.condition }}</p>
+                <p><strong>Price:</strong> €{{ card.price }}</p>
 
-                  <!-- Wishlist Heart Button -->
-                  {% if user.is_authenticated %}
-                    <form method="POST" action="{% url 'toggle_wishlist' card.id %}" class="mt-2">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-sm wishlist-btn">
-                        {% if card in wishlist_cards %}
-                          ♥ Remove from Wishlist
-                        {% else %}
-                          ♡ Add to Wishlist
-                        {% endif %}
-                      </button>
-                    </form>
+                <form method="post" action="{% url 'add_to_cart' card.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-success mt-2">🛒 Add to Cart</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Card Main Info (always visible) -->
+            <div class="card-body">
+              <h5 class="card-title">{{ card.name }}</h5>
+              <p class="card-text"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
+              <p class="card-text"><strong>Price:</strong> €{{ card.price }}</p>
+              <p class="card-text">
+                <strong>Average Rating:</strong>
+                {% with card.rating_set.all as ratings %}
+                  {% if ratings %}
+                    {{ ratings|average_rating }}★
+                    <small class="text-muted">({{ ratings|length }} user{{ ratings|pluralize }})</small>
+                  {% else %}
+                    <span class="text-muted">No ratings yet</span>
                   {% endif %}
-                </div>
-              </div>
+                {% endwith %}
+              </p>
+            </div>
 
-              <!-- Card body -->
-              <div class="card-body">
-                <h5 class="card-title">{{ card.name }}</h5>
-                <p class="card-text"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
-                <p class="card-text"><strong>Price:</strong> €{{ card.price }}</p>
-                <p class="card-text">
-                  <strong>Average Rating:</strong>
-                  {% with card.rating_set.all as ratings %}
-                    {% if ratings %}
-                      {{ ratings|average_rating }}★
-                      <small class="text-muted">({{ ratings|length }} user{{ ratings|pluralize }})</small>
-                    {% else %}
-                      <span class="text-muted">No ratings yet</span>
-                    {% endif %}
-                  {% endwith %}
-                </p>
-              </div>
-            </a>
-
-            <!-- Rating -->
+            <!-- Rating Stars -->
             {% if user.is_authenticated %}
               <div class="card-footer bg-white">
                 <div class="d-flex justify-content-between align-items-center">
@@ -144,6 +105,7 @@
                 <small><em>Log in to rate this card.</em></small>
               </div>
             {% endif %}
+
           </div>
         </div>
       {% endfor %}
