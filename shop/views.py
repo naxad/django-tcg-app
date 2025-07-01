@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-
+from .forms import UserProfileForm
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import update_session_auth_hash
 
@@ -145,17 +145,28 @@ def view_cart(request):
         'total_price': total_price,
     })
 
-
 @login_required
 def profile_view(request):
     user = request.user
-    ratings = Rating.objects.filter(user=user).select_related('card')
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = UserProfileForm(instance=user)
 
-    context = {
-        'user': user,
+    # example activity data (will customize the models later)
+    ratings = Rating.objects.filter(user=user).select_related('card')[:5]  # last 5 ratings
+    wishlist = user.profile.wishlist.all()[:5] if hasattr(user, 'profile') and hasattr(user.profile, 'wishlist') else []
+    viewed_cards = user.profile.viewed_cards.all()[:5] if hasattr(user, 'profile') and hasattr(user.profile, 'viewed_cards') else []
+
+    return render(request, 'shop/profile.html', {
+        'form': form,
         'ratings': ratings,
-    }
-    return render(request, 'shop/profile.html', context)
+        'wishlist': wishlist,
+        'viewed_cards': viewed_cards,
+    })
 
 
 @login_required
