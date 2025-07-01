@@ -169,3 +169,22 @@ def edit_profile(request):
         form = UserUpdateForm(instance=request.user)
 
     return render(request, 'shop/edit_profile.html', {'form': form})
+
+
+@login_required
+def user_dashboard(request):
+    user = request.user
+
+    # fetch ratings the user has given
+    user_ratings = Rating.objects.filter(user=user).select_related('card')
+
+    # placeholder for future features
+    recently_viewed = request.session.get('recently_viewed', [])[:5]
+    recently_viewed_cards = Card.objects.filter(id__in=recently_viewed)
+
+    # later i need to add purchases and wishlist
+    context = {
+        'user_ratings': user_ratings,
+        'recently_viewed_cards': recently_viewed_cards,
+    }
+    return render(request, 'shop/dashboard.html', context)

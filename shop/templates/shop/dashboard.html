@@ -1,0 +1,53 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Your Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5" data-aos="fade-in">
+  <h2 class="mb-4">Welcome, {{ user.username }}</h2>
+
+  <div class="mb-5">
+    <h4>Recently Viewed Cards</h4>
+    {% if recently_viewed_cards %}
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {% for card in recently_viewed_cards %}
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              {% if card.image %}
+                <img src="{{ card.image.url }}" class="card-img-top" alt="{{ card.name }}">
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ card.name }}</h5>
+                <p class="card-text">€{{ card.price }}</p>
+                <a href="{% url 'card_detail' card.id %}" class="btn btn-sm btn-outline-primary">View</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No recently viewed cards.</p>
+    {% endif %}
+  </div>
+
+  <div class="mb-5">
+    <h4>Your Ratings</h4>
+    {% if user_ratings %}
+      <ul class="list-group">
+        {% for rating in user_ratings %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><strong>{{ rating.card.name }}</strong></span>
+            <span class="badge bg-warning text-dark">{{ rating.score }}★</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>You haven’t rated any cards yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- purchases will be added here later -->
+
+</div>
+{% endblock %}
