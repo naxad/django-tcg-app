@@ -5,14 +5,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 
-from django.contrib.auth.decorators import login_required
-from .models import Rating, Card
+
+
+
+from .models import Rating
 from django.shortcuts import get_object_or_404
 
 from django.contrib import messages
 
 
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Card
 
@@ -141,3 +142,15 @@ def view_cart(request):
         'cart_items': cart_items,
         'total_price': total_price,
     })
+
+
+@login_required
+def profile_view(request):
+    user = request.user
+    ratings = Rating.objects.filter(user=user).select_related('card')
+
+    context = {
+        'user': user,
+        'ratings': ratings,
+    }
+    return render(request, 'shop/profile.html', context)

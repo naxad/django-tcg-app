@@ -1,12 +1,33 @@
-{% extends 'shop/base.html' %} 
-
-{% block title %}Profile{% endblock %} 
+{% extends 'shop/base.html' %}
+{% block title %}My Profile{% endblock %}
 {% block content %}
-<h2>Welcome, {{ user.username }}!</h2>
-<p>This is your dashboard. In the future, we’ll show:</p>
-<ul>
-  <li>Previously viewed cards</li>
-  <li>Wishlist</li>
-  <li>Ratings</li>
-</ul>
+<div class="container mt-5">
+  <h2 class="mb-4">👤 Profile Dashboard</h2>
+  
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Your Information</h5>
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">📝 Your Ratings</h5>
+      {% if ratings %}
+        <ul class="list-group">
+          {% for rating in ratings %}
+            <li class="list-group-item">
+              {{ rating.card.name }} — {{ rating.score }}★
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No ratings yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}
