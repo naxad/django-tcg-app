@@ -111,7 +111,20 @@ def browse(request):
 
 def card_detail(request, card_id):
     card = get_object_or_404(Card, id=card_id)
+
+    # --- Track Recently Viewed Cards ---
+    recently_viewed = request.session.get('recently_viewed', [])
+
+    if card.id in recently_viewed:
+        recently_viewed.remove(card.id)  # Move to front if already there
+    recently_viewed.insert(0, card.id)   # Add current card to the front
+
+    # Limit to last 5 viewed
+    request.session['recently_viewed'] = recently_viewed[:5]
+    # -----------------------------------
+
     return render(request, 'shop/card_detail.html', {'card': card})
+
 
 def add_to_cart(request, card_id):
     card = get_object_or_404(Card, id=card_id)
@@ -147,26 +160,29 @@ def view_cart(request):
 
 @login_required
 def profile_view(request):
-    user = request.user
-    if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-    else:
-        form = UserUpdateForm(instance=user)
+    if not request.user.is_authenticated:
+        return redirect('login')
 
-    # example activity data (will customize the models later)
-    ratings = Rating.objects.filter(user=user).select_related('card')[:5]  # last 5 ratings
-    wishlist = user.profile.wishlist.all()[:5] if hasattr(user, 'profile') and hasattr(user.profile, 'wishlist') else []
-    viewed_cards = user.profile.viewed_cards.all()[:5] if hasattr(user, 'profile') and hasattr(user.profile, 'viewed_cards') else []
+    form = UserUpdateForm(instance=request.user)
 
-    return render(request, 'shop/profile.html', {
+    # Load viewed cards
+    recent_ids = request.session.get('recently_viewed', [])
+    recently_viewed_cards = list(Card.objects.filter(id__in=recent_ids))
+
+    # Sort them in the order stored in session
+    recently_viewed_cards.sort(key=lambda x: recent_ids.index(x.id))
+
+    # TODO: replace these with actual logic later
+    recent_ratings = []  # coming soon
+    wishlist = []        # coming soon
+
+    context = {
         'form': form,
-        'ratings': ratings,
+        'recently_viewed_cards': recently_viewed_cards,
+        'recent_ratings': recent_ratings,
         'wishlist': wishlist,
-        'viewed_cards': viewed_cards,
-    })
+    }
+    return render(request, 'shop/profile.html', context)
 
 
 @login_required

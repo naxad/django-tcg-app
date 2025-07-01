@@ -57,8 +57,18 @@
               {% endfor %}
             </ul>
           {% else %}
-            <p class="text-muted">No viewed cards yet.</p>
-          {% endif %}
+            {% if recently_viewed_cards %}
+                <ul class="list-unstyled">
+                    {% for card in recently_viewed_cards %}
+                        <li>
+                            <a href="{% url 'card_detail' card.id %}">{{ card.name }}</a> – €{{ card.price }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                No viewed cards yet.
+            {% endif %}
+            {% endif %}
         </div>
       </div>
 
