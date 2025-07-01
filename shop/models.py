@@ -40,3 +40,16 @@ class Purchase(models.Model):
 
     def __str__(self):
         return f"{self.user.username} bought {self.card.name}"
+    
+
+
+    
+class WishlistItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'card')  # Prevent duplicate wishlist entries
+
+    def __str__(self):
+        return f"{self.user.username} – {self.card.name}"

@@ -32,6 +32,22 @@
         <button type="submit" class="btn btn-success">Add to Cart</button>
       </form>
 
+      <!-- ❤️ Wishlist Button -->
+      {% if user.is_authenticated %}
+        {% if is_in_wishlist %}
+          <form method="post" action="{% url 'remove_from_wishlist' card.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-secondary">💔 Remove from Wishlist</button>
+          </form>
+        {% else %}
+          <form method="post" action="{% url 'add_to_wishlist' card.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-warning">❤️ Add to Wishlist</button>
+          </form>
+        {% endif %}
+      {% endif %}
+
+      <!-- ⭐ Rating Info -->
       <p class="mt-4">
         <strong>Average Rating:</strong>
         {% with card.rating_set.all as ratings %}

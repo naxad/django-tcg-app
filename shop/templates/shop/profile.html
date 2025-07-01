@@ -33,9 +33,9 @@
           <strong>Recent Ratings</strong>
         </div>
         <div class="card-body">
-          {% if recent_ratings %}
+          {% if ratings %}
             <ul class="list-group">
-              {% for r in recent_ratings %}
+              {% for r in ratings %}
                 <li class="list-group-item">
                   ⭐ {{ r.score }} for <a href="{% url 'card_detail' r.card.id %}">{{ r.card.name }}</a>
                 </li>
@@ -76,7 +76,9 @@
           {% if wishlist %}
             <ul class="list-group">
               {% for card in wishlist %}
-                <li class="list-group-item">{{ card.name }}</li>
+                <li class="list-group-item">
+                  <a href="{% url 'card_detail' card.id %}">{{ card.name }}</a>
+                </li>
               {% endfor %}
             </ul>
           {% else %}

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .forms import UserUpdateForm
+
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import update_session_auth_hash
 
@@ -18,7 +19,7 @@ from django.contrib import messages
 
 from django.shortcuts import render
 from .models import Card
-
+from .models import WishlistItem
 
 def home(request):
     return render(request, 'shop/home.html')
@@ -111,6 +112,11 @@ def browse(request):
 
 def card_detail(request, card_id):
     card = get_object_or_404(Card, id=card_id)
+    is_in_wishlist = False
+
+    # Check if the card is in the user's wishlist
+    if request.user.is_authenticated:
+        is_in_wishlist = WishlistItem.objects.filter(user=request.user, card=card).exists()
 
     # --- Track Recently Viewed Cards ---
     recently_viewed = request.session.get('recently_viewed', [])
@@ -123,8 +129,10 @@ def card_detail(request, card_id):
     request.session['recently_viewed'] = recently_viewed[:5]
     # -----------------------------------
 
-    return render(request, 'shop/card_detail.html', {'card': card})
-
+    return render(request, 'shop/card_detail.html', {
+        'card': card,
+        'is_in_wishlist': is_in_wishlist
+    })
 
 def add_to_cart(request, card_id):
     card = get_object_or_404(Card, id=card_id)
@@ -158,32 +166,42 @@ def view_cart(request):
         'total_price': total_price,
     })
 
+
 @login_required
 def profile_view(request):
     user = request.user
     form = UserUpdateForm(instance=user)
 
+    # Handle profile update POST
     if request.method == 'POST':
         form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('profile')
 
-    recent_ratings = Rating.objects.filter(user=user).select_related('card')[:5]
-    
-    viewed_card_ids = request.session.get('viewed_cards', [])
+    # Recent ratings (limit to 5)
+    recent_ratings = Rating.objects.filter(user=user).select_related('card').order_by('-id')[:5]
+
+    # Recently viewed cards (from session)
+    viewed_card_ids = request.session.get('recently_viewed', [])
     viewed_cards = Card.objects.filter(id__in=viewed_card_ids)
 
-    wishlist = user.wishlist_cards.all() if hasattr(user, 'wishlist_cards') else []
-    purchases = Purchase.objects.filter(user=request.user).order_by('-purchased_at')[:5]
+    # Wishlist cards
+    wishlist_items = WishlistItem.objects.filter(user=user).select_related('card')
+    wishlist = [item.card for item in wishlist_items]
+
+    # Recent purchases (limit to 5)
+    purchases = Purchase.objects.filter(user=user).select_related('card').order_by('-purchased_at')[:5]
 
     return render(request, 'shop/profile.html', {
-    'form': form,
-    'ratings': recent_ratings,
-    'viewed_cards': viewed_cards,
-    'wishlist': wishlist,
-    'purchases': purchases
-})
+        'form': form,
+        'ratings': recent_ratings,
+        'viewed_cards': viewed_cards,
+        'wishlist': wishlist,
+        'purchases': purchases
+    })
+
+
 
 @login_required
 def edit_profile(request):
@@ -273,3 +291,15 @@ def update_cart_quantity(request, card_id):
 
         request.session['cart'] = cart
     return redirect('cart')
+
+
+@login_required
+def add_to_wishlist(request, card_id):
+    card = get_object_or_404(Card, id=card_id)
+    WishlistItem.objects.get_or_create(user=request.user, card=card)
+    return redirect('card_detail', card_id=card_id)
+
+@login_required
+def remove_from_wishlist(request, card_id):
+    WishlistItem.objects.filter(user=request.user, card_id=card_id).delete()
+    return redirect('profile')
