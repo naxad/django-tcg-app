@@ -159,7 +159,7 @@ def view_cart(request):
     })
 
 @login_required
-def profile(request):
+def profile_view(request):
     user = request.user
     form = UserUpdateForm(instance=user)
 
@@ -167,26 +167,21 @@ def profile(request):
         form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            messages.success(request, "Profile updated successfully.")
             return redirect('profile')
 
-    # Recent Ratings
-    recent_ratings = Rating.objects.filter(user=user).order_by('-timestamp')[:5]
+    recent_ratings = Rating.objects.filter(user=user).select_related('card')[:5]
+    
+    viewed_card_ids = request.session.get('viewed_cards', [])
+    viewed_cards = Card.objects.filter(id__in=viewed_card_ids)
 
-    # Recently Viewed Cards (from session)
-    viewed_ids = request.session.get('recently_viewed', [])
-    viewed_cards = Card.objects.filter(id__in=viewed_ids)
-    # Ensure they’re in session order
-    viewed_cards = sorted(viewed_cards, key=lambda c: viewed_ids.index(c.id))
+    wishlist = user.wishlist_cards.all() if hasattr(user, 'wishlist_cards') else []
 
-    context = {
+    return render(request, 'shop/profile.html', {
         'form': form,
         'recent_ratings': recent_ratings,
         'viewed_cards': viewed_cards,
-        'wishlist': [],  # Placeholder
-    }
-    return render(request, 'shop/profile.html', context)
-
+        'wishlist': wishlist,
+    })
 
 @login_required
 def edit_profile(request):

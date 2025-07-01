@@ -40,7 +40,16 @@
           {% if user.is_staff %}
             <a href="/admin/">Admin Panel</a>
           {% endif %}
-          <a href="{% url 'logout' %}">Logout</a>
+
+          <!-- Styled logout button that sends POST -->
+          <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link nav-link"
+              style="display: inline; padding: 0; border: none; background: none; color: inherit;">
+              Logout
+            </button>
+          </form>
+
         {% else %}
           <a href="{% url 'login' %}">Login</a>
           <a href="{% url 'register' %}">Register</a>
