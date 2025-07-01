@@ -4,13 +4,19 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+
 from django.contrib.auth.decorators import login_required
 from .models import Rating, Card
 from django.shortcuts import get_object_or_404
 
 from django.contrib import messages
 
-# Create your views here.
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Card
+
+
 def home(request):
     return render(request, 'shop/home.html')
 
@@ -91,7 +97,7 @@ def browse(request):
         except ValueError:
             pass
 
-    # Get unique brands for the filter dropdown
+    # get unique brands for the filter dropdown
     brands = Card.objects.values_list('brand', flat=True).distinct()
 
     return render(request, "shop/browse.html", {
@@ -108,6 +114,30 @@ def add_to_cart(request, card_id):
     card = get_object_or_404(Card, id=card_id)
     cart = request.session.get('cart', {})
     cart[str(card.id)] = cart.get(str(card.id), 0) + 1
+
     request.session['cart'] = cart
+
     messages.success(request, f"{card.name} added to your cart.")
     return redirect(request.META.get('HTTP_REFERER', 'browse'))
+
+
+@login_required
+def view_cart(request):
+    cart = request.session.get('cart', {})
+    cart_items = []
+    total_price = 0
+
+    for card_id, quantity in cart.items():
+        card = Card.objects.get(id=card_id)
+        item_total = card.price * quantity
+        total_price += item_total
+        cart_items.append({
+            'card': card,
+            'quantity': quantity,
+            'item_total': item_total,
+        })
+
+    return render(request, 'shop/cart.html', {
+        'cart_items': cart_items,
+        'total_price': total_price,
+    })
