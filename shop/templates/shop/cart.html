@@ -8,7 +8,7 @@
   <h2 class="mb-4">Shopping Cart</h2>
 
   {% if cart_items %}
-    <table class="table table-bordered align-middle">
+    <table class="table table-bordered align-middle shadow-sm">
       <thead class="table-light">
         <tr>
           <th>Card</th>
@@ -22,8 +22,8 @@
         {% for item in cart_items %}
           <tr>
             <td>
-              <a href="{% url 'card_detail' item.card.id %}">
-                <img src="{{ item.card.image.url }}" alt="{{ item.card.name }}" style="height: 60px; margin-right: 10px;">
+              <a href="{% url 'card_detail' item.card.id %}" class="d-flex align-items-center text-decoration-none">
+                <img src="{{ item.card.image.url }}" alt="{{ item.card.name }}" class="me-2 rounded" style="height: 60px;">
                 {{ item.card.name }}
               </a>
             </td>
@@ -33,7 +33,9 @@
             <td>
               <form method="post" action="{% url 'remove_from_cart' item.card.id %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                <button type="submit" class="btn btn-sm btn-outline-danger">
+                  🗑 Remove
+                </button>
               </form>
             </td>
           </tr>
@@ -46,11 +48,10 @@
     </table>
 
     <div class="text-end">
-      <a href="{% url 'checkout' %}" class="btn btn-success">Proceed to Checkout</a>
+      <a href="{% url 'checkout' %}" class="btn btn-success">✅ Proceed to Checkout</a>
     </div>
-
   {% else %}
-    <p>Your cart is empty.</p>
+    <p class="text-muted">Your cart is currently empty.</p>
   {% endif %}
 </div>
 {% endblock %}

@@ -247,3 +247,11 @@ def checkout(request):
     request.session['cart'] = {}
 
     return render(request, 'shop/thank_you.html')
+
+
+def remove_from_cart(request, card_id):
+    cart = request.session.get('cart', [])
+    if card_id in cart:
+        cart.remove(card_id)
+        request.session['cart'] = cart
+    return redirect('cart')
