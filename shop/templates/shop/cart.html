@@ -1,0 +1,39 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Your Cart{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Your Shopping Cart</h2>
+
+  {% if cart_items %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Card</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+          <tr>
+            <td>{{ item.card.name }}</td>
+            <td>€{{ item.card.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>€{{ item.item_total }}</td>
+          </tr>
+        {% endfor %}
+        <tr class="fw-bold">
+          <td colspan="3" class="text-end">Total:</td>
+          <td>€{{ total_price }}</td>
+        </tr>
+      </tbody>
+    </table>
+  {% else %}
+    <p>Your cart is empty.</p>
+  {% endif %}
+</div>
+{% endblock %}
