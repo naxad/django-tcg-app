@@ -11,6 +11,7 @@ urlpatterns = [
     path('add-to-cart/<int:card_id>/', views.add_to_cart, name='add_to_cart'),
     path('cart/', views.view_cart, name='cart'),
     path('profile/', views.profile_view, name='profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
     # auth
     path('register/', views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='shop/login.html'), name='login'),

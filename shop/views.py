@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 
@@ -154,3 +156,17 @@ def profile_view(request):
         'ratings': ratings,
     }
     return render(request, 'shop/profile.html', context)
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.instance)
+            return redirect('profile')
+    else:
+        form = UserChangeForm(instance=request.user)
+
+    return render(request, 'shop/edit_profile.html', {'form': form})
