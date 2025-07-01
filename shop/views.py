@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Rating, Card
 from django.shortcuts import get_object_or_404
 
+from django.contrib import messages
+
 # Create your views here.
 def home(request):
     return render(request, 'shop/home.html')
@@ -101,3 +103,11 @@ def browse(request):
 def card_detail(request, card_id):
     card = get_object_or_404(Card, id=card_id)
     return render(request, 'shop/card_detail.html', {'card': card})
+
+def add_to_cart(request, card_id):
+    card = get_object_or_404(Card, id=card_id)
+    cart = request.session.get('cart', {})
+    cart[str(card.id)] = cart.get(str(card.id), 0) + 1
+    request.session['cart'] = cart
+    messages.success(request, f"{card.name} added to your cart.")
+    return redirect(request.META.get('HTTP_REFERER', 'browse'))

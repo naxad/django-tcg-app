@@ -50,6 +50,10 @@
                   <p><strong>Released:</strong> {{ card.release_date }}</p>
                   <p><strong>Condition:</strong> {{ card.condition }}</p>
                   <p><strong>Price:</strong> €{{ card.price }}</p>
+                  <form method="post" action="{% url 'add_to_cart' card.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-success mt-2">Add to Cart</button>
+                </form>
                 </div>
               </div>
 

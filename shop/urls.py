@@ -8,6 +8,8 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('sell/', views.sell, name='sell'),
     path('card/<int:card_id>/', views.card_detail, name='card_detail'),
+    path('add-to-cart/<int:card_id>/', views.add_to_cart, name='add_to_cart'),
+
 
     # Auth
     path('register/', views.register, name='register'),

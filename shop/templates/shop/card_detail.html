@@ -26,7 +26,13 @@
       <p><strong>Release Date:</strong> {{ card.release_date }}</p>
       <p><strong>Price:</strong> €{{ card.price }}</p>
 
-      <p>
+      <!-- ✅ Add to Cart Button -->
+      <form method="post" action="{% url 'add_to_cart' card.id %}" class="mt-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Add to Cart</button>
+      </form>
+
+      <p class="mt-4">
         <strong>Average Rating:</strong>
         {% with card.rating_set.all as ratings %}
           {% if ratings %}
