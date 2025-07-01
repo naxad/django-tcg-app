@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .forms import UserProfileForm
+from .forms import UserUpdateForm
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import update_session_auth_hash
 
@@ -149,12 +149,12 @@ def view_cart(request):
 def profile_view(request):
     user = request.user
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user)
+        form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('profile')
     else:
-        form = UserProfileForm(instance=user)
+        form = UserUpdateForm(instance=user)
 
     # example activity data (will customize the models later)
     ratings = Rating.objects.filter(user=user).select_related('card')[:5]  # last 5 ratings
