@@ -36,22 +36,22 @@
               </form>
             </td>
             <td>€{{ item.card.price }}</td>
-            <td>€{{ item.total }}</td>
+            <td>€{{ item.item_total }}</td>
             <td>
               <form method="post" action="{% url 'remove_from_cart' item.card.id %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-outline-danger">
-                  🗑 Remove
-                </button>
+                <button type="submit" class="btn btn-sm btn-outline-danger">🗑 Remove</button>
               </form>
             </td>
           </tr>
         {% endfor %}
+      </tbody>
+      <tfoot>
         <tr>
           <td colspan="3" class="text-end"><strong>Total:</strong></td>
-          <td colspan="2"><strong>€{{ total }}</strong></td>
+          <td colspan="2"><strong>€{{ total_price }}</strong></td>
         </tr>
-      </tbody>
+      </tfoot>
     </table>
 
     <div class="text-end">
