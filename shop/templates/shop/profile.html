@@ -1,0 +1,12 @@
+{% extends 'shop/base.html' %} 
+
+{% block title %}Profile{% endblock %} 
+{% block content %}
+<h2>Welcome, {{ user.username }}!</h2>
+<p>This is your dashboard. In the future, we’ll show:</p>
+<ul>
+  <li>Previously viewed cards</li>
+  <li>Wishlist</li>
+  <li>Ratings</li>
+</ul>
+{% endblock %}

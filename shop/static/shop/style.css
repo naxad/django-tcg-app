@@ -1,0 +1,93 @@
+/* shop/static/shop/style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    padding: 20px;
+}
+
+header {
+    background-color: #222;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+p {
+    font-size: 18px;
+}
+
+nav {
+    background-color: #222;
+    padding: 10px;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #00ccff;
+}
+
+.search-bar {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-bar input {
+    padding: 5px;
+    width: 200px;
+}
+
+
+.star {
+    font-size: 20px;
+    color: gray;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.star:hover,
+.star:hover~.star {
+    color: gold;
+    transform: scale(1.2);
+}
+
+/* Card animation */
+.card-hover {
+    transition: transform 0.3s;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+}
+
+/* Hover overlay */
+.card-img-container {
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+.hover-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 10px;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.card-img-container:hover .hover-overlay {
+    opacity: 1;
+}

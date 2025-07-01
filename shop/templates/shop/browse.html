@@ -1,0 +1,99 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Browse Cards{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2 class="mb-4">Browse Cards</h2>
+
+  <!-- Search & Filter Form -->
+  <form method="GET" class="mb-4">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <input type="text" name="q" class="form-control" placeholder="Search by name..." value="{{ request.GET.q }}">
+      </div>
+      <div class="col-md-3">
+        <select name="brand" class="form-select">
+          <option value="">All Brands</option>
+          {% for b in brands %}
+            <option value="{{ b }}" {% if request.GET.brand == b %}selected{% endif %}>{{ b }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <input type="number" name="max_price" class="form-control" placeholder="Max price" value="{{ request.GET.max_price }}">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+      </div>
+    </div>
+  </form>
+
+  {% if cards %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      {% for card in cards %}
+        <div class="col" data-aos="fade-up">
+          <div class="card h-100 shadow-sm card-hover">
+
+            <!-- Image with hover overlay -->
+            <div class="card-img-container position-relative">
+              {% if card.image %}
+                <img src="{{ card.image.url }}" class="card-img-top" alt="{{ card.name }}">
+              {% endif %}
+              <div class="hover-overlay">
+                <p><strong>Name:</strong> {{ card.name }}</p>
+                <p><strong>Rarity:</strong> {{ card.rarity }}</p>
+                <p><strong>Released:</strong> {{ card.release_date }}</p>
+                <p><strong>Condition:</strong> {{ card.condition }}</p>
+                <p><strong>Price:</strong> €{{ card.price }}</p>
+              </div>
+            </div>
+
+            <!-- Card body -->
+            <div class="card-body">
+              <h5 class="card-title">{{ card.name }}</h5>
+              <p class="card-text"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
+              <p class="card-text"><strong>Price:</strong> €{{ card.price }}</p>
+
+              <p class="card-text">
+                <strong>Average Rating:</strong>
+                {% with card.rating_set.all as ratings %}
+                  {% if ratings %}
+                    {{ ratings|average_rating }}★
+                    <small class="text-muted">({{ ratings|length }} user{{ ratings|pluralize }})</small>
+                  {% else %}
+                    <span class="text-muted">No ratings yet</span>
+                  {% endif %}
+                {% endwith %}
+              </p>
+            </div>
+
+            <!-- Rating -->
+            {% if user.is_authenticated %}
+              <div class="card-footer bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                  <small>Rate:</small>
+                  <div class="rating-stars" data-card="{{ card.id }}">
+                    {% for i in "12345" %}
+                      <span class="star text-warning fs-5 me-1" data-value="{{ i }}">&#9733;</span>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="card-footer text-muted text-center">
+                <small><em>Log in to rate this card.</em></small>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No cards found.</p>
+  {% endif %}
+</div>
+{% endblock %}
