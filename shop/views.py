@@ -21,6 +21,9 @@ from django.shortcuts import render
 from .models import Card
 from .models import WishlistItem
 
+
+
+
 def home(request):
     return render(request, 'shop/home.html')
 
@@ -332,8 +335,10 @@ def remove_from_wishlist(request, card_id):
 @login_required
 def toggle_wishlist(request, card_id):
     card = get_object_or_404(Card, id=card_id)
+
     if request.method == 'POST':
-        wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, card=card)
+        wishlist_item, created = WishlistItem.objects.get_or_create(user=request.user, card=card)
         if not created:
             wishlist_item.delete()
-        return redirect(request.META.get('HTTP_REFERER', 'browse'))
+    
+    return redirect(request.META.get('HTTP_REFERER', 'browse'))
