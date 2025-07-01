@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import update_session_auth_hash
 
-
+from .forms import UserUpdateForm
 
 from .models import Rating
 from django.shortcuts import get_object_or_404
@@ -161,12 +161,11 @@ def profile_view(request):
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=request.user)
+        form = UserUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            update_session_auth_hash(request, form.instance)
             return redirect('profile')
     else:
-        form = UserChangeForm(instance=request.user)
+        form = UserUpdateForm(instance=request.user)
 
     return render(request, 'shop/edit_profile.html', {'form': form})
