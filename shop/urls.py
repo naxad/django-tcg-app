@@ -11,6 +11,8 @@ urlpatterns = [
     path('card/<int:card_id>/', views.card_detail, name='card_detail'),
     path('add-to-cart/<int:card_id>/', views.add_to_cart, name='add_to_cart'),
     path('cart/', views.view_cart, name='cart'),
+    path('remove-from-cart/<int:card_id>/', views.remove_from_cart, name='remove_from_cart'),
+
 
     # Combined profile + dashboard view
     path('profile/', views.profile_view, name='profile'),

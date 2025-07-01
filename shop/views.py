@@ -213,3 +213,14 @@ def user_dashboard(request):
         'recently_viewed_cards': recently_viewed_cards,
     }
     return render(request, 'shop/dashboard.html', context)
+
+
+def remove_from_cart(request, card_id):
+    cart = request.session.get('cart', {})
+    if str(card_id) in cart:
+        del cart[str(card_id)]
+        request.session['cart'] = cart
+        messages.success(request, "Item removed from cart.")
+    else:
+        messages.warning(request, "Item was not in your cart.")
+    return redirect('cart')
