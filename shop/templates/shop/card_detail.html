@@ -1,0 +1,25 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}{{ card.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-5">
+      {% if card.image %}
+        <img src="{{ card.image.url }}" class="img-fluid rounded shadow" alt="{{ card.name }}">
+      {% endif %}
+    </div>
+    <div class="col-md-7">
+      <h2>{{ card.name }}</h2>
+      <p><strong>Brand:</strong> {{ card.get_brand_display }}</p>
+      <p><strong>Rarity:</strong> {{ card.rarity }}</p>
+      <p><strong>Condition:</strong> {{ card.condition }}</p>
+      <p><strong>Release Date:</strong> {{ card.release_date }}</p>
+      <p><strong>Price:</strong> €{{ card.price }}</p>
+      <a href="{% url 'browse' %}" class="btn btn-secondary mt-3">← Back to Browse</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

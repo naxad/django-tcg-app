@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Rating, Card
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 def home(request):
@@ -95,3 +96,8 @@ def browse(request):
         "cards": cards,
         "brands": brands,
     })
+
+
+def card_detail(request, card_id):
+    card = get_object_or_404(Card, id=card_id)
+    return render(request, 'shop/card_detail.html', {'card': card})
