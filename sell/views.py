@@ -8,7 +8,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
 def sell(request):
-    return render(request, 'sell/sell.html')
+    return redirect('submit_card')  # Previously: render(request, 'sell/sell.html')
+
 
 
 

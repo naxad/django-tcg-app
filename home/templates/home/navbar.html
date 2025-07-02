@@ -1,53 +1,38 @@
 <div class="navbar-container">
   <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
+    <div class="container-fluid justify-content-between align-items-center">
 
-      <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}">TCG Store</a>
+      <!-- Left group -->
+      <div class="navbar-left d-flex align-items-center gap-3">
+        <a class="navbar-brand" href="{% url 'home' %}">TCG Store</a>
+        <a class="nav-link" href="{% url 'browse' %}">Browse</a>
+        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+        <a class="nav-link" href="{% url 'sell' %}">Sell Your Card</a>
+      </div>
 
-      <!-- Toggler for mobile -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-              data-bs-target="#mainNavbar" aria-controls="mainNavbar"
-              aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- Main navbar content -->
-      <div class="collapse navbar-collapse justify-content-between" id="mainNavbar">
-
-        <!-- Left links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="{% url 'browse' %}">Browse</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'sell' %}">Sell Your Card</a></li>
-        </ul>
-
-        <!-- Center: Search -->
-        <form class="d-flex search-form" method="GET" action="{% url 'browse' %}">
-
-
+      <!-- Center: Search -->
+      <div class="navbar-center d-flex justify-content-center">
+        <form class="search-form" method="GET" action="{% url 'browse' %}">
           <input class="form-control me-2" type="search" name="q" placeholder="Search cards…" />
           <button class="search-btn" type="submit">🔍</button>
         </form>
-
-        <!-- Right: Cart + Auth -->
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}">🛒 Cart</a></li>
-          {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a></li>
-            <li class="nav-item logout-form">
-              <form method="post" action="{% url 'accounts:logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="nav-link">Logout</button>
-              </form>
-            </li>
-          {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Register</a></li>
-          {% endif %}
-        </ul>
-
       </div>
+
+      <!-- Right group -->
+      <div class="navbar-right d-flex align-items-center gap-3">
+        <a class="nav-link" href="{% url 'cart' %}">🛒 Cart</a>
+        {% if user.is_authenticated %}
+          <a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a>
+          <form method="post" action="{% url 'accounts:logout' %}" class="logout-form m-0">
+            {% csrf_token %}
+            <button type="submit" class="nav-link">Logout</button>
+          </form>
+        {% else %}
+          <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+          <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
+        {% endif %}
+      </div>
+
     </div>
   </nav>
 </div>

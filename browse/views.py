@@ -25,7 +25,7 @@ from wishlist.models import WishlistItem
 
 
 
-@login_required
+
 def browse(request):
     query = request.GET.get('q')
     brand = request.GET.get('brand')
