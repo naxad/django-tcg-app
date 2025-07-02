@@ -23,7 +23,9 @@
         </ul>
 
         <!-- Center: Search -->
-        <form class="d-flex search-form mx-auto" method="GET" action="{% url 'browse' %}">
+        <form class="d-flex search-form" method="GET" action="{% url 'browse' %}">
+
+
           <input class="form-control me-2" type="search" name="q" placeholder="Search cards…" />
           <button class="search-btn" type="submit">🔍</button>
         </form>
