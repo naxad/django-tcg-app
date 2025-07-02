@@ -10,7 +10,7 @@ urlpatterns = [
     
     path('', views.sell, name='sell'),
     path('submit', views.submit_card, name='submit_card'),
-    path('thank-you/', views.thank_you, name='thank_you'),
+    path('thank_you/', views.thank_you, name='thank_you'),
     
 
 ]

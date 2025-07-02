@@ -4,9 +4,8 @@
 {% block content %}
 <div class="container mt-5 mb-5">
     <div class="card shadow p-4">
-        <h2 class="mb-3 text-center">📤 Sell Us Your Card</h2>
-        <p class="mb-4 text-center">Fill in the details below and we’ll review your card promptly!</p>
-        <p class="mb-4 text-center">After we review your card, we will email you back with an offer!</p>
+        <h2 class="mb-3 text-center">📤 Sell Your Card</h2>
+        <p class="mb-4 text-center">Fill in the details below and we’ll review your listing promptly!</p>
         
         <form method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
@@ -15,36 +14,57 @@
                 <div class="col-md-6 mb-3">
                     <label for="id_seller_name" class="form-label">Your Name</label>
                     {{ form.seller_name }}
+                    {% if form.seller_name.errors %}
+                        <div class="text-danger small">{{ form.seller_name.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="id_email" class="form-label">Email</label>
                     {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="id_card_name" class="form-label">Card Name</label>
                     {{ form.card_name }}
+                    {% if form.card_name.errors %}
+                        <div class="text-danger small">{{ form.card_name.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="id_condition" class="form-label">Condition</label>
                     {{ form.condition }}
+                    {% if form.condition.errors %}
+                        <div class="text-danger small">{{ form.condition.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="col-md-6 mb-4">
                     <label for="id_image_front" class="form-label">Front Image</label>
                     {{ form.image_front }}
+                    {% if form.image_front.errors %}
+                        <div class="text-danger small">{{ form.image_front.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="col-md-6 mb-4">
                     <label for="id_image_back" class="form-label">Back Image</label>
                     {{ form.image_back }}
+                    {% if form.image_back.errors %}
+                        <div class="text-danger small">{{ form.image_back.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="col-12 mb-4">
                     <label for="id_comment" class="form-label">Comment</label>
                     {{ form.comment }}
+                    {% if form.comment.errors %}
+                        <div class="text-danger small">{{ form.comment.errors.0 }}</div>
+                    {% endif %}
                 </div>
             </div>
 

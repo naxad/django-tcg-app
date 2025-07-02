@@ -19,7 +19,8 @@ def submit_card(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Your card has been submitted! Our team will review it shortly.")
-            return redirect('sell:thank_you')
+            return redirect('thank_you')  # instead of 'sell:thank_you'
+
     else:
         form = CardSubmissionForm()
     return render(request, 'sell/submit_card.html', {'form': form})

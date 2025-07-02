@@ -1,5 +1,7 @@
 from django import forms
 from .models import CardSubmission
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 class CardSubmissionForm(forms.ModelForm):
     class Meta:
@@ -14,3 +16,11 @@ class CardSubmissionForm(forms.ModelForm):
             'image_front': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'image_back': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        try:
+            validate_email(email)
+        except ValidationError:
+            raise forms.ValidationError("Please enter a valid email address.")
+        return email

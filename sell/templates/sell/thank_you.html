@@ -1,10 +1,17 @@
-<!-- thank_you.html -->
-{% extends "base.html" %}
-
+{% extends "home/base.html" %}
 {% block content %}
-<div class="container mt-5 text-center">
-  <h2>Thank You!</h2>
-  <p>Your card submission has been received. We'll review it shortly and get back to you.</p>
-  <a href="{% url 'home' %}" class="btn btn-outline-primary mt-3">Return to Home</a>
+<div class="container mt-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success text-center" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="text-center">
+        <h2 class="mb-3">🎉 Submission Successful</h2>
+        <p>Thank you! Our team will review your card and get back to you soon with an offer.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
 </div>
 {% endblock %}
