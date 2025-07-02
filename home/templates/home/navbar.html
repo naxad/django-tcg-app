@@ -21,7 +21,11 @@
       <!-- Right group -->
       <div class="navbar-right d-flex align-items-center gap-3">
         <a class="nav-link" href="{% url 'cart' %}">🛒 Cart</a>
+
         {% if user.is_authenticated %}
+          {% if user.is_superuser %}
+            <a class="nav-link" href="/admin/">🛠️ Admin Panel</a>
+          {% endif %}
           <a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a>
           <form method="post" action="{% url 'accounts:logout' %}" class="logout-form m-0">
             {% csrf_token %}

@@ -7,7 +7,6 @@
     max-width: 1400px;
     margin: 0 auto;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    overflow-x: auto;
     flex-wrap: nowrap;
     white-space: nowrap;
 }
@@ -118,15 +117,21 @@
 .search-btn:hover {
     color: #ecf0f1;
     transform: translateY(-50%) scale(1.15);
-    /* Keeps it centered, just enlarges */
 }
 
-/* mobile-only logout form tweak */
+/* Hide search bar on mobile (center) */
+@media (max-width: 991.98px) {
+    .navbar-center {
+        display: none;
+    }
+}
+
+/* Mobile-only logout form tweak */
 .logout-form-mobile {
     display: flex;
 }
 
-/* navbar toggler (if needed for JS) */
+/* Toggler */
 .navbar-toggler {
     margin-left: 1rem;
 }
@@ -139,10 +144,18 @@
     display: none;
 }
 
-/* mobile collapse menu */
-.mobile-menu {
-    padding: 1rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+/* Collapse content styling */
+.navbar .navbar-collapse {
+    background: #93b2f7;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 1rem;
+}
+
+/* Collapsed nav style */
+.navbar-collapse ul.navbar-nav {
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 /* === Page layout === */
@@ -243,6 +256,12 @@ footer {
     flex-wrap: nowrap;
 }
 
+/* Ensure brand and search are always visible */
+.navbar-brand,
+.search-form {
+    z-index: 1050;
+}
+
 /* === Responsive Fixes === */
 @media (max-width: 768px) {
     .navbar .container-fluid {
@@ -295,5 +314,7 @@ footer {
     .logout-form button {
         padding: 0.4rem 0.8rem;
         font-size: 0.9rem;
+        width: 100%;
+        text-align: left;
     }
 }
