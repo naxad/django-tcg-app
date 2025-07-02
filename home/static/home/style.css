@@ -1,7 +1,4 @@
-/* style.css */
 /* === Pill-Style, Three-Zone Flex Navbar === */
-
-
 .navbar {
     background: #93b2f7;
     border-radius: 50px;
@@ -10,42 +7,45 @@
     max-width: 1400px;
     margin: 0 auto;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 
-/* Three-zone flex in one row */
 .navbar .container-fluid {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 3rem;
-    /* inner horizontal padding so edges aren’t flush */
 }
 
-/* Left & right groups spacing */
 .navbar-left,
-.navbar-right,
-.navbar-center {
+.navbar-center,
+.navbar-right {
     display: flex;
     align-items: center;
 }
 
 .navbar-left {
     gap: 1.5rem;
-    flex: 1;
+    flex: 0 1 auto;
+    min-width: 150px;
 }
 
-
 .navbar-center {
+    flex-grow: 1;
     justify-content: center;
-    flex: 1;
+    min-width: 200px;
 }
 
 .navbar-right {
     justify-content: flex-end;
-    gap: 1.5rem;
-    flex: 1;
+    gap: 1rem;
+    flex: 0 1 auto;
+    min-width: 150px;
+    flex-wrap: nowrap;
+    align-items: center;
 }
-
 
 /* Brand styling */
 .navbar-brand {
@@ -60,12 +60,14 @@
 .logout-form button,
 .logout-form-mobile button {
     color: #ecf0f1;
-    padding: 0.5rem 1rem;
-    /* a bit less than before */
+    font-size: 1rem;
     font-weight: 500;
+    padding: 0.5rem 1rem;
     border-radius: 6px;
     transition: background 0.3s, color 0.3s;
     white-space: nowrap;
+    background: none;
+    border: none;
 }
 
 .navbar .nav-link:hover,
@@ -75,17 +77,12 @@
     color: #fff;
 }
 
-/* Search form */
+/* === Search Form === */
 .search-form,
 .search-form-mobile {
     position: relative;
-}
-
-.search-form {
-    position: relative;
-    flex: 1;
-    display: flex;
-    justify-content: center;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .search-form .form-control,
@@ -94,7 +91,7 @@
     padding: 0.45rem 2.5rem 0.45rem 1rem;
     border: none;
     border-radius: 50px;
-    transition: width 0.3s, box-shadow 0.3s;
+    transition: width 0.3s ease, box-shadow 0.3s ease;
 }
 
 .search-form .form-control:focus,
@@ -115,11 +112,13 @@
     color: #7f8c8d;
     cursor: pointer;
     transition: color 0.3s, transform 0.2s;
+    z-index: 2;
 }
 
 .search-btn:hover {
     color: #ecf0f1;
-    transform: scale(1.1);
+    transform: translateY(-50%) scale(1.15);
+    /* Keeps it centered, just enlarges */
 }
 
 /* mobile-only logout form tweak */
@@ -127,7 +126,7 @@
     display: flex;
 }
 
-/* toggler visible only on small screens */
+/* navbar toggler (if needed for JS) */
 .navbar-toggler {
     margin-left: 1rem;
 }
@@ -140,13 +139,13 @@
     display: none;
 }
 
-/* mobile collapse menu styling */
+/* mobile collapse menu */
 .mobile-menu {
     padding: 1rem 0;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Page-level basics */
+/* === Page layout === */
 body {
     display: flex;
     flex-direction: column;
@@ -168,6 +167,7 @@ footer {
     margin-top: auto;
 }
 
+/* === Card styles === */
 .card-hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 12px;
@@ -191,7 +191,6 @@ footer {
     left: 0;
     right: 0;
     height: 70%;
-
     border-radius: 0 0 12px 12px;
     pointer-events: auto;
     z-index: 5;
@@ -200,24 +199,10 @@ footer {
     justify-content: flex-end;
 }
 
-
-
-
-.navbar .nav-link,
-.logout-form button,
-.logout-form-mobile button {
-    color: #ecf0f1;
-    font-size: 1rem;
-    /* was smaller */
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: background 0.3s, color 0.3s;
+.hover-overlay::before {
+    background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.75) 90%);
 }
 
-
-
-/* Allow pointer events on rating stars and Add to Cart button */
 .hover-overlay form,
 .hover-overlay button,
 .rating-stars,
@@ -226,11 +211,12 @@ footer {
     z-index: 10;
 }
 
-.hover-overlay::before {
-    background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.75) 90%);
+.rating-stars {
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
 }
 
-/* Optional: make the stars feel clickable */
 .rating-stars .star {
     cursor: pointer;
     transition: transform 0.1s ease;
@@ -241,44 +227,28 @@ footer {
     color: gold;
 }
 
-.rating-stars {
-    position: relative;
-    z-index: 10;
-    cursor: pointer;
-}
-
-
 .card-img-top {
     display: block;
     width: 100%;
     border-radius: 12px 12px 0 0;
 }
 
-
-
 .card-hover:hover .hover-overlay {
     opacity: 1;
     pointer-events: auto;
 }
 
-
+/* prevent wrapping of nav links */
 .navbar-nav {
     flex-wrap: nowrap;
 }
 
-
+/* === Responsive Fixes === */
 @media (max-width: 768px) {
-
-    /* Make navbar vertical */
     .navbar .container-fluid {
         flex-direction: column;
         align-items: stretch;
-    }
-
-    /* Stack items in collapse */
-    .navbar-collapse {
-        width: 100%;
-        margin-top: 1rem;
+        padding: 0 1rem;
     }
 
     .navbar-nav {
@@ -287,10 +257,10 @@ footer {
         gap: 0.5rem;
     }
 
-    .search-form {
-        justify-content: center;
-        width: 100%;
-        margin: 0.5rem 0;
+    .navbar-right {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.3rem;
     }
 
     .navbar-brand {
@@ -302,8 +272,28 @@ footer {
         align-self: flex-end;
     }
 
+    .search-form {
+        position: relative;
+        min-width: 180px;
+        max-width: 240px;
+        width: 100%;
+        margin: 0 auto;
+        flex-shrink: 1;
+    }
+
     .search-form .form-control {
         width: 100%;
-        max-width: 300px;
+        padding: 0.45rem 2.5rem 0.45rem 1rem;
+        border-radius: 50px;
+        transition: width 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .search-form .form-control:focus {
+        width: 100%;
+    }
+
+    .logout-form button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
     }
 }
