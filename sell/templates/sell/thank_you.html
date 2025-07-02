@@ -1,0 +1,10 @@
+<!-- thank_you.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <h2>Thank You!</h2>
+  <p>Your card submission has been received. We'll review it shortly and get back to you.</p>
+  <a href="{% url 'home' %}" class="btn btn-outline-primary mt-3">Return to Home</a>
+</div>
+{% endblock %}

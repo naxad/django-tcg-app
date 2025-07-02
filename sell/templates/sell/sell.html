@@ -1,0 +1,10 @@
+<!-- sell.html -->
+{% extends "home/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Sell Your Card</h2>
+  <p>Please fill out the form below to submit your card for review.</p>
+  <a href="{% url 'submit_card' %}" class="btn btn-primary mt-3">Submit Your Card</a>
+</div>
+{% endblock %}

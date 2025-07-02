@@ -23,7 +23,18 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('shop.urls')),  # all views are routed to the shop app
+  
+    path('accounts/', include('accounts.urls')),
+    path('userprofile/', include('userprofile.urls')),
+    path('dashboard/', include('dashboard.urls')),
+    path('wishlist/', include('wishlist.urls')),
+    path('cart/', include('cart.urls')),
+    path('dashboard/', include('dashboard.urls')),
+    path('', include('home.urls')), # all views are routed to the home app
+    path('browse/', include('browse.urls')),
+    path('contact/', include('contact.urls')),
+    path('sell/', include('sell.urls')),
+
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='shop/password_change.html'), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='shop/password_change_done.html'), name='password_change_done'),
 ]

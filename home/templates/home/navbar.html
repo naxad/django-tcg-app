@@ -1,0 +1,33 @@
+<div class="navbar-container">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+      <a class="navbar-brand" href="{% url 'home' %}">TCG Store</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'browse' %}">Browse</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'sell' %}">Sell Your Card</a></li>
+        </ul>
+        <form class="d-flex me-3" method="GET" action="{% url 'browse' %}">
+          <input class="form-control me-2" type="search" name="q" placeholder="Search cards..." />
+          <button class="btn btn-outline-light" type="submit">🔍</button>
+        </form>
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}">🛒 Cart</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li class="nav-item logout-form">
+              <form method="post" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="nav-link">Logout</button>
+              </form>
+            </li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </nav>
+</div>

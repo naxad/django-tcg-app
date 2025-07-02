@@ -37,7 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shop'
+    'browse',
+    'accounts',
+    'dashboard',
+    'wishlist',
+    'userprofile',
+    'sell',
+    'cart',
+    'home',
+    'contact',
+
 ]
 
 MIDDLEWARE = [
@@ -125,6 +134,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-STATICFILES_DIRS = [BASE_DIR / 'shop' / 'static']
+STATICFILES_DIRS = [BASE_DIR / 'home' / 'static']
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home'

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="card shadow p-4">
+        <h2 class="mb-3">Sell Your Card</h2>
+        <p class="mb-4">Fill in the details below and we'll review your card listing.</p>
+        
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_seller_name" class="form-label">Your Name</label>
+                    {{ form.seller_name|as_widget(attrs={'class': 'form-control'}) }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="id_email" class="form-label">Email</label>
+                    {{ form.email|as_widget(attrs={'class': 'form-control'}) }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="id_card_name" class="form-label">Card Name</label>
+                    {{ form.card_name|as_widget(attrs={'class': 'form-control'}) }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="id_condition" class="form-label">Condition</label>
+                    {{ form.condition|as_widget(attrs={'class': 'form-select'}) }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="id_image_front" class="form-label">Image (Front)</label>
+                    {{ form.image_front|as_widget(attrs={'class': 'form-control'}) }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="id_image_back" class="form-label">Image (Back)</label>
+                    {{ form.image_back|as_widget(attrs={'class': 'form-control'}) }}
+                </div>
+
+                <div class="col-12 mb-4">
+                    <label for="id_comment" class="form-label">Comment</label>
+                    {{ form.comment|as_widget(attrs={'class': 'form-control', 'rows': '4'}) }}
+                </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

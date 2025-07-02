@@ -1,0 +1,113 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5" data-aos="fade-in">
+  <h2 class="mb-4">My Profile</h2>
+
+  <div class="row">
+    <!-- Profile Edit Form -->
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header">
+          <strong>Edit Profile</strong>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mt-2">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Info -->
+    <div class="col-md-6">
+
+      <!-- Recent Ratings -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header">
+          <strong>Recent Ratings</strong>
+        </div>
+        <div class="card-body">
+          {% if ratings %}
+            <ul class="list-group">
+              {% for r in ratings %}
+                <li class="list-group-item">
+                  ⭐ {{ r.score }} for <a href="{% url 'card_detail' r.card.id %}">{{ r.card.name }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">You haven't rated any cards yet.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Recently Viewed -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header">
+          <strong>Recently Viewed Cards</strong>
+        </div>
+        <div class="card-body">
+          {% if viewed_cards %}
+            <ul class="list-group">
+              {% for card in viewed_cards %}
+                <li class="list-group-item">
+                  <a href="{% url 'card_detail' card.id %}">{{ card.name }}</a> – €{{ card.price }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">No viewed cards yet.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Wishlist -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header">
+          <strong>Wishlist</strong>
+        </div>
+        <div class="card-body">
+          {% if wishlist %}
+            <ul class="list-group">
+              {% for card in wishlist %}
+                <li class="list-group-item">
+                  <a href="{% url 'card_detail' card.id %}">{{ card.name }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">Your wishlist is empty.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Recent Purchases -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header">
+          <strong>Recent Purchases</strong>
+        </div>
+        <div class="card-body">
+          {% if purchases %}
+            <ul class="list-group">
+              {% for p in purchases %}
+                <li class="list-group-item">
+                  {{ p.card.name }} – {{ p.purchased_at|date:"M d, Y H:i" }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">No purchases yet.</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

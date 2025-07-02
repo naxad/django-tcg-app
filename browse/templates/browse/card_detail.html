@@ -1,0 +1,75 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}{{ card.name }} Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5" data-aos="fade-in">
+
+  <a href="{% url 'browse' %}" class="btn btn-secondary mb-3">← Back to Browse</a>
+
+  <div class="row">
+    <div class="col-md-6 text-center">
+      {% if card.image %}
+        <img src="{{ card.image.url }}" class="img-fluid rounded shadow" alt="{{ card.name }}">
+      {% else %}
+        <p>No image available.</p>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      <h2>{{ card.name }}</h2>
+      <p><strong>Brand:</strong> {{ card.get_brand_display }}</p>
+      <p><strong>Rarity:</strong> {{ card.rarity }}</p>
+      <p><strong>Condition:</strong> {{ card.condition }}</p>
+      <p><strong>Release Date:</strong> {{ card.release_date }}</p>
+      <p><strong>Price:</strong> €{{ card.price }}</p>
+
+      <!-- ✅ Add to Cart Button -->
+      <form method="post" action="{% url 'add_to_cart' card.id %}" class="mt-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Add to Cart</button>
+      </form>
+
+      <!-- ❤️ Wishlist Button -->
+      {% if user.is_authenticated %}
+        {% if is_in_wishlist %}
+          <form method="post" action="{% url 'remove_from_wishlist' card.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-secondary">💔 Remove from Wishlist</button>
+          </form>
+        {% else %}
+          <form method="post" action="{% url 'add_to_wishlist' card.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-warning">❤️ Add to Wishlist</button>
+          </form>
+        {% endif %}
+      {% endif %}
+
+      <!-- ⭐ Rating Info -->
+      <p class="mt-4">
+        <strong>Average Rating:</strong>
+        {% with card.rating_set.all as ratings %}
+          {% if ratings %}
+            {{ ratings|average_rating }}★
+            <small class="text-muted">({{ ratings|length }} user{{ ratings|pluralize }})</small>
+          {% else %}
+            <span class="text-muted">No ratings yet</span>
+          {% endif %}
+        {% endwith %}
+      </p>
+
+      {% if user.is_authenticated %}
+        <div class="rating-stars mt-3" data-card="{{ card.id }}">
+          {% for i in "12345" %}
+            <span class="star text-warning fs-4 me-1" data-value="{{ i }}">&#9733;</span>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p><em>Log in to rate this card.</em></p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
