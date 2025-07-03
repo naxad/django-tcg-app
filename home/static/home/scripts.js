@@ -31,6 +31,7 @@ $(document).ready(function () {
     });
 });
 
+// Infinite card carousel with manual arrows
 document.addEventListener("DOMContentLoaded", function () {
     const track = document.querySelector(".card-track");
     if (!track) return;
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const gap = 24;
     const fullCardWidth = cardWidth + gap;
 
-    // Clone 50 sets
+    // Clone 50 sets of the cards
     for (let i = 0; i < 50; i++) {
         originalItems.forEach(item => {
             const clone = item.cloneNode(true);
@@ -50,16 +51,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     let scrollPos = 0;
-    const speed = 0.7; // Lower = slower
+    const speed = 0.5; // Adjust speed here
+    let manualScroll = false;
+    let manualTimeout;
 
     function loopScroll() {
-        scrollPos += speed;
-        track.style.transform = `translateX(-${scrollPos}px)`;
+        if (!manualScroll) {
+            scrollPos += speed;
+            track.style.transform = `translateX(-${scrollPos}px)`;
+        }
 
         const totalItems = track.children.length;
         const totalTrackWidth = fullCardWidth * totalItems;
 
-        // Reset before we run out of clones
         if (scrollPos >= totalTrackWidth - (fullCardWidth * originalItems.length)) {
             scrollPos = 0;
             track.style.transform = `translateX(0)`;
@@ -69,4 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     requestAnimationFrame(loopScroll);
+
+
 });

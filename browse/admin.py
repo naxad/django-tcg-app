@@ -5,4 +5,4 @@ from .models import Card
 class CardAdmin(admin.ModelAdmin):
     list_display = ('name', 'brand', 'price')
     search_fields = ('name', 'brand')
-    list_filter = ('brand',)
+    list_filter = ('brand', 'is_featured')

@@ -7,6 +7,7 @@
 
 <div class="carousel-wrapper fade-carousel">
   <div class="fade-left"></div>
+  
   <div class="card-carousel">
     <div class="card-track">
       {% for item in carousel_items %}
@@ -19,8 +20,38 @@
       {% endfor %}
     </div>
   </div>
+
   <div class="fade-right"></div>
 </div>
+
+<h3 class="section-title">🔥 Featured Picks</h3>
+<div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {% for card in featured_items %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <div class="d-flex justify-content-center">
+          <div class="card card-hover" style="width: 18rem;">
+            <img src="{{ card.image.url }}" class="card-img-top" alt="{{ card.title }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ card.title }}</h5>
+              <a href="{{ card.get_absolute_url }}" class="btn btn-primary">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+
+
+
 {% endblock %}
 
 {% block extra_scripts %}
