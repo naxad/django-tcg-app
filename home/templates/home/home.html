@@ -1,21 +1,28 @@
 {% extends 'home/base.html' %}
+{% load static %}
 {% block title %}Home - TCG Store{% endblock %}
 
 {% block content %}
-<h3 class="section-title">🆕 Recently Listed Cards</h3>
-  <div class="carousel-wrapper">
-    <div class="card-carousel">
+<h3 class="section-title">Recently Listed Cards</h3>
+
+<div class="carousel-wrapper fade-carousel">
+  <div class="fade-left"></div>
+  <div class="card-carousel">
+    <div class="card-track">
       {% for item in carousel_items %}
         <div class="card-item">
           <a href="{{ item.get_absolute_url }}">
             <img src="{{ item.image.url }}" alt="{{ item.title }}">
           </a>
-          <div class="card-caption">
-            <strong>{{ item.title }}</strong><br>
-            <small>{{ item.subtitle }}</small>
-          </div>
+          <div class="card-caption">{{ item.title }}</div>
         </div>
       {% endfor %}
     </div>
   </div>
+  <div class="fade-right"></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'home/scripts.js' %}" defer></script>
 {% endblock %}

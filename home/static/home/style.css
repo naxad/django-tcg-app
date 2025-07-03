@@ -321,22 +321,30 @@ footer {
 
 
 
-/* === Horizontal Auto-Scrolling Card Carousel === */
 .carousel-wrapper {
     overflow: hidden;
     position: relative;
-    margin-bottom: 3rem;
+    margin: 2rem auto;
     padding: 0 100px;
 }
+
 
 .card-carousel {
     display: flex;
     gap: 1.5rem;
-    animation: scroll 30s linear infinite;
+    width: max-content;
+
 }
 
 .card-carousel:hover {
     animation-play-state: paused;
+}
+
+.card-track {
+    display: flex;
+    gap: 1.5rem;
+
+    width: max-content;
 }
 
 .card-carousel .card-item {
@@ -364,13 +372,43 @@ footer {
     color: #333;
 }
 
+.card-item {
+    flex: 0 0 auto;
+    width: 200px;
+    transition: transform 0.3s ease;
+}
+
+
+.card-item img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+
+@keyframes scroll-loop {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+
+
+
+
 @keyframes scroll {
     0% {
         transform: translateX(0);
     }
 
     100% {
-        transform: translateX(-100%);
+        transform: translateX(50%);
     }
 }
 
@@ -383,6 +421,36 @@ footer {
         height: 220px;
     }
 }
+
+
+.fade-carousel {
+    position: relative;
+}
+
+.fade-left,
+.fade-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.fade-left {
+    left: 0;
+    background: linear-gradient(to right, #ffffff 80%, transparent);
+}
+
+.fade-right {
+    right: 0;
+    background: linear-gradient(to left, #ffffff 80%, transparent);
+}
+
+
+
+
+
 
 .section-title {
     text-align: center;
