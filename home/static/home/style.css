@@ -174,6 +174,32 @@ footer {
     margin-top: auto;
 }
 
+
+.fade-carousel {
+    position: relative;
+}
+
+.fade-left,
+.fade-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.fade-left {
+    left: 0;
+    background: linear-gradient(to right, white 0%, transparent 100%);
+}
+
+.fade-right {
+    right: 0;
+    background: linear-gradient(to left, white 0%, transparent 100%);
+}
+
+
 /* === Card Styles === */
 .card-hover {
     border-radius: 16px;
@@ -359,6 +385,19 @@ footer {
     transform: scale(1.02);
 }
 
+
+.carousel-cards {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+
+.carousel-cards .card {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+}
+
 .browse-card-img img {
     max-height: 350px;
     object-fit: contain;
@@ -427,4 +466,51 @@ footer {
 
 .image-modal-close:hover {
     color: #bbb;
+}
+
+
+
+.card-carousel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+    overflow-x: hidden;
+    /* Prevent scrollbar */
+}
+
+.card-track {
+    display: flex;
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
+}
+
+.card-item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    width: 220px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    text-align: center;
+}
+
+
+.section-title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+
+.card-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.card-caption {
+    margin-top: 0.5rem;
+    font-weight: 500;
 }
