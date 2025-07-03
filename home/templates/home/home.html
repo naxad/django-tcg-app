@@ -1,10 +1,21 @@
-<!-- shop/templates/shop/home.html -->
-{% extends 'home/base.html' %} 
-
+{% extends 'home/base.html' %}
 {% block title %}Home - TCG Store{% endblock %}
 
 {% block content %}
-<p>
-  This is your homepage for Pokémon, One Piece, and Magic: The Gathering cards.
-</p>
+<h3 class="section-title">🆕 Recently Listed Cards</h3>
+  <div class="carousel-wrapper">
+    <div class="card-carousel">
+      {% for item in carousel_items %}
+        <div class="card-item">
+          <a href="{{ item.get_absolute_url }}">
+            <img src="{{ item.image.url }}" alt="{{ item.title }}">
+          </a>
+          <div class="card-caption">
+            <strong>{{ item.title }}</strong><br>
+            <small>{{ item.subtitle }}</small>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 {% endblock %}
