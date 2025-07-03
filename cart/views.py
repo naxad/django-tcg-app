@@ -77,4 +77,4 @@ def update_cart_quantity(request, card_id):
                     item.delete()
                 else:
                     item.save()
-    return redirect('cart')
+    return redirect('cart:cart')

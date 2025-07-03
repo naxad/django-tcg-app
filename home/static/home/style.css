@@ -43,7 +43,6 @@
     flex: 0 1 auto;
     min-width: 150px;
     flex-wrap: nowrap;
-    align-items: center;
 }
 
 /* Brand styling */
@@ -64,7 +63,6 @@
     padding: 0.5rem 1rem;
     border-radius: 6px;
     transition: background 0.3s, color 0.3s;
-    white-space: nowrap;
     background: none;
     border: none;
 }
@@ -110,8 +108,8 @@
     font-size: 1rem;
     color: #7f8c8d;
     cursor: pointer;
-    transition: color 0.3s, transform 0.2s;
     z-index: 2;
+    transition: color 0.3s, transform 0.2s;
 }
 
 .search-btn:hover {
@@ -119,19 +117,17 @@
     transform: translateY(-50%) scale(1.15);
 }
 
-/* Hide search bar on mobile (center) */
+/* === Responsive === */
 @media (max-width: 991.98px) {
     .navbar-center {
         display: none;
     }
 }
 
-/* Mobile-only logout form tweak */
 .logout-form-mobile {
     display: flex;
 }
 
-/* Toggler */
 .navbar-toggler {
     margin-left: 1rem;
 }
@@ -144,7 +140,6 @@
     display: none;
 }
 
-/* Collapse content styling */
 .navbar .navbar-collapse {
     background: #93b2f7;
     border-radius: 10px;
@@ -152,7 +147,6 @@
     padding: 1rem;
 }
 
-/* Collapsed nav style */
 .navbar-collapse ul.navbar-nav {
     gap: 1rem;
     flex-wrap: wrap;
@@ -180,21 +174,20 @@ footer {
     margin-top: auto;
 }
 
-/* === Card styles === */
+/* === Card Styles === */
 .card-hover {
     border-radius: 16px;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border: 1px solid #e0e0e0;
+    position: relative;
 }
 
 .card-hover:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-
     z-index: 10;
 }
-
 
 .card-fixed {
     max-width: 260px;
@@ -205,7 +198,26 @@ footer {
     margin: 0 auto;
 }
 
+/* === Wishlist Button === */
+.wishlist-btn {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    padding: 0;
+    line-height: 1;
+    transition: background 0.2s ease;
+    position: relative;
+    z-index: 15;
+}
 
+.wishlist-btn:hover {
+    background: #ffecec;
+}
+
+/* === Hover Overlay === */
 .hover-overlay {
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -222,18 +234,18 @@ footer {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    z-index: 5;
 }
 
-.hover-overlay::before {
-    background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.75) 90%);
+.card-hover:hover .hover-overlay {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .hover-overlay form,
-.hover-overlay button,
-.rating-stars,
-.rating-stars .star {
+.hover-overlay button {
     pointer-events: auto;
-    z-index: 10;
+    z-index: 20;
 }
 
 .rating-stars {
@@ -258,23 +270,16 @@ footer {
     border-radius: 12px 12px 0 0;
 }
 
-.card-hover:hover .hover-overlay {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* prevent wrapping of nav links */
 .navbar-nav {
     flex-wrap: nowrap;
 }
 
-/* Ensure brand and search are always visible */
 .navbar-brand,
 .search-form {
     z-index: 1050;
 }
 
-/* === Responsive Fixes === */
+/* === Responsive Adjustments === */
 @media (max-width: 768px) {
     .navbar .container-fluid {
         flex-direction: column;
@@ -316,11 +321,6 @@ footer {
         width: 100%;
         padding: 0.45rem 2.5rem 0.45rem 1rem;
         border-radius: 50px;
-        transition: width 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .search-form .form-control:focus {
-        width: 100%;
     }
 
     .logout-form button {
@@ -333,210 +333,98 @@ footer {
 
 
 
-.carousel-wrapper {
-    overflow: hidden;
+.browse-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.browse-card-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 1rem;
+    border-radius: 10px;
     position: relative;
-    margin: 2rem auto;
-    padding: 0 100px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, height 0.3s ease;
+    align-self: start;
+    min-height: auto;
+    /* Let the height adjust naturally */
 }
 
-
-.card-carousel {
-    display: flex;
-    gap: 1.5rem;
-    width: max-content;
-
+.browse-card-container:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
 }
 
-.card-carousel:hover {
-    animation-play-state: paused;
-}
-
-.card-track {
-    display: flex;
-    gap: 1.5rem;
-
-    width: max-content;
-}
-
-.card-carousel .card-item {
-    flex: 0 0 auto;
-    width: 200px;
-    transition: transform 0.3s ease;
-}
-
-.card-carousel .card-item:hover {
-    transform: scale(1.05);
-    z-index: 2;
-}
-
-
-.carousel-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.8);
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 10;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease;
-}
-
-.carousel-arrow:hover {
-    background-color: rgba(255, 255, 255, 1);
-}
-
-.left-arrow {
-    left: 10px;
-}
-
-.right-arrow {
-    right: 10px;
-}
-
-.card-img-limited {
-    max-height: 320px;
-    object-fit: cover;
-}
-
-.wishlist-btn {
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
-    font-size: 18px;
-    padding: 0;
-    line-height: 1;
-    transition: background 0.2s ease;
-}
-
-.wishlist-btn:hover {
-    background: #ffecec;
-}
-
-
-
-
-.card-img-fixed {
-    max-height: 250px;
-    width: 100%;
+.browse-card-img img {
+    max-height: 350px;
     object-fit: contain;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    border-radius: 8px;
 }
 
-.detail-card-img {
-    max-height: 500px;
-    width: auto;
-    object-fit: contain;
+.browse-card-img {
+    flex: 0 0 130px;
 }
 
-.card-carousel img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.browse-card-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex-grow: 1;
 }
 
-.card-caption {
-    text-align: center;
+.add-to-cart-form {
+    opacity: 0;
+    height: 0;
+    transition: opacity 0.3s ease, height 0.3s ease, margin-top 0.3s ease;
+    visibility: hidden;
+
+
+}
+
+.browse-card-container:hover .add-to-cart-form {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
     margin-top: 0.5rem;
-    color: #333;
 }
 
-.card-item {
-    flex: 0 0 auto;
-    width: 200px;
-    transition: transform 0.3s ease;
-}
-
-
-.card-item img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-
-@keyframes scroll-loop {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-
-
-
-
-@keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(50%);
-    }
-}
-
-@media (max-width: 768px) {
-    .card-carousel .card-item {
-        width: 150px;
-    }
-
-    .card-carousel img {
-        height: 220px;
-    }
-}
-
-
-.fade-carousel {
-    position: relative;
-}
-
-.fade-left,
-.fade-right {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 60px;
-    z-index: 3;
-    pointer-events: none;
-}
-
-.fade-left {
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    padding-top: 60px;
     left: 0;
-    background: linear-gradient(to right, #ffffff 80%, transparent);
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.85);
 }
 
-.fade-right {
-    right: 0;
-    background: linear-gradient(to left, #ffffff 80%, transparent);
+.image-modal-content {
+    margin: auto;
+    display: block;
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 12px;
+    box-shadow: 0 0 25px #000;
 }
 
-
-
-
-
-
-.section-title {
-    text-align: center;
-    font-size: 1.6rem;
+.image-modal-close {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
     font-weight: bold;
-    margin-bottom: 1rem;
-    color: #333;
+    cursor: pointer;
+    z-index: 1100;
+}
+
+.image-modal-close:hover {
+    color: #bbb;
 }

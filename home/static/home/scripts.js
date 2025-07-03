@@ -31,6 +31,24 @@ $(document).ready(function () {
     });
 });
 
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const imageElements = document.querySelectorAll('.card-img-clickable');
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    const modalImage = document.getElementById('modalImage');
+
+    imageElements.forEach(img => {
+        img.addEventListener('click', () => {
+            const imageUrl = img.dataset.img;
+            if (modalImage && imageUrl) {
+                modalImage.src = imageUrl;
+                modal.show();
+            }
+        });
+    });
+});
+
 // Infinite card carousel with manual arrows
 document.addEventListener("DOMContentLoaded", function () {
     const track = document.querySelector(".card-track");

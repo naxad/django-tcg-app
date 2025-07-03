@@ -6,146 +6,131 @@
 
 {% block content %}
 <div class="container mt-4">
-
-{% if show_popup %}
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
-  <div id="cartToast" class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">
-        🛒 "{{ show_popup }}" added to cart!
+  {% if show_popup %}
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+    <div id="cartToast" class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">🛒 "{{ show_popup }}" added to cart!</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
   </div>
-</div>
-{% endif %}
+  {% endif %}
 
-<h2 class="mb-4">Browse Cards</h2>
+  <h2 class="mb-4">Browse Cards</h2>
 
-{% if current_sort %}
-  <p>
-    <span class="badge bg-info text-dark">
-      Sorted by: 
-      {% if current_sort == "price_asc" %}Price (Low → High){% endif %}
-      {% if current_sort == "price_desc" %}Price (High → Low){% endif %}
-      {% if current_sort == "rating_desc" %}Rating (High → Low){% endif %}
-      {% if current_sort == "newest" %}Newest Added{% endif %}
-    </span>
-  </p>
-{% endif %}
+  {% if current_sort %}
+  <p><span class="badge bg-info text-dark">
+    Sorted by: 
+    {% if current_sort == "price_asc" %}Price (Low → High){% endif %}
+    {% if current_sort == "price_desc" %}Price (High → Low){% endif %}
+    {% if current_sort == "rating_desc" %}Rating (High → Low){% endif %}
+    {% if current_sort == "newest" %}Newest Added{% endif %}
+  </span></p>
+  {% endif %}
 
-<!-- Filter + Sort Form -->
-<form method="GET" class="mb-4">
-  <div class="row g-2">
-    <div class="col-md-3">
-      <input type="text" name="q" class="form-control" placeholder="Search by name..." value="{{ request.GET.q }}">
-    </div>
-    <div class="col-md-2">
-      <select name="brand" class="form-select">
-        <option value="">All Brands</option>
-        {% for b in brands %}
+  <form method="GET" class="mb-4">
+    <div class="row g-2">
+      <div class="col-md-3">
+        <input type="text" name="q" class="form-control" placeholder="Search by name..." value="{{ request.GET.q }}">
+      </div>
+      <div class="col-md-2">
+        <select name="brand" class="form-select">
+          <option value="">All Brands</option>
+          {% for b in brands %}
           <option value="{{ b }}" {% if request.GET.brand == b %}selected{% endif %}>{{ b }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-2">
-      <input type="number" name="max_price" class="form-control" placeholder="Max price" value="{{ request.GET.max_price }}">
-    </div>
-    <div class="col-md-3">
-      <select name="sort" class="form-select">
-        <option value="">Sort By</option>
-        <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Price: Low → High</option>
-        <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Price: High → Low</option>
-        <option value="rating_desc" {% if request.GET.sort == "rating_desc" %}selected{% endif %}>Rating: High → Low</option>
-        <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest</option>
-      </select>
-    </div>
-    <div class="col-md-2 d-flex gap-2">
-      <button type="submit" class="btn btn-primary flex-fill">Filter</button>
-      <a href="{% url 'browse' %}" class="btn btn-secondary flex-fill">Clear</a>
-    </div>
-  </div>
-</form>
-
-{% if cards %}
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-    {% for card in cards %}
-      <div class="col" data-aos="fade-up">
-        <div class="card h-100 shadow-sm card-hover card-fixed position-relative">
-
-          {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'wishlist:toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
-              {% csrf_token %}
-              <button type="submit" class="wishlist-btn">
-                {% if card in wishlist_cards %}♥{% else %}♡{% endif %}
-              </button>
-            </form>
-          {% endif %}
-
-          <div class="card-img-container position-relative">
-            <a href="{% url 'card_detail' card.id %}">
-              {% if card.image %}
-                <img src="{{ card.image.url }}" class="img-fluid rounded" alt="{{ card.name }}" style="max-height: 320px; object-fit: cover;">
-
-              {% endif %}
-
-              <div class="hover-overlay">
-                <p><strong>Name:</strong> {{ card.name }}</p>
-                <p><strong>Rarity:</strong> {{ card.rarity }}</p>
-                <p><strong>Released:</strong> {{ card.release_date }}</p>
-                <p><strong>Condition:</strong> {{ card.condition }}</p>
-                <p><strong>Price:</strong> €{{ card.price }}</p>
-
-                <form method="post" action="{% url 'cart:add_to_cart' card.id %}">
-
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-success mt-2">🛒 Add to Cart</button>
-                </form>
-              </div>
-            </a>
-          </div>
-
-          <div class="card-body">
-            <h5 class="card-title">{{ card.name }}</h5>
-            <p class="card-text"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
-            <p class="card-text"><strong>Price:</strong> €{{ card.price }}</p>
-            <p class="card-text">
-              <strong>Average Rating:</strong>
-              {% with card.rating_set.all as ratings %}
-                {% if ratings %}
-                  {{ ratings|average_rating }}★
-                  <small class="text-muted">({{ ratings|length }} user{{ ratings|pluralize }})</small>
-                {% else %}
-                  <span class="text-muted">No ratings yet</span>
-                {% endif %}
-              {% endwith %}
-            </p>
-          </div>
-
-          {% if user.is_authenticated %}
-            <div class="card-footer bg-white">
-              <div class="d-flex justify-content-between align-items-center">
-                <small>Rate:</small>
-                <div class="rating-stars" data-card="{{ card.id }}" style="position: relative; z-index: 10;">
-                  {% for i in "12345" %}
-                    <span class="star text-warning fs-5 me-1" data-value="{{ i }}">&#9733;</span>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          {% else %}
-            <div class="card-footer text-muted text-center">
-              <small><em>Log in to rate this card.</em></small>
-            </div>
-          {% endif %}
-
-        </div>
+          {% endfor %}
+        </select>
       </div>
-    {% endfor %}
+      <div class="col-md-2">
+        <input type="number" name="max_price" class="form-control" placeholder="Max price" value="{{ request.GET.max_price }}">
+      </div>
+      <div class="col-md-3">
+        <select name="sort" class="form-select">
+          <option value="">Sort By</option>
+          <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Price: Low → High</option>
+          <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Price: High → Low</option>
+          <option value="rating_desc" {% if request.GET.sort == "rating_desc" %}selected{% endif %}>Rating: High → Low</option>
+          <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest</option>
+        </select>
+      </div>
+      <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-fill">Filter</button>
+        <a href="{% url 'browse' %}" class="btn btn-secondary flex-fill">Clear</a>
+      </div>
+    </div>
+  </form>
 
+  {% if cards %}
+  <div class="browse-grid">
+    {% for card in cards %}
+    <div class="browse-card-container">
+      <!-- Wishlist -->
+      {% if user.is_authenticated %}
+      <form method="POST" action="{% url 'wishlist:toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
+        {% csrf_token %}
+        <button type="submit" class="wishlist-btn">
+          {% if card in wishlist_cards %}♥{% else %}♡{% endif %}
+        </button>
+      </form>
+      {% endif %}
+
+      <div class="browse-card-img">
+        {% if card.image %}
+        <img src="{{ card.image.url }}" alt="{{ card.name }}" class="img-fluid rounded card-img-clickable" data-img="{{ card.image.url }}">
+        {% endif %}
+      </div>
+
+      <div class="browse-card-details flex-grow-1">
+        <h5 class="mb-1">{{ card.name }}</h5>
+        <p class="mb-1"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
+        <p class="mb-1"><strong>Condition:</strong> {{ card.condition }}</p>
+        <p class="mb-1"><strong>Release Date:</strong> {{ card.release_date|date:"F j, Y" }}</p>
+        <p class="mb-1"><strong>Price:</strong> €{{ card.price }}</p>
+        <p class="mb-1">
+          <strong>Average Rating:</strong>
+          {% with card.rating_set.all as ratings %}
+          {% if ratings %}
+          {{ ratings|average_rating }}★ <small class="text-muted">({{ ratings|length }} user{{ ratings|pluralize }})</small>
+          {% else %}
+          <span class="text-muted">No ratings yet</span>
+          {% endif %}
+          {% endwith %}
+        </p>
+
+        {% if user.is_authenticated %}
+        <div class="rating-stars mt-1" data-card="{{ card.id }}">
+          {% for i in "12345" %}
+          <span class="star text-warning fs-5 me-1" data-value="{{ i }}">&#9733;</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'cart:add_to_cart' card.id %}" class="add-to-cart-form">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-success mt-2">🛒 Add to Cart</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
   </div>
-{% else %}
+  {% else %}
   <p>No cards found.</p>
-{% endif %}
+  {% endif %}
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-body p-0">
+        <img id="modalImage" class="img-fluid rounded shadow">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/browse.js' %}"></script>
 {% endblock %}
