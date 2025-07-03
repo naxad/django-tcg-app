@@ -20,7 +20,8 @@
 
       <!-- Right group -->
       <div class="navbar-right d-flex align-items-center gap-3">
-        <a class="nav-link" href="{% url 'cart' %}">🛒 Cart</a>
+        <a class="nav-link" href="{% url 'cart:cart' %}">🛒 Cart</a>
+
 
         {% if user.is_authenticated %}
           {% if user.is_superuser %}

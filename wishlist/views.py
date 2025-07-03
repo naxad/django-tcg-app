@@ -14,12 +14,14 @@ def wishlist_view(request):
 def add_to_wishlist(request, card_id):
     card = get_object_or_404(Card, id=card_id)
     WishlistItem.objects.get_or_create(user=request.user, card=card)
-    return redirect('wishlist')
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
 
 @login_required
 def remove_from_wishlist(request, card_id):
     WishlistItem.objects.filter(user=request.user, card__id=card_id).delete()
-    return redirect('wishlist')
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
 
 
 from django.shortcuts import redirect, get_object_or_404

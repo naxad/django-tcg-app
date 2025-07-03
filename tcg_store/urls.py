@@ -27,8 +27,9 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('userprofile/', include('userprofile.urls')),
     path('dashboard/', include('dashboard.urls')),
-    path('wishlist/', include('wishlist.urls')),
-    path('cart/', include('cart.urls')),
+    path('wishlist/', include('wishlist.urls', namespace='wishlist')),
+
+    path('cart/', include('cart.urls', namespace='cart')),
     path('dashboard/', include('dashboard.urls')),
     path('', include('home.urls')), # all views are routed to the home app
     path('browse/', include('browse.urls')),

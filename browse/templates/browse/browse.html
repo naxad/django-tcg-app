@@ -74,7 +74,7 @@
         <div class="card h-100 shadow-sm card-hover position-relative">
 
           {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
+            <form method="POST" action="{% url 'wishlist:toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
               {% csrf_token %}
               <button type="submit" class="wishlist-btn">
                 {% if card in wishlist_cards %}♥{% else %}♡{% endif %}
@@ -95,7 +95,8 @@
                 <p><strong>Condition:</strong> {{ card.condition }}</p>
                 <p><strong>Price:</strong> €{{ card.price }}</p>
 
-                <form method="post" action="{% url 'add_to_cart' card.id %}">
+                <form method="post" action="{% url 'cart:add_to_cart' card.id %}">
+
                   {% csrf_token %}
                   <button type="submit" class="btn btn-sm btn-success mt-2">🛒 Add to Cart</button>
                 </form>

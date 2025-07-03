@@ -41,7 +41,7 @@ def remove_from_cart(request, card_id):
         messages.success(request, "Item removed from cart.")
     else:
         messages.warning(request, "Item not found in your cart.")
-    return redirect('cart')
+    return redirect('cart:cart')
 
 @login_required
 def checkout(request):
@@ -49,7 +49,7 @@ def checkout(request):
 
     if not cart_items:
         messages.warning(request, "Your cart is empty.")
-        return redirect('cart')
+        return redirect('cart:cart')
 
     for item in cart_items:
         for _ in range(item.quantity):
@@ -66,7 +66,7 @@ def remove_from_cart(request, card_id):
     if card_id in cart:
         cart.remove(card_id)
         request.session['cart'] = cart
-    return redirect('cart')
+    return redirect('cart:cart')
 
 @login_required
 def update_cart_quantity(request, card_id):

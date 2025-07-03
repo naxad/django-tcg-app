@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.urls import reverse
 
 class Card(models.Model):
     BRAND_CHOICES = [
@@ -18,6 +19,10 @@ class Card(models.Model):
     release_date = models.DateField(blank=True, null=True)
     condition = models.CharField(max_length=50, blank=True)
     is_featured = models.BooleanField(default=False)
+
+    def get_absolute_url(self):
+        return reverse('card_detail', kwargs={'pk': self.pk})
+
 
     def __str__(self):
         return f"{self.name} ({self.brand})"

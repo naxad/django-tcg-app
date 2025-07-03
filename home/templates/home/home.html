@@ -34,7 +34,17 @@
             <img src="{{ card.image.url }}" class="card-img-top" alt="{{ card.title }}">
             <div class="card-body">
               <h5 class="card-title">{{ card.title }}</h5>
-              <a href="{{ card.get_absolute_url }}" class="btn btn-primary">View</a>
+              <div class="d-flex justify-content-center gap-2 mt-2">
+                <a href="{{ card.get_absolute_url }}" class="btn btn-outline-primary btn-sm">View</a>
+                <form method="POST" action="{% url 'cart:add_to_cart' card.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-success btn-sm">Add to Cart</button>
+                </form>
+                <form method="POST" action="{% url 'wishlist:add_to_wishlist' card.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-danger btn-sm">♡</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
