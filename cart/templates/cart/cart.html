@@ -41,7 +41,6 @@
             <td>€{{ item.item_total }}</td>
             <td>
               <form method="post" action="{% url 'cart:remove_from_cart' item.card.id %}">
-
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-danger">🗑 Remove</button>
               </form>

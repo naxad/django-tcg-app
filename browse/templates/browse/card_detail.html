@@ -13,7 +13,8 @@
     <!-- Card Image -->
     <div class="col-lg-6 col-md-6 col-sm-12 mb-4 text-center">
       {% if card.image %}
-        <img src="{{ card.image.url }}" class="img-fluid rounded shadow" alt="{{ card.name }}">
+        <img src="{{ card.image.url }}" class="img-fluid rounded shadow detail-card-img" alt="{{ card.name }}">
+
       {% endif %}
     </div>
 
@@ -27,13 +28,13 @@
       <p><strong>Price:</strong> €{{ card.price }}</p>
 
       <!-- Cart + Wishlist -->
-      <form method="post" action="{% url 'add_to_cart' card.id %}">
+      <form method="post" action="{% url 'cart:add_to_cart' card.id %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-success me-2 mb-2">Add to Cart</button>
       </form>
 
       {% if user.is_authenticated %}
-        <form method="post" action="{% url 'toggle_wishlist' card.id %}">
+        <form method="post" action="{% url 'wishlist:toggle_wishlist' card.id %}">
           {% csrf_token %}
           {% if in_wishlist %}
             <button type="submit" class="btn btn-outline-danger mb-2">❤️ Remove from Wishlist</button>

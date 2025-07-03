@@ -182,31 +182,43 @@ footer {
 
 /* === Card styles === */
 .card-hover {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e0e0e0;
 }
 
 .card-hover:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
     z-index: 10;
 }
+
+
+.card-fixed {
+    max-width: 260px;
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
 
 .hover-overlay {
     opacity: 0;
     transition: opacity 0.3s ease;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 30%, transparent 100%);
-    color: #fff;
-    padding: 1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: white;
+    padding: 0.8rem 1rem;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 70%;
+    height: 60%;
     border-radius: 0 0 12px 12px;
-    pointer-events: auto;
-    z-index: 5;
+    pointer-events: none;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -389,6 +401,43 @@ footer {
     right: 10px;
 }
 
+.card-img-limited {
+    max-height: 320px;
+    object-fit: cover;
+}
+
+.wishlist-btn {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    padding: 0;
+    line-height: 1;
+    transition: background 0.2s ease;
+}
+
+.wishlist-btn:hover {
+    background: #ffecec;
+}
+
+
+
+
+.card-img-fixed {
+    max-height: 250px;
+    width: 100%;
+    object-fit: contain;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.detail-card-img {
+    max-height: 500px;
+    width: auto;
+    object-fit: contain;
+}
 
 .card-carousel img {
     width: 100%;

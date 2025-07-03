@@ -61,13 +61,6 @@ def checkout(request):
 
 
 
-def remove_from_cart(request, card_id):
-    cart = request.session.get('cart', [])
-    if card_id in cart:
-        cart.remove(card_id)
-        request.session['cart'] = cart
-    return redirect('cart:cart')
-
 @login_required
 def update_cart_quantity(request, card_id):
     if request.method == 'POST':
