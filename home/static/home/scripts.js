@@ -5,6 +5,31 @@ AOS.init({
     once: true
 });
 
+
+
+// Get CSRF token from cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrfToken = getCookie('csrftoken');
+
+
+
+
+
+
 // AJAX rating system
 $(document).ready(function () {
     $('.rating-stars .star').on('click', function () {
@@ -13,7 +38,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'POST',
-            url: '/rate-card/',
+            url: '/browse/rate_card/',
             data: {
                 card_id: cardId,
                 score: score,

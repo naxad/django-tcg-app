@@ -3,6 +3,39 @@
 {% block title %}Home - TCG Store{% endblock %}
 
 {% block content %}
+
+{% if banners %}
+<div id="homepageBannerCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {% for banner in banners %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{ banner.image.url }}" class="d-block w-100" alt="{{ banner.title }}" style="height: 450px; object-fit: cover;">
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+          <h2>{{ banner.title }}</h2>
+          {% if banner.subtitle %}<p>{{ banner.subtitle }}</p>{% endif %}
+          {% if banner.button_link %}
+            <a href="{{ banner.button_link }}" class="btn btn-primary">{{ banner.button_text }}</a>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#homepageBannerCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#homepageBannerCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+{% endif %}
+
+
+
+
+
+
+
 <h3 class="section-title">Recently Listed Cards</h3>
 
 <div class="carousel-wrapper fade-carousel">
@@ -12,9 +45,7 @@
     <div class="card-track">
       {% for item in carousel_items %}
         <div class="card-item">
-          <a href="{{ item.get_absolute_url }}">
-            <img src="{{ item.image.url }}" alt="{{ item.title }}">
-          </a>
+          <img src="{{ item.image.url }}" alt="{{ item.title }}">
           <div class="card-caption">{{ item.title }}</div>
         </div>
       {% endfor %}

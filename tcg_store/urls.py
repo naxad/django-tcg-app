@@ -31,7 +31,7 @@ urlpatterns = [
 
     path('cart/', include('cart.urls', namespace='cart')),
     path('dashboard/', include('dashboard.urls')),
-    path('', include('home.urls')), # all views are routed to the home app
+    path('', include('home.urls', namespace='home')), # all views are routed to the home app
     path('browse/', include('browse.urls')),
     path('contact/', include('contact.urls')),
     path('sell/', include('sell.urls')),

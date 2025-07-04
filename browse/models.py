@@ -28,6 +28,11 @@ class Card(models.Model):
         return f"{self.name} ({self.brand})"
     
 
+
+
+    
+    
+
     
 
 

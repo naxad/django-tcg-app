@@ -11,6 +11,6 @@ urlpatterns = [
    
     path('card/<int:pk>/', views.card_detail, name='card_detail'),
 
-    # AJAX rating
+    # for ajax star rating
     path('rate-card/', views.rate_card, name='rate_card'),
 ]
