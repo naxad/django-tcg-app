@@ -56,7 +56,7 @@
       </div>
       <div class="col-md-2 d-flex gap-2">
         <button type="submit" class="btn btn-primary flex-fill">Filter</button>
-        <a href="{% url 'browse' %}" class="btn btn-secondary flex-fill">Clear</a>
+        <a href="{% url 'browse:browse' %}" class="btn btn-secondary flex-fill">Clear</a>
       </div>
     </div>
   </form>
@@ -89,7 +89,7 @@
         <p class="mb-1"><strong>Price:</strong> €{{ card.price }}</p>
         <p class="mb-1">
           <strong>Average Rating:</strong>
-          {% with card.rating_set.all as ratings %}
+          {% with card.ratings.all as ratings %}
           {% if ratings %}
           {{ ratings|average_rating }}★ <small class="text-muted">({{ ratings|length }} user{{ ratings|pluralize }})</small>
           {% else %}
@@ -99,10 +99,19 @@
         </p>
 
         {% if user.is_authenticated %}
-        <div class="rating-stars mt-1" data-card="{{ card.id }}">
-          {% for i in "12345" %}
-          <span class="star text-warning fs-5 me-1" data-value="{{ i }}">&#9733;</span>
-          {% endfor %}
+        <div class="rating-stars">
+          {% if card.avg_rating %}
+            {% for i in "12345"|slice:":5" %}
+              {% if i <= card.avg_rating|floatformat:0 %}
+                <span class="star">&#9733;</span> {# ★ solid star #}
+              {% else %}
+                <span class="star">&#9734;</span> {# ☆ hollow star #}
+              {% endif %}
+            {% endfor %}
+            <span class="text-muted">({{ card.num_ratings }} user{{ card.num_ratings|pluralize }})</span>
+          {% else %}
+            <span class="text-muted">No ratings yet</span>
+          {% endif %}
         </div>
         {% endif %}
 
@@ -131,6 +140,6 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script src="{% static 'js/browse.js' %}"></script>
-{% endblock %}
+
+
+

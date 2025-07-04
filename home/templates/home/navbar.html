@@ -5,14 +5,14 @@
       <!-- Left group -->
       <div class="navbar-left d-flex align-items-center gap-3">
         <a class="navbar-brand" href="{% url 'home:home' %}">TCG Store</a>
-        <a class="nav-link" href="{% url 'browse' %}">Browse</a>
+        <a class="nav-link" href="{% url 'browse:browse' %}">Browse</a>
         <a class="nav-link" href="{% url 'contact' %}">Contact</a>
         <a class="nav-link" href="{% url 'sell' %}">Sell Your Card</a>
       </div>
 
       <!-- Center: Search -->
       <div class="navbar-center d-flex justify-content-center">
-        <form class="search-form" method="GET" action="{% url 'browse' %}">
+        <form class="search-form" method="GET" action="{% url 'browse:browse' %}">
           <input class="form-control me-2" type="search" name="q" placeholder="Search cards…" />
           <button class="search-btn" type="submit">🔍</button>
         </form>

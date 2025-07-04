@@ -1,31 +1,12 @@
-from django.shortcuts import render
-from .models import Card
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
 from django.http import JsonResponse
-
-
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth import update_session_auth_hash
-
-
-
-from userprofile.models import Rating
-from django.shortcuts import get_object_or_404
-
-
-
-from django.shortcuts import render
+from django.db.models import Avg
 from .models import Card
 from wishlist.models import WishlistItem
+from userprofile.models import Rating
 
-
-
-
-
-
-
+# Browse cards with filtering, sorting, and rating calculation
 def browse(request):
     query = request.GET.get('q')
     brand = request.GET.get('brand')
@@ -44,7 +25,7 @@ def browse(request):
         except ValueError:
             pass
 
-    # Sorting logic
+    # Sorting
     if sort == "price_asc":
         cards = cards.order_by("price")
     elif sort == "price_desc":
@@ -54,16 +35,24 @@ def browse(request):
     elif sort == "newest":
         cards = cards.order_by("-id")
 
+    # Get brands for filter
     brands = Card.objects.values_list('brand', flat=True).distinct()
 
+    # Wishlist cards for the user
     wishlist_cards = []
     if request.user.is_authenticated:
         wishlist_cards = Card.objects.filter(wishlisted_by__user=request.user)
 
+    # Toast message
     show_popup = None
     if 'cart_added' in request.session:
-        show_popup = request.session.pop('cart_added')  # Remove after showing once
+        show_popup = request.session.pop('cart_added')
 
+    # Attach rating info to each card
+    for card in cards:
+        avg = card.ratings.aggregate(avg=Avg('score'))['avg']
+        card.avg_rating = avg or 0
+        card.num_ratings = card.ratings.count()
 
     return render(request, 'browse/browse.html', {
         'cards': cards,
@@ -74,9 +63,7 @@ def browse(request):
     })
 
 
-
-
-
+# AJAX view to handle user rating a card
 @login_required
 def rate_card(request):
     if request.method == 'POST':
@@ -85,7 +72,7 @@ def rate_card(request):
 
         try:
             card = Card.objects.get(id=card_id)
-            rating, created = Rating.objects.update_or_create(
+            Rating.objects.update_or_create(
                 user=request.user,
                 card=card,
                 defaults={'score': score}
@@ -97,38 +84,34 @@ def rate_card(request):
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
-
-
+# Card detail view with wishlist and recently viewed tracking
 def card_detail(request, card_id):
     card = get_object_or_404(Card, id=card_id)
-    is_in_wishlist = False
 
-    # Check if the card is in the user's wishlist
+    # Check if it's in the wishlist
+    is_in_wishlist = False
     if request.user.is_authenticated:
         is_in_wishlist = WishlistItem.objects.filter(user=request.user, card=card).exists()
 
-    # --- Track Recently Viewed Cards ---
+    # Track recently viewed
     recently_viewed = request.session.get('recently_viewed', [])
-
     if card.id in recently_viewed:
-        recently_viewed.remove(card.id)  # Move to front if already there
-    recently_viewed.insert(0, card.id)   # Add current card to the front
-
-    # Limit to last 5 viewed
+        recently_viewed.remove(card.id)
+    recently_viewed.insert(0, card.id)
     request.session['recently_viewed'] = recently_viewed[:5]
-    # -----------------------------------
 
+    # Toast message
     show_popup = None
     if 'cart_added' in request.session:
         show_popup = request.session.pop('cart_added')
+
+    # Add rating info
+    avg = card.ratings.aggregate(avg=Avg('score'))['avg']
+    card.avg_rating = avg or 0
+    card.num_ratings = card.ratings.count()
 
     return render(request, 'browse/card_detail.html', {
         'card': card,
         'is_in_wishlist': is_in_wishlist,
         'show_popup': show_popup,
     })
-
-
-
-
-

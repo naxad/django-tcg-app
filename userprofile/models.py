@@ -4,8 +4,8 @@ from browse.models import Card
 
 # Create your models here.
 class Rating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,  related_name='ratings')
+    card = models.ForeignKey(Card, on_delete=models.CASCADE,  related_name='ratings')
     score = models.IntegerField()  # 1 to 5
 
     class Meta:

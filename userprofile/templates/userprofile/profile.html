@@ -37,7 +37,7 @@
             <ul class="list-group">
               {% for r in ratings %}
                 <li class="list-group-item">
-                  ⭐ {{ r.score }} for <a href="{% url 'card_detail' r.card.id %}">{{ r.card.name }}</a>
+                  ⭐ {{ r.score }} for <a href="{% url 'browse:card_detail' r.card.id %}">{{ r.card.name }}</a>
                 </li>
               {% endfor %}
             </ul>
@@ -57,7 +57,7 @@
             <ul class="list-group">
               {% for card in viewed_cards %}
                 <li class="list-group-item">
-                  <a href="{% url 'card_detail' card.id %}">{{ card.name }}</a> – €{{ card.price }}
+                  <a href="{% url 'browse:card_detail' card.id %}">{{ card.name }}</a> – €{{ card.price }}
                 </li>
               {% endfor %}
             </ul>
@@ -77,7 +77,7 @@
             <ul class="list-group">
               {% for card in wishlist %}
                 <li class="list-group-item">
-                  <a href="{% url 'card_detail' card.id %}">{{ card.name }}</a>
+                  <a href="{% url 'browse:card_detail' card.id %}">{{ card.name }}</a>
                 </li>
               {% endfor %}
             </ul>

@@ -514,3 +514,19 @@ footer {
     margin-top: 0.5rem;
     font-weight: 500;
 }
+
+
+.rating-stars {
+    position: relative;
+    z-index: 50;
+    cursor: pointer;
+    display: flex;
+    margin-top: 5px;
+}
+
+.rating-stars .star {
+    z-index: 9999;
+    pointer-events: auto;
+    cursor: pointer;
+    font-size: 20px;
+}

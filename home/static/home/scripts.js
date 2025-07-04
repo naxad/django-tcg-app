@@ -5,8 +5,6 @@ AOS.init({
     once: true
 });
 
-
-
 // Get CSRF token from cookie
 function getCookie(name) {
     let cookieValue = null;
@@ -23,41 +21,47 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const csrfToken = getCookie('csrftoken');
+// Use window.csrfToken if set; otherwise get from cookie
+var csrfToken = window.csrfToken || getCookie('csrftoken');
 
+// Star rating with fetch (native JS)
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.rating-stars .star').forEach(star => {
+        star.addEventListener('click', function () {
+            const score = this.dataset.value;
+            const cardId = this.parentElement.dataset.card;
 
+            console.log("⭐ Star clicked!");
+            console.log("Card ID:", cardId, "Score:", score);
 
-
-
-
-// AJAX rating system
-$(document).ready(function () {
-    $('.rating-stars .star').on('click', function () {
-        const score = $(this).data('value');
-        const cardId = $(this).parent().data('card');
-
-        $.ajax({
-            type: 'POST',
-            url: '/browse/rate_card/',
-            data: {
-                card_id: cardId,
-                score: score,
-                csrfmiddlewaretoken: csrfToken
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert('Rating submitted!');
-                    location.reload();
-                } else {
-                    alert('Error: ' + response.error);
-                }
-            }
+            fetch('/browse/rate-card/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: new URLSearchParams({
+                    card_id: cardId,
+                    score: score
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Rating submitted!');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(err => {
+                    console.error("Fetch error:", err);
+                });
         });
     });
 });
 
-
-
+// Modal image view
 document.addEventListener('DOMContentLoaded', function () {
     const imageElements = document.querySelectorAll('.card-img-clickable');
     const modal = new bootstrap.Modal(document.getElementById('imageModal'));
@@ -94,9 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     let scrollPos = 0;
-    const speed = 0.5; // Adjust speed here
+    const speed = 0.5;
     let manualScroll = false;
-    let manualTimeout;
 
     function loopScroll() {
         if (!manualScroll) {
@@ -116,6 +119,4 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     requestAnimationFrame(loopScroll);
-
-
 });

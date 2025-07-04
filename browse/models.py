@@ -20,8 +20,6 @@ class Card(models.Model):
     condition = models.CharField(max_length=50, blank=True)
     is_featured = models.BooleanField(default=False)
 
-    def get_absolute_url(self):
-        return reverse('card_detail', kwargs={'pk': self.pk})
 
 
     def __str__(self):

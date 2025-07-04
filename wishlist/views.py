@@ -38,4 +38,4 @@ def toggle_wishlist(request, card_id):
         # It already exists, so remove it
         wishlist_item.delete()
 
-    return redirect('browse')  # Adjust if needed to redirect to current page
+    return redirect('browse:browse')  # Adjust if needed to redirect to current page
