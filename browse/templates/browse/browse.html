@@ -89,18 +89,23 @@
 
         {% if user.is_authenticated %}
         <div class="rating-stars" data-card-id="{{ card.id }}">
-          {% for i in "12345" %}
-            <span class="star"
-                  data-score="{{ forloop.counter }}"
-                  data-card-id="{{ card.id }}"
-                  style="cursor: pointer;">
-              {% if forloop.counter <= card.avg_rating|floatformat:0 %}
-                &#9733;
-              {% else %}
-                &#9734;
-              {% endif %}
-            </span>
-          {% endfor %}
+          {% with avg=card.avg_rating %}
+            {% for i in "12345" %}
+              <span class="star"
+                    data-score="{{ forloop.counter }}"
+                    data-card-id="{{ card.id }}"
+                    style="cursor: pointer; color: {% if forloop.counter <= avg %}gold{% elif forloop.counter == avg|floatformat:0|add:'1' and avg|floatformat:1|stringformat:"s"|slice:'-1' == '5' %}gold{% else %}gray{% endif %}">
+                {% if forloop.counter <= avg %}
+                  &#9733; {# full star ★ #}
+                {% elif forloop.counter == avg|floatformat:0|add:'1' and avg|floatformat:1|stringformat:"s"|slice:'-1' == '5' %}
+                  &#189; {# half star ½ #}  ← you can also use custom CSS here
+                {% else %}
+                  &#9734; {# empty star ☆ #}
+                {% endif %}
+              </span>
+            {% endfor %}
+          {% endwith %}
+
           <span class="text-muted ms-2">({{ card.num_ratings }} rating{{ card.num_ratings|pluralize }})</span>
         </div>
         {% endif %}
