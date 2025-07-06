@@ -21,7 +21,7 @@
 
   {% if current_sort %}
   <p><span class="badge bg-info text-dark">
-    Sorted by: 
+    Sorted by:
     {% if current_sort == "price_asc" %}Price (Low → High){% endif %}
     {% if current_sort == "price_desc" %}Price (High → Low){% endif %}
     {% if current_sort == "rating_desc" %}Rating (High → Low){% endif %}
@@ -65,7 +65,6 @@
   <div class="browse-grid">
     {% for card in cards %}
     <div class="browse-card-container">
-      <!-- Wishlist -->
       {% if user.is_authenticated %}
       <form method="POST" action="{% url 'wishlist:toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
         {% csrf_token %}
@@ -87,31 +86,22 @@
         <p class="mb-1"><strong>Condition:</strong> {{ card.condition }}</p>
         <p class="mb-1"><strong>Release Date:</strong> {{ card.release_date|date:"F j, Y" }}</p>
         <p class="mb-1"><strong>Price:</strong> €{{ card.price }}</p>
-        <p class="mb-1">
-          <strong>Average Rating:</strong>
-          {% with card.ratings.all as ratings %}
-          {% if ratings %}
-          {{ ratings|average_rating }}★ <small class="text-muted">({{ ratings|length }} user{{ ratings|pluralize }})</small>
-          {% else %}
-          <span class="text-muted">No ratings yet</span>
-          {% endif %}
-          {% endwith %}
-        </p>
 
         {% if user.is_authenticated %}
-        <div class="rating-stars">
-          {% if card.avg_rating %}
-            {% for i in "12345"|slice:":5" %}
-              {% if i <= card.avg_rating|floatformat:0 %}
-                <span class="star">&#9733;</span> {# ★ solid star #}
+        <div class="rating-stars" data-card-id="{{ card.id }}">
+          {% for i in "12345" %}
+            <span class="star"
+                  data-score="{{ forloop.counter }}"
+                  data-card-id="{{ card.id }}"
+                  style="cursor: pointer;">
+              {% if forloop.counter <= card.avg_rating|floatformat:0 %}
+                &#9733;
               {% else %}
-                <span class="star">&#9734;</span> {# ☆ hollow star #}
+                &#9734;
               {% endif %}
-            {% endfor %}
-            <span class="text-muted">({{ card.num_ratings }} user{{ card.num_ratings|pluralize }})</span>
-          {% else %}
-            <span class="text-muted">No ratings yet</span>
-          {% endif %}
+            </span>
+          {% endfor %}
+          <span class="text-muted ms-2">({{ card.num_ratings }} rating{{ card.num_ratings|pluralize }})</span>
         </div>
         {% endif %}
 
@@ -139,7 +129,3 @@
   </div>
 </div>
 {% endblock %}
-
-
-
-

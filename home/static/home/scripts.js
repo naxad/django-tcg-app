@@ -24,42 +24,49 @@ function getCookie(name) {
 // Use window.csrfToken if set; otherwise get from cookie
 var csrfToken = window.csrfToken || getCookie('csrftoken');
 
-// Star rating with fetch (native JS)
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('.rating-stars .star').forEach(star => {
-        star.addEventListener('click', function () {
-            const score = this.dataset.value;
-            const cardId = this.parentElement.dataset.card;
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".rating-stars .star").forEach(star => {
+        star.addEventListener("click", function () {
+            const score = this.getAttribute("data-score");
+            const cardId = this.getAttribute("data-card-id");
 
-            console.log("⭐ Star clicked!");
-            console.log("Card ID:", cardId, "Score:", score);
-
-            fetch('/browse/rate-card/', {
-                method: 'POST',
+            fetch("/browse/rate/", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': csrfToken
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    "Content-Type": "application/x-www-form-urlencoded"
                 },
-                body: new URLSearchParams({
-                    card_id: cardId,
-                    score: score
-                })
+                body: `card_id=${cardId}&score=${score}`
             })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Rating submitted!');
-                        location.reload();
+                        alert("Thanks for your rating!");
+                        location.reload(); // Optionally reload to update stars
                     } else {
-                        alert('Error: ' + data.error);
+                        alert("Error: " + (data.error || "Something went wrong."));
                     }
-                })
-                .catch(err => {
-                    console.error("Fetch error:", err);
                 });
         });
     });
 });
+
+// Utility to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 
 // Modal image view
 document.addEventListener('DOMContentLoaded', function () {

@@ -186,7 +186,7 @@ footer {
     bottom: 0;
     width: 60px;
     z-index: 2;
-    pointer-events: none;
+
 }
 
 .fade-left {
@@ -256,7 +256,7 @@ footer {
     right: 0;
     height: 60%;
     border-radius: 0 0 12px 12px;
-    pointer-events: none;
+
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -274,21 +274,40 @@ footer {
     z-index: 20;
 }
 
+
+
+
 .rating-stars {
     position: relative;
-    z-index: 10;
+    display: flex;
+    gap: 2px;
     cursor: pointer;
+    z-index: 5;
+    margin-top: 0.3rem;
+    pointer-events: auto !important;
 }
 
 .rating-stars .star {
-    cursor: pointer;
-    transition: transform 0.1s ease;
+    font-size: 20px;
+    color: #f1c40f;
+    transition: transform 0.2s ease;
+    pointer-events: auto;
+    z-index: 5
 }
 
 .rating-stars .star:hover {
     transform: scale(1.2);
+}
+
+.star {
+    cursor: pointer;
+    font-size: 1.2rem;
     color: gold;
 }
+
+
+
+
 
 .card-img-top {
     display: block;
@@ -377,7 +396,8 @@ footer {
     transition: transform 0.2s ease, box-shadow 0.2s ease, height 0.3s ease;
     align-self: start;
     min-height: auto;
-    /* Let the height adjust naturally */
+    pointer-events: auto !important;
+
 }
 
 .browse-card-container:hover {
@@ -471,19 +491,36 @@ footer {
 
 
 .card-carousel {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    display: flex;
+
     gap: 1.5rem;
     padding: 1rem 0;
     overflow-x: hidden;
-    /* Prevent scrollbar */
+    position: relative;
+
 }
+
+
+@keyframes scroll-loop {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
 
 .card-track {
     display: flex;
     gap: 1rem;
-    scroll-snap-type: x mandatory;
+    animation: scroll-loop 30s linear infinite;
+
 }
+
+
+
 
 .card-item {
     flex: 0 0 auto;
@@ -513,20 +550,4 @@ footer {
 .card-caption {
     margin-top: 0.5rem;
     font-weight: 500;
-}
-
-
-.rating-stars {
-    position: relative;
-    z-index: 50;
-    cursor: pointer;
-    display: flex;
-    margin-top: 5px;
-}
-
-.rating-stars .star {
-    z-index: 9999;
-    pointer-events: auto;
-    cursor: pointer;
-    font-size: 20px;
 }
