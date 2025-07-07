@@ -58,6 +58,21 @@
         <button type="submit" class="btn btn-primary flex-fill">Filter</button>
         <a href="{% url 'browse:browse' %}" class="btn btn-secondary flex-fill">Clear</a>
       </div>
+      </div> <!-- closes the filter form's row -->
+      </form> <!-- closes the filter form -->
+
+      <!-- Now outside the form: Add Card Button -->
+      {% if user_is_staff %}
+        <div class="d-flex justify-content-end mb-3">
+          <button id="addCardBtn" type="button"
+                  class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 42px; height: 42px;" title="Add Card">
+            <span style="font-size: 25px; line-height: 0px; margin-bottom: 5px;">＋</span>
+          </button>
+        </div>
+      {% endif %}
+
+      </div>
     </div>
   </form>
 
@@ -133,4 +148,45 @@
     </div>
   </div>
 </div>
+
+
+
+<!-- Add Card Modal -->
+<div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCardModalLabel">Add New Card</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+      </div>
+      <form method="post" action="{% url 'browse:add_card' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body d-flex flex-column gap-3">
+          <input type="text" name="name" class="form-control" placeholder="Card Name" required>
+          <select name="brand" class="form-select" required>
+            <option value="">-- Select Brand --</option>
+            {% for b in brands %}
+              <option value="{{ b }}">{{ b }}</option>
+            {% endfor %}
+          </select>
+          <input type="text" name="condition" class="form-control" placeholder="Condition" required>
+          <input type="date" name="release_date" class="form-control" required>
+          <input type="number" step="0.01" name="price" class="form-control" placeholder="Price" required>
+          <input type="file" name="image" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
 {% endblock %}
+
+
+

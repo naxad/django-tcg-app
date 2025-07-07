@@ -60,7 +60,34 @@ def browse(request):
         'wishlist_cards': wishlist_cards,
         'current_sort': sort,
         'show_popup': show_popup,
+        'user_is_staff': request.user.is_staff,
+        
     })
+
+
+
+
+from django.contrib.auth.decorators import user_passes_test
+
+@user_passes_test(lambda u: u.is_staff)
+def add_card(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        brand = request.POST.get("brand")
+        condition = request.POST.get("condition")
+        release_date = request.POST.get("release_date")
+        price = request.POST.get("price")
+        image = request.FILES.get("image")
+
+        Card.objects.create(
+            name=name,
+            brand=brand,
+            condition=condition,
+            release_date=release_date,
+            price=price,
+            image=image,
+        )
+    return redirect("browse:browse")
 
 
 # AJAX view to handle user rating a card

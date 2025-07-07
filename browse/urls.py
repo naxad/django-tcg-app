@@ -13,4 +13,5 @@ urlpatterns = [
 
     # for ajax star rating
     path('rate/', views.rate_card, name='rate_card'),
+    path("add/", views.add_card, name="add_card"),
 ]

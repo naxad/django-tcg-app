@@ -120,3 +120,15 @@ window.addEventListener("load", function () {
         console.log(`✅ Cloned ${originalItems.length} items × ${cloneCount} = ${originalItems.length * cloneCount} cards.`);
     }, 100); // <- This small delay ensures DOM rendering is complete
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const addCardBtn = document.getElementById('addCardBtn');
+    const addCardModalEl = document.getElementById('addCardModal');
+    if (addCardBtn && addCardModalEl) {
+        const addCardModal = new bootstrap.Modal(addCardModalEl);
+
+        addCardBtn.addEventListener('click', () => {
+            addCardModal.show();
+        });
+    }
+})
