@@ -26,7 +26,7 @@
 }
 
 .navbar-left {
-    gap: 1.5rem;
+    gap: 2rem;
     flex: 0 1 auto;
     min-width: 150px;
 }
@@ -34,12 +34,12 @@
 .navbar-center {
     flex-grow: 1;
     justify-content: center;
-    min-width: 200px;
+    min-width: 250px;
 }
 
 .navbar-right {
     justify-content: flex-end;
-    gap: 1rem;
+    gap: 2rem;
     flex: 0 1 auto;
     min-width: 150px;
     flex-wrap: nowrap;
@@ -532,6 +532,15 @@ footer {
     padding: 0.5rem;
     text-align: center;
 }
+
+#homepageBannerCarousel .carousel-inner {
+    /* to round the top carousel edges */
+    border-radius: 1.25rem;
+
+    overflow: hidden;
+}
+
+
 
 
 .section-title {
