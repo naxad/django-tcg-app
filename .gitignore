@@ -4,19 +4,14 @@ __pycache__/
 *.sqlite3
 *.log
 
-# Django
-db.sqlite3
-/staticfiles/
-media/
+
+
 
 # VSCode
 .vscode/
 
-# Environment
-.env
-venv/
-env/
-*.env
+
+
 
 # OS
 .DS_Store
