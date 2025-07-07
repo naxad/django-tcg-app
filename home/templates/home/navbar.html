@@ -2,55 +2,62 @@
 
 <!-- Outer centering wrapper -->
 <div class="d-flex justify-content-center pt-4">
-  <!-- Inner container with logo + navbar aligned -->
-  <div class="d-flex align-items-center gap-4" style="max-width: 1500px;">
+  <!-- Full-width inner wrapper -->
+  <div class="d-flex align-items-center" style="max-width: 1500px; width: 100%; padding: 0 30px;">
     
-    <!-- Logo -->
-    <a href="{% url 'home:home' %}" class="logo-link d-flex align-items-center">
-      <img src="{% static 'home/logo.png' %}" alt="Home" height="75" style="object-fit: contain;">
-    </a>
+    <!-- Logo area -->
 
-    <!-- Navbar pill -->
-    <div class="navbar-container">
-      <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid justify-content-between align-items-center">
-
-          <!-- Left group -->
-          <div class="navbar-left d-flex align-items-center gap-3">
-            <a class="nav-link" href="{% url 'browse:browse' %}">Browse</a>
-            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-            <a class="nav-link" href="{% url 'sell' %}">Sell Your Card</a>
-          </div>
-
-          <!-- Center: Search -->
-          <div class="navbar-center d-flex justify-content-center">
-            <form class="search-form d-flex" method="GET" action="{% url 'browse:browse' %}">
-              <input class="form-control me-2" type="search" name="q" placeholder="Search cards…" />
-              <button class="search-btn btn btn-light" type="submit">🔍</button>
-            </form>
-          </div>
-
-          <!-- Right group -->
-          <div class="navbar-right d-flex align-items-center gap-3">
-            <a class="nav-link" href="{% url 'cart:cart' %}">🛒 Cart</a>
-
-            {% if user.is_authenticated %}
-              {% if user.is_superuser %}
-                <a class="nav-link" href="/admin/">🛠️ Admin Panel</a>
-              {% endif %}
-              <a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a>
-              <form method="post" action="{% url 'accounts:logout' %}" class="logout-form m-0">
-                {% csrf_token %}
-                <button type="submit" class="nav-link">Logout</button>
-              </form>
-            {% else %}
-              <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
-              <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
-            {% endif %}
-          </div>
-
-        </div>
-      </nav>
+    <div class="me-4" style="min-width: 90px; margin-left: -30px;">
+      <a href="{% url 'home:home' %}" class="logo-link d-flex align-items-center">
+        <img src="{% static 'home/logo.png' %}" alt="Home" height="95" style="object-fit: contain;">
+      </a>
     </div>
+
+
+    <!-- Navbar pill centered in remaining space -->
+    <div class="flex-grow-1 d-flex justify-content-center">
+      <div class="navbar-container">
+        <nav class="navbar navbar-expand-lg">
+          <div class="container-fluid justify-content-between align-items-center">
+
+            <!-- Left group -->
+            <div class="navbar-left d-flex align-items-center gap-3">
+              <a class="nav-link" href="{% url 'browse:browse' %}">Browse</a>
+              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+              <a class="nav-link" href="{% url 'sell' %}">Sell Your Card</a>
+            </div>
+
+            <!-- Center: Search -->
+            <div class="navbar-center d-flex justify-content-center">
+              <form class="search-form d-flex" method="GET" action="{% url 'browse:browse' %}">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search cards…" />
+                <button class="search-btn btn btn-light" type="submit">🔍</button>
+              </form>
+            </div>
+
+            <!-- Right group -->
+            <div class="navbar-right d-flex align-items-center gap-3">
+              <a class="nav-link" href="{% url 'cart:cart' %}">🛒 Cart</a>
+
+              {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                  <a class="nav-link" href="/admin/">🛠️ Admin Panel</a>
+                {% endif %}
+                <a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a>
+                <form method="post" action="{% url 'accounts:logout' %}" class="logout-form m-0">
+                  {% csrf_token %}
+                  <button type="submit" class="nav-link">Logout</button>
+                </form>
+              {% else %}
+                <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
+              {% endif %}
+            </div>
+
+          </div>
+        </nav>
+      </div>
+    </div>
+
   </div>
 </div>
