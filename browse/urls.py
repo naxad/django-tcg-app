@@ -13,5 +13,10 @@ urlpatterns = [
 
     # for ajax star rating
     path('rate/', views.rate_card, name='rate_card'),
+
+
+
+    #this is for staff members to be able to add and delete cards from the browser section
+    path('delete/<int:card_id>/', views.delete_card, name='delete_card'),
     path("add/", views.add_card, name="add_card"),
 ]

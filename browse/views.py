@@ -5,6 +5,7 @@ from django.db.models import Avg
 from .models import Card
 from wishlist.models import WishlistItem
 from userprofile.models import Rating
+from django.contrib.admin.views.decorators import staff_member_required
 
 # Browse cards with filtering, sorting, and rating calculation
 def browse(request):
@@ -109,6 +110,21 @@ def rate_card(request):
             return JsonResponse({'success': False, 'error': 'Card not found'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
+
+
+
+@staff_member_required
+def delete_card(request, card_id):
+    if request.method == "POST":
+        card = get_object_or_404(Card, id=card_id)
+        card.delete()
+        return redirect('browse:browse')
+
+
+
+
 
 
 # Card detail view with wishlist and recently viewed tracking

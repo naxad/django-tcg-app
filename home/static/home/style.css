@@ -109,14 +109,14 @@
     background: none;
     border: none;
     font-size: 2rem;
-    color: #7f8c8d;
+    color: #ffffff;
     cursor: pointer;
     z-index: 2;
     transition: color 0.3s, transform 0.2s;
     border-radius: 20%;
     /* make it circular */
-    background-color: white;
-    border-radius: 50%;
+
+    border-radius: 30%;
     padding: 0;
 }
 
