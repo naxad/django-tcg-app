@@ -1,13 +1,28 @@
-{% extends 'home/base.html' %}
-
-{% block title %}Login{% endblock %}
+{% extends "home/base.html" %}
+{% load static %}
 
 {% block content %}
-<h2>Login</h2>
-
-<form method="post" action="{% url 'accounts:login' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
+<div class="auth-container">
+  <div class="auth-box">
+    <h3 class="mb-4 text-center">Login</h3>
+    <form method="post" action="{% url 'accounts:login' %}" class="auth-form">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary w-100">Log In</button>
+    </form>
+    <hr>
+    <div class="text-center">
+      <p class="mb-0">Don't have an account?</p>
+      <a href="{% url 'accounts:register' %}" class="btn btn-outline-secondary mt-2">Create an Account</a>
+    </div>
+  </div>
+</div>
 {% endblock %}

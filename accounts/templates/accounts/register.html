@@ -1,13 +1,28 @@
-{% extends 'home/base.html' %} 
-
-{% block title %}Register{% endblock %} 
+{% extends "home/base.html" %}
+{% load static %}
 
 {% block content %}
-<h2>Create Account</h2>
-
-<form method="post" action="{% url 'accounts:register' %}">
-  {% csrf_token %} 
-  {{ form.as_p }}
-  <button type="submit">Register</button>
-</form>
+<div class="auth-container">
+  <div class="auth-box">
+    <h3 class="mb-4 text-center">Create Account</h3>
+    <form method="post" action="{% url 'accounts:register' %}" class="auth-form">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-success w-100">Register</button>
+    </form>
+    <hr>
+    <div class="text-center">
+      <p class="mb-0">Already have an account?</p>
+      <a href="{% url 'accounts:login' %}" class="btn btn-outline-secondary mt-2">Log In</a>
+    </div>
+  </div>
+</div>
 {% endblock %}
