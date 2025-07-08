@@ -5,7 +5,8 @@ __pycache__/
 *.log
 
 
-
+# i don't need to track this in Git
+/staticfiles/
 
 # VSCode
 .vscode/
