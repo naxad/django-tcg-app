@@ -31,37 +31,41 @@ def profile(request):
     return render(request, 'userprofile/profile.html')
 
 
+from .forms import UserUpdateForm, UserProfileForm
+
+from userprofile.models import UserProfile
+
 @login_required
 def profile_view(request):
     user = request.user
 
-    # Handle profile update form
+    # ✅ Ensure user has a profile or create one if not
+    profile, created = UserProfile.objects.get_or_create(user=user)
+
     if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
+        user_form = UserUpdateForm(request.POST, instance=user)
+        profile_form = UserProfileForm(request.POST, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
             messages.success(request, 'Profile updated successfully!')
             return redirect('profile')
     else:
-        form = UserUpdateForm(instance=user)
+        user_form = UserUpdateForm(instance=user)
+        profile_form = UserProfileForm(instance=profile)
 
-    # Ratings
     ratings = Rating.objects.filter(user=user)
-
-    # Wishlist
     wishlist_items = WishlistItem.objects.filter(user=user)
     wishlist_cards = [item.card for item in wishlist_items]
-
-    # Recently viewed
     viewed_ids = request.session.get('recently_viewed', [])
     viewed_cards = list(Card.objects.filter(id__in=viewed_ids))
     viewed_cards.sort(key=lambda card: viewed_ids.index(card.id))
-
-    # Purchases
     purchases = Purchase.objects.filter(user=user).order_by('-purchased_at')
 
     context = {
-        'form': form,
+        'form': user_form,
+        'profile_form': profile_form,
         'ratings': ratings,
         'wishlist': wishlist_cards,
         'viewed_cards': viewed_cards,
@@ -69,6 +73,7 @@ def profile_view(request):
     }
 
     return render(request, 'userprofile/profile.html', context)
+
 
 @login_required
 def edit_profile(request):
