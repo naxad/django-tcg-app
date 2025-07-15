@@ -32,6 +32,12 @@ var csrfToken = window.csrfToken || getCookie('csrftoken');
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".rating-stars .star").forEach(star => {
         star.addEventListener("click", function () {
+            // Prevent rating if not logged in
+            if (!document.body.classList.contains("user-logged-in")) {
+                alert("Please log in to rate cards!");
+                return;
+            }
+
             const score = this.getAttribute("data-score");
             const cardId = this.getAttribute("data-card-id");
 
@@ -47,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(data => {
                     if (data.success) {
                         alert("Thanks for your rating!");
-                        location.reload(); // Optionally reload to update stars
+                        location.reload();
                     } else {
                         alert("Error: " + (data.error || "Something went wrong."));
                     }
@@ -55,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
 
 // Utility to get CSRF token
 function getCookie(name) {

@@ -58,28 +58,26 @@
         <button type="submit" class="btn btn-primary flex-fill">Filter</button>
         <a href="{% url 'browse:browse' %}" class="btn btn-secondary flex-fill">Clear</a>
       </div>
-      </div> <!-- closes the filter form's row -->
-      </form> <!-- closes the filter form -->
-
-      <!-- Now outside the form: Add Card Button -->
-      {% if user_is_staff %}
-        <div class="d-flex justify-content-end mb-3">
-          <button id="addCardBtn" type="button"
-                  class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
-                  style="width: 42px; height: 42px;" title="Add Card">
-            <span style="font-size: 25px; line-height: 0px; margin-bottom: 5px;">＋</span>
-          </button>
-        </div>
-      {% endif %}
-
       </div>
-    </div>
   </form>
+
+  <!-- Staff-only Add Card Button -->
+  {% if user_is_staff %}
+  <div class="d-flex justify-content-end mb-3">
+    <button id="addCardBtn" type="button"
+            class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
+            style="width: 42px; height: 42px;" title="Add Card">
+      <span style="font-size: 25px; line-height: 0px; margin-bottom: 5px;">＋</span>
+    </button>
+  </div>
+  {% endif %}
 
   {% if cards %}
   <div class="browse-grid">
     {% for card in cards %}
     <div class="browse-card-container">
+
+      <!-- Wishlist Button -->
       {% if user.is_authenticated %}
       <form method="POST" action="{% url 'wishlist:toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
         {% csrf_token %}
@@ -89,12 +87,14 @@
       </form>
       {% endif %}
 
+      <!-- Card Image -->
       <div class="browse-card-img">
         {% if card.image %}
         <img src="{{ card.image.url }}" alt="{{ card.name }}" class="img-fluid rounded card-img-clickable" data-img="{{ card.image.url }}">
         {% endif %}
       </div>
 
+      <!-- Card Details -->
       <div class="browse-card-details flex-grow-1">
         <h5 class="mb-1">{{ card.name }}</h5>
         <p class="mb-1"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
@@ -102,35 +102,35 @@
         <p class="mb-1"><strong>Release Date:</strong> {{ card.release_date|date:"F j, Y" }}</p>
         <p class="mb-1"><strong>Price:</strong> €{{ card.price }}</p>
 
-        {% if user.is_authenticated %}
+        <!-- Always show rating stars -->
         <div class="rating-stars" data-card-id="{{ card.id }}">
           {% with avg=card.avg_rating %}
             {% for i in "12345" %}
               <span class="star"
                     data-score="{{ forloop.counter }}"
                     data-card-id="{{ card.id }}"
-                    style="cursor: pointer; color: {% if forloop.counter <= avg %}gold{% elif forloop.counter == avg|floatformat:0|add:'1' and avg|floatformat:1|stringformat:"s"|slice:'-1' == '5' %}gold{% else %}gray{% endif %}">
+                    style="color: {% if forloop.counter <= avg %}gold{% else %}gray{% endif %};
+                           {% if user.is_authenticated %}cursor: pointer;{% else %}cursor: default;{% endif %}">
                 {% if forloop.counter <= avg %}
-                  &#9733; {# full star ★ #}
-                {% elif forloop.counter == avg|floatformat:0|add:'1' and avg|floatformat:1|stringformat:"s"|slice:'-1' == '5' %}
-                  &#189; {# half star ½ #}  ← you can also use custom CSS here
+                  &#9733;
                 {% else %}
-                  &#9734; {# empty star ☆ #}
+                  &#9734;
                 {% endif %}
               </span>
             {% endfor %}
           {% endwith %}
-
           <span class="text-muted ms-2">({{ card.num_ratings }} rating{{ card.num_ratings|pluralize }})</span>
         </div>
+
+        {% if not user.is_authenticated %}
+        <small class="text-muted">Login to rate</small>
         {% endif %}
 
+        <!-- Buttons -->
         {% if user.is_staff %}
           <form method="post" action="{% url 'browse:delete_card' card.id %}" onsubmit="return confirm('Are you sure you want to delete this card?');">
             {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-danger mt-2">
-              🗑 Remove
-            </button>
+            <button type="submit" class="btn btn-sm btn-danger mt-2">🗑 Remove</button>
           </form>
         {% else %}
           <form method="post" action="{% url 'cart:add_to_cart' card.id %}" class="add-to-cart-form">
@@ -138,7 +138,6 @@
             <button type="submit" class="btn btn-sm btn-success mt-2">🛒 Add to Cart</button>
           </form>
         {% endif %}
-
       </div>
     </div>
     {% endfor %}
@@ -159,8 +158,6 @@
   </div>
 </div>
 
-
-
 <!-- Add Card Modal -->
 <div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -168,7 +165,6 @@
       <div class="modal-header">
         <h5 class="modal-title" id="addCardModalLabel">Add New Card</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
       </div>
       <form method="post" action="{% url 'browse:add_card' %}" enctype="multipart/form-data">
         {% csrf_token %}
@@ -192,11 +188,4 @@
     </div>
   </div>
 </div>
-
-
-
-
 {% endblock %}
-
-
-
