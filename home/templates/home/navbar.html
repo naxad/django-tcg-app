@@ -1,33 +1,33 @@
 {% load static %}
 
-<!-- Outer centering wrapper -->
+
 <div class="d-flex justify-content-center pt-4">
-  <!-- Full-width inner wrapper -->
+
   <div class="d-flex align-items-center" style="max-width: 1500px; width: 100%; padding: 0 30px;">
     
-    <!-- Logo area -->
+    <!-- logo area -->
 
-    <div class="navbar-brand ms-3" style="min-width: 90px; margin-left: -30px;">
+    <div class="navbar-brand ms-3">
       <a href="{% url 'home:home' %}" class="logo-link d-flex align-items-center">
-        <img src="{% static 'logo.png' %}" alt="Home" height="95" style="object-fit: contain;">
+        <img src="{% static 'logo.png' %}" alt="Home" height="95" style="object-fit: contain; margin-left: -60px; ">
       </a>
     </div>
 
 
-    <!-- Navbar pill centered in remaining space -->
+  
     <div class="flex-grow-1 d-flex justify-content-center">
       <div class="navbar-container">
         <nav class="navbar navbar-expand-lg">
           <div class="container-fluid justify-content-between align-items-center">
 
-            <!-- Left group -->
+            <!-- left group -->
             <div class="navbar-left d-flex align-items-center gap-3">
               <a class="nav-link" href="{% url 'browse:browse' %}">Browse</a>
               <a class="nav-link" href="{% url 'contact' %}">Contact</a>
               <a class="nav-link" href="{% url 'sell' %}">Sell Your Card</a>
             </div>
 
-            <!-- Center: Search -->
+            <!-- ccenter is the search -->
             <div class="navbar-center d-flex justify-content-center">
               <form class="search-form d-flex" method="GET" action="{% url 'browse:browse' %}">
                 <input class="form-control me-2" type="search" name="q" placeholder="Search cards…" />
@@ -35,7 +35,7 @@
               </form>
             </div>
 
-            <!-- Right group -->
+            <!-- right group -->
             <div class="navbar-right d-flex align-items-center gap-3">
               <a class="nav-link" href="{% url 'cart:cart' %}">🛒 Cart</a>
 
