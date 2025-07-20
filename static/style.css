@@ -614,3 +614,20 @@ footer {
     margin-top: 0.5rem;
     font-weight: 500;
 }
+
+@media (max-width: 991px) {
+    .navbar img {
+        height: 50px;
+        /* shrink logo */
+    }
+
+    .navbar-nav {
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .search-form {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
