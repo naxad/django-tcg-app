@@ -32,12 +32,6 @@ var csrfToken = window.csrfToken || getCookie('csrftoken');
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".rating-stars .star").forEach(star => {
         star.addEventListener("click", function () {
-            // Prevent rating if not logged in
-            if (!document.body.classList.contains("user-logged-in")) {
-                alert("Please log in to rate cards!");
-                return;
-            }
-
             const score = this.getAttribute("data-score");
             const cardId = this.getAttribute("data-card-id");
 
@@ -49,15 +43,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: `card_id=${cardId}&score=${score}`
             })
-                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 401) {
+                        alert("Please log in to rate cards!");
+                        return null;
+                    }
+                    return res.json();
+                })
                 .then(data => {
-                    if (data.success) {
+                    if (data && data.success) {
                         alert("Thanks for your rating!");
                         location.reload();
-                    } else {
+                    } else if (data) {
                         alert("Error: " + (data.error || "Something went wrong."));
                     }
-                });
+                })
+                .catch(() => alert("Network error. Please try again."));
         });
     });
 });
