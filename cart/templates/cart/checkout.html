@@ -1,10 +1,73 @@
 {% extends 'home/base.html' %}
-
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2>Checkout</h2>
-  <p>This is where you’ll finalize your order. (Coming soon!)</p>
+<div class="container mt-5" data-aos="fade-in">
+  <h2 class="mb-4">Checkout</h2>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-header"><strong>Order Summary</strong></div>
+        <div class="card-body">
+          <table class="table align-middle">
+            <thead>
+              <tr><th>Item</th><th class="text-center">Qty</th><th class="text-end">Price</th></tr>
+            </thead>
+            <tbody>
+              {% for it in order.items.all %}
+              <tr>
+                <td>{{ it.name }}</td>
+                <td class="text-center">{{ it.quantity }}</td>
+                <td class="text-end">€{{ it.unit_price }}</td>
+              </tr>
+              {% endfor %}
+              <tr class="table-light">
+                <td colspan="2" class="text-end"><strong>Total</strong></td>
+                <td class="text-end"><strong>€{{ order.total }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <a href="{% url 'cart:cart' %}" class="btn btn-outline-secondary">Back to cart</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-header"><strong>Pay Securely</strong></div>
+        <div class="card-body d-grid gap-3">
+          <!-- Stripe -->
+          <button id="pay-stripe" class="btn btn-dark w-100">Pay with Stripe</button>
+          <!-- PayPal -->
+          <div id="paypal-button-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById('pay-stripe').addEventListener('click', async () => {
+    const res = await fetch("{% url 'cart:stripe_checkout' %}", {method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'}});
+    const data = await res.json();
+    if (data.url) window.location = data.url;
+  });
+</script>
+<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=EUR"></script>
+<script>
+  (async function(){
+    const res = await fetch("{% url 'cart:paypal_create' %}", {method:'POST', headers:{'X-CSRFToken':'{{ csrf_token }}'}});
+    const {id} = await res.json();
+    paypal.Buttons({
+      createOrder: () => id,
+      onApprove: async () => {
+        const r = await fetch("{% url 'cart:paypal_capture' order_id='__' %}".replace('__', id), {method:'POST'});
+        if (r.ok) window.location = "{% url 'cart:thank_you' %}";
+      }
+    }).render('#paypal-button-container');
+  })();
+</script>
 {% endblock %}
