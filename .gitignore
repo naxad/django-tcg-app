@@ -11,6 +11,7 @@ __pycache__/
 # VSCode
 .vscode/
 
+#ignore these for the keys
 .env
 main.env
 
