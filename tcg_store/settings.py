@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'dashboard',
     'wishlist',
-
+    'orders',
     'sell',
     'cart',
     'home',
