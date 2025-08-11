@@ -1,0 +1,71 @@
+{% extends 'home/base.html' %}
+{% block title %}Order #{{ order.id }}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Order #{{ order.id }}</h2>
+  <p class="text-muted">Placed {{ order.created_at|date:"M d, Y H:i" }}</p>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-header"><strong>Items</strong></div>
+        <div class="card-body">
+          <table class="table align-middle">
+            <thead><tr><th>Item</th><th class="text-center">Qty</th><th class="text-end">Price</th></tr></thead>
+            <tbody>
+              {% for it in order.items.all %}
+              <tr>
+                <td>{{ it.name }}</td>
+                <td class="text-center">{{ it.quantity }}</td>
+                <td class="text-end">€{{ it.unit_price }}</td>
+              </tr>
+              {% endfor %}
+              <tr class="table-light">
+                <td colspan="2" class="text-end"><strong>Total</strong></td>
+                <td class="text-end"><strong>€{{ order.total }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header"><strong>Status</strong></div>
+        <div class="card-body">
+          {% if order.status == 'paid' %}
+            <span class="badge bg-success">Paid</span>
+          {% elif order.status == 'pending' %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% elif order.status == 'failed' %}
+            <span class="badge bg-danger">Failed</span>
+          {% else %}
+            <span class="badge bg-secondary">{{ order.status|title }}</span>
+          {% endif %}
+          <div class="text-muted mt-2">Gateway: {{ order.gateway|default:"-" }}</div>
+          {% if order.paid_at %}<div class="text-muted">Paid: {{ order.paid_at|date:"M d, Y H:i" }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-header"><strong>Shipping</strong></div>
+        <div class="card-body">
+          {% if order.shipping_line1 %}
+            <div class="fw-semibold">{{ order.shipping_name }}</div>
+            <div class="small text-muted">
+              {{ order.shipping_line1 }}{% if order.shipping_line2 %}, {{ order.shipping_line2 }}{% endif %}<br>
+              {{ order.shipping_city }} {{ order.shipping_postal_code }}, {{ order.shipping_country }}
+            </div>
+            {% if order.shipping_phone %}<div class="small text-muted mt-1">☎ {{ order.shipping_phone }}</div>{% endif %}
+          {% else %}
+            <div class="text-muted">No shipping address on this order.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="{% url 'profile' %}#tab-orders" class="btn btn-outline-secondary mt-3">Back to profile</a>
+</div>
+{% endblock %}

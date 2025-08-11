@@ -1,16 +1,75 @@
 {% extends 'home/base.html' %}
+{% load static %}
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
 <div class="container mt-5" data-aos="fade-in">
   <h2 class="mb-4">Checkout</h2>
 
+  <!-- helper for JS guard -->
+  <div id="checkout-root" data-shipping-ready="{{ shipping_ready|yesno:'1,0' }}"></div>
+
   <div class="row g-4">
     <div class="col-lg-7">
+
+      <!-- Shipping address -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header"><strong>Shipping address</strong></div>
+        <div class="card-body">
+          {% if shipping_ready and order.shipping_line1 %}
+            <div class="alert alert-success mb-3">
+              Using: <strong>{{ order.shipping_name }}</strong>,
+              {{ order.shipping_line1 }}{% if order.shipping_line2 %}, {{ order.shipping_line2 }}{% endif %},
+              {{ order.shipping_city }} {{ order.shipping_postal_code }}, {{ order.shipping_country }}
+              {% if order.shipping_phone %}<span class="ms-2">• ☎ {{ order.shipping_phone }}</span>{% endif %}
+            </div>
+          {% endif %}
+
+          {% if addresses %}
+            <form method="post" class="d-grid gap-2">
+              {% csrf_token %}
+              {% for a in addresses %}
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="address_id"
+                    id="addr{{ a.id }}"
+                    value="{{ a.id }}"
+                    {% if order.shipping_address and order.shipping_address.id == a.id %}
+                      checked
+                    {% elif not order.shipping_address and a.is_default %}
+                      checked
+                    {% endif %}
+                  >
+                  <label class="form-check-label" for="addr{{ a.id }}">
+                    <div class="fw-semibold">
+                      {{ a.full_name }}
+                      {% if a.is_default %}<span class="badge bg-secondary ms-1">Default</span>{% endif %}
+                    </div>
+                    <div class="small text-muted">
+                      {{ a.line1 }}{% if a.line2 %}, {{ a.line2 }}{% endif %}, {{ a.city }} {{ a.postal_code }}, {{ a.country }}
+                    </div>
+                    {% if a.phone %}<div class="small text-muted">☎ {{ a.phone }}</div>{% endif %}
+                  </label>
+                </div>
+                {% if not forloop.last %}<hr class="my-2">{% endif %}
+              {% endfor %}
+              <button class="btn btn-outline-primary" type="submit">Use this address</button>
+              <div class="form-text">Need a new address? Add it in <a href="{% url 'profile' %}#tab-profile">Edit profile</a>.</div>
+            </form>
+          {% else %}
+            <div class="alert alert-warning mb-2">No saved addresses yet.</div>
+            <p class="mb-0">Go to <a href="{% url 'profile' %}#tab-profile">Edit profile</a> to add one, then return here.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Order Summary -->
       <div class="card shadow-sm">
         <div class="card-header"><strong>Order Summary</strong></div>
         <div class="card-body">
-          <table class="table align-middle">
+          <table class="table align-middle mb-0">
             <thead>
               <tr><th>Item</th><th class="text-center">Qty</th><th class="text-end">Price</th></tr>
             </thead>
@@ -28,7 +87,7 @@
               </tr>
             </tbody>
           </table>
-          <a href="{% url 'cart:cart' %}" class="btn btn-outline-secondary">Back to cart</a>
+          <a href="{% url 'cart:cart' %}" class="btn btn-outline-secondary mt-3">Back to cart</a>
         </div>
       </div>
     </div>
@@ -37,10 +96,14 @@
       <div class="card shadow-sm">
         <div class="card-header"><strong>Pay Securely</strong></div>
         <div class="card-body d-grid gap-3">
-          <!-- Stripe -->
-          <button id="pay-stripe" class="btn btn-dark w-100">Pay with Stripe</button>
-          <!-- PayPal -->
-          <div id="paypal-button-container"></div>
+          {% if shipping_ready %}
+            <!-- Stripe -->
+            <button id="pay-stripe" class="btn btn-dark w-100">Pay with Stripe</button>
+            <!-- PayPal -->
+            <div id="paypal-button-container"></div>
+          {% else %}
+            <div class="alert alert-warning mb-0">Please select a shipping address first.</div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -49,25 +112,21 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-  document.getElementById('pay-stripe').addEventListener('click', async () => {
-    const res = await fetch("{% url 'cart:stripe_checkout' %}", {method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'}});
-    const data = await res.json();
-    if (data.url) window.location = data.url;
-  });
-</script>
-<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=EUR"></script>
-<script>
-  (async function(){
-    const res = await fetch("{% url 'cart:paypal_create' %}", {method:'POST', headers:{'X-CSRFToken':'{{ csrf_token }}'}});
-    const {id} = await res.json();
-    paypal.Buttons({
-      createOrder: () => id,
-      onApprove: async () => {
-        const r = await fetch("{% url 'cart:paypal_capture' order_id='__' %}".replace('__', id), {method:'POST'});
-        if (r.ok) window.location = "{% url 'cart:thank_you' %}";
-      }
-    }).render('#paypal-button-container');
-  })();
-</script>
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=EUR"></script>
+
+  <!-- Your global scripts bundle -->
+  <script src="{% static 'scripts.js' %}"></script>
+
+  <!-- Initialize checkout JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      window.initCheckout({
+        stripeUrl: "{% url 'cart:stripe_checkout' %}",
+        paypalCreateUrl: "{% url 'cart:paypal_create' %}",
+        paypalCaptureUrl: "{% url 'cart:paypal_capture' order_id='__ORDER_ID__' %}",
+        thankYouUrl: "{% url 'cart:thank_you' %}"
+      });
+    });
+  </script>
 {% endblock %}

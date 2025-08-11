@@ -8,6 +8,9 @@ urlpatterns = [
     path('', views.profile_view, name='profile'),
     
     path('profile/edit/', views.edit_profile, name='edit_profile'),
-    path('profile/dashboard/view/', views.profile_dashboard_view, name='dashboard_view')
+    path('profile/dashboard/view/', views.profile_dashboard_view, name='dashboard_view'),
+    path('address/<int:pk>/default/', views.address_set_default, name='address_set_default'),
+    path('address/<int:pk>/delete/', views.address_delete, name='address_delete'),
+
    
 ]

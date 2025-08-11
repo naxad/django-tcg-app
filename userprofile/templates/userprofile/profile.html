@@ -64,7 +64,10 @@
             {% for o in recent_orders %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                <div class="fw-semibold">Order #{{ o.id }}</div>
+                <div class="fw-semibold">
+                  <a href="{% url 'orders:detail' o.id %}">Order #{{ o.id }}</a>
+                </div>
+
                 <div class="text-muted small">{{ o.created_at|date:"M d, Y H:i" }}</div>
                 <div class="mt-1">
                   {% if o.status == 'paid' %}
@@ -81,7 +84,6 @@
               </div>
               <div class="text-end">
                 <div class="fw-semibold">€{{ o.total }}</div>
-                <!-- quick actions could go here later (view details, reorder, etc.) -->
               </div>
             </li>
             {% endfor %}
@@ -91,7 +93,6 @@
         <p class="text-muted">You have no orders yet.</p>
       {% endif %}
 
-      <!-- Optional: show purchase history items you already track -->
       {% if purchases %}
         <div class="card shadow-sm mt-4">
           <div class="card-header"><strong>Purchase history (items)</strong></div>
@@ -164,21 +165,73 @@
 
     <!-- Edit profile -->
     <div id="tab-profile" class="tab-pane fade" role="tabpanel">
-      <div class="row">
-        <div class="col-lg-8 col-xl-7">
+      <div class="row g-3">
+        <!-- Profile + basic fields -->
+        <div class="col-lg-6">
           <div class="card shadow-sm">
             <div class="card-header"><strong>Edit Profile</strong></div>
             <div class="card-body">
               <form method="POST" novalidate>
                 {% csrf_token %}
+                <input type="hidden" name="profile_submit" value="1">
                 <h5 class="mt-2 mb-3">User Information</h5>
                 {{ form.as_p }}
 
                 <hr>
-                <h5 class="mt-4 mb-3">Address</h5>
+                <h5 class="mt-4 mb-3">Profile details</h5>
                 {{ profile_form.as_p }}
 
                 <button type="submit" class="btn btn-primary mt-3 w-100">Save Changes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Saved addresses -->
+        <div class="col-lg-6">
+          <div class="card shadow-sm mb-3">
+            <div class="card-header"><strong>Saved addresses</strong></div>
+            <ul class="list-group list-group-flush">
+              {% for a in addresses %}
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-semibold">
+                    {{ a.full_name }}
+                    {% if a.is_default %}<span class="badge bg-secondary ms-1">Default</span>{% endif %}
+                  </div>
+                  <div class="small text-muted">
+                    {{ a.line1 }}{% if a.line2 %}, {{ a.line2 }}{% endif %}, {{ a.city }} {{ a.postal_code }}, {{ a.country }}
+                  </div>
+                  {% if a.phone %}<div class="small text-muted">☎ {{ a.phone }}</div>{% endif %}
+                </div>
+                <div class="ms-3 d-flex gap-2">
+                  {% if not a.is_default %}
+                  <form method="post" action="{% url 'address_set_default' a.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-secondary">Set default</button>
+                  </form>
+                  {% endif %}
+                  <form method="post" action="{% url 'address_delete' a.pk %}" onsubmit="return confirm('Delete this address?');">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                  </form>
+                </div>
+              </li>
+              {% empty %}
+              <li class="list-group-item text-muted">No addresses yet.</li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <!-- Add new address -->
+          <div class="card shadow-sm">
+            <div class="card-header"><strong>Add new address</strong></div>
+            <div class="card-body">
+              <form method="POST" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="address_submit" value="1">
+                {{ addr_form.as_p }}
+                <button type="submit" class="btn btn-outline-primary w-100">Save address</button>
               </form>
             </div>
           </div>

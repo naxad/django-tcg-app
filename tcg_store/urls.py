@@ -35,7 +35,7 @@ urlpatterns = [
     path('browse/', include('browse.urls')),
     path('contact/', include('contact.urls', namespace='contact')),
     path('sell/', include('sell.urls', namespace='sell')),
-
+    path('orders/', include('orders.urls', namespace='orders')),
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='shop/password_change.html'), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='shop/password_change_done.html'), name='password_change_done'),
 ]

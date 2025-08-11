@@ -18,6 +18,8 @@ from browse.models import Card
 from django.utils import timezone
 import stripe
 import requests
+from userprofile.models import Address
+from django.views.decorators.http import require_http_methods
 
 Decimal = decimal.Decimal
 
@@ -67,18 +69,36 @@ def remove_from_cart(request, card_id):
     return redirect('cart:cart')
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def checkout(request):
-    order = _create_or_refresh_order_from_cart(request)  # <-- new helper below
+    order = _create_or_refresh_order_from_cart(request)
     if not order:
         messages.warning(request, "Your cart is empty.")
         return redirect('cart:cart')
 
     request.session['current_order_id'] = order.id
-    return render(
-        request,
-        'cart/checkout.html',
-        {"order": order, "PAYPAL_CLIENT_ID": os.environ.get("PAYPAL_CLIENT_ID","")}
-    )
+    addresses = Address.objects.filter(user=request.user)
+
+    shipping_ready = bool(order.shipping_line1)
+
+    if request.method == "POST":
+        # case 1: use a saved address
+        addr_id = request.POST.get("address_id")
+        if addr_id:
+            addr = get_object_or_404(Address, id=addr_id, user=request.user)
+            _apply_address_to_order(order, addr)
+            shipping_ready = True
+            messages.success(request, "Shipping address selected.")
+        else:
+            # minimal inline new address (or you can redirect to profile to add)
+            messages.error(request, "Please select an address.")
+
+    return render(request, 'cart/checkout.html', {
+        "order": order,
+        "addresses": addresses,
+        "shipping_ready": shipping_ready,
+        "PAYPAL_CLIENT_ID": os.environ.get("PAYPAL_CLIENT_ID","")
+    })
 
 
 
@@ -133,8 +153,22 @@ def _create_or_refresh_order_from_cart(request):
 def stripe_checkout(request):
     order_id = request.session.get("current_order_id")
     if not order_id:
-        return JsonResponse({"error":"no_order"}, status=400)
+        return JsonResponse({"error": "no_order"}, status=400)
+
     order = get_object_or_404(Order, id=order_id, user=request.user, status="pending")
+
+    # ✅ Guard: require shipping snapshot on the order
+    if not all([
+        order.shipping_name,
+        order.shipping_line1,
+        order.shipping_city,
+        order.shipping_postal_code,
+        order.shipping_country,
+    ]):
+        return JsonResponse({"error": "shipping_missing", "message": "Please select a shipping address first."}, status=400)
+
+    if not order.items.exists() or order.total <= 0:
+        return JsonResponse({"error": "empty_order"}, status=400)
 
     line_items = [{
         "price_data": {
@@ -155,8 +189,9 @@ def stripe_checkout(request):
     )
     order.gateway = "stripe"
     order.gateway_id = session.id
-    order.save(update_fields=["gateway","gateway_id"])
+    order.save(update_fields=["gateway", "gateway_id"])
     return JsonResponse({"url": session.url})
+
 
 
 @login_required
@@ -185,6 +220,8 @@ def thank_you(request):
         except Exception:
             pass
     return render(request, 'cart/thank_you.html')
+
+
 
 def _finalize_order_to_purchases(order: Order):
     # create Purchase rows for history
@@ -241,6 +278,21 @@ def paypal_create(request):
     else:
         order = get_object_or_404(Order, id=order_id, user=request.user, status="pending")
 
+    # ✅ Guard: require shipping snapshot on the order
+    if not all([
+        order.shipping_name,
+        order.shipping_line1,
+        order.shipping_city,
+        order.shipping_postal_code,
+        order.shipping_country,
+    ]):
+        return JsonResponse(
+            {"error": "shipping_missing", "message": "Please select a shipping address first."},
+            status=400
+        )
+
+
+
     access = _pp_token()
     body = {
         "intent": "CAPTURE",
@@ -288,3 +340,19 @@ def paypal_capture(request, order_id):
         _finalize_order_to_purchases(order)
         return JsonResponse({"ok": True})
     return HttpResponseBadRequest("Not completed")
+
+
+def _apply_address_to_order(order, addr: Address):
+    order.shipping_address = addr
+    order.shipping_name = addr.full_name
+    order.shipping_phone = addr.phone
+    order.shipping_line1 = addr.line1
+    order.shipping_line2 = addr.line2
+    order.shipping_city = addr.city
+    order.shipping_state = addr.state
+    order.shipping_postal_code = addr.postal_code
+    order.shipping_country = addr.country
+    order.save(update_fields=[
+        "shipping_address","shipping_name","shipping_phone","shipping_line1","shipping_line2",
+        "shipping_city","shipping_state","shipping_postal_code","shipping_country"
+    ])

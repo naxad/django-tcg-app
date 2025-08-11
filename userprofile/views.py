@@ -8,7 +8,7 @@ from django.http import JsonResponse
 
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import update_session_auth_hash
-
+from django.views.decorators.http import require_POST
 from .forms import UserUpdateForm
 
 from userprofile.models import Rating
@@ -22,7 +22,8 @@ from browse.models import Card
 from wishlist.models import WishlistItem
 from django.db.models import Sum
 from decimal import Decimal
-
+from .forms import UserUpdateForm, UserProfileForm, AddressForm   # NEW
+from .models import UserProfile, Address 
 from orders.models import Order
 
 # Create your views here.
@@ -42,19 +43,42 @@ def profile_view(request):
     user = request.user
     profile, _ = UserProfile.objects.get_or_create(user=user)
 
-    if request.method == 'POST':
+    # ----- handle form posts -----
+    if request.method == "POST" and "profile_submit" in request.POST:
+        # Save basic user/profile fields
         user_form = UserUpdateForm(request.POST, instance=user)
         profile_form = UserProfileForm(request.POST, instance=profile)
+        addr_form = AddressForm()  # blank for render
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Profile updated successfully!')
-            return redirect('profile')  # make sure your URL name points to this view
-    else:
+            messages.success(request, "Profile updated successfully!")
+            return redirect("profile")
+
+    elif request.method == "POST" and "address_submit" in request.POST:
+        # Create a new saved address
         user_form = UserUpdateForm(instance=user)
         profile_form = UserProfileForm(instance=profile)
+        addr_form = AddressForm(request.POST)
+        if addr_form.is_valid():
+            addr = addr_form.save(commit=False)
+            addr.user = user
+            addr.save()
+            # set as default if checked
+            if addr_form.cleaned_data.get("set_as_default"):
+                Address.objects.filter(user=user).exclude(id=addr.id).update(is_default=False)
+                addr.is_default = True
+                addr.save(update_fields=["is_default"])
+            messages.success(request, "Address saved.")
+            return redirect("profile")
 
-    # Existing sections
+    else:
+        # initial GET
+        user_form = UserUpdateForm(instance=user)
+        profile_form = UserProfileForm(instance=profile)
+        addr_form = AddressForm()
+
+    # ----- read-only data for the dashboard -----
     ratings = Rating.objects.filter(user=user).select_related('card')
     wishlist_items = WishlistItem.objects.filter(user=user).select_related('card')
     wishlist_cards = [w.card for w in wishlist_items]
@@ -64,26 +88,28 @@ def profile_view(request):
     viewed_cards = sorted(viewed_qs, key=lambda c: viewed_ids.index(c.id)) if viewed_ids else []
 
     purchases = Purchase.objects.filter(user=user).order_by('-purchased_at')
-
-    # NEW: orders + lifetime spend
     recent_orders = Order.objects.filter(user=user).order_by('-created_at')[:5]
     lifetime_spend = (
-        Order.objects.filter(user=request.user, status='paid')
+        Order.objects.filter(user=user, status='paid')
         .aggregate(total=Sum('total'))
         .get('total') or Decimal('0.00')
     )
 
+    addresses = Address.objects.filter(user=user)
+
     context = {
-        'form': user_form,
-        'profile_form': profile_form,
-        'ratings': ratings,
-        'wishlist': wishlist_cards,
-        'viewed_cards': viewed_cards,
-        'purchases': purchases,
-        'recent_orders': recent_orders,
-        'lifetime_spend': lifetime_spend,
+        "form": user_form,
+        "profile_form": profile_form,
+        "addr_form": addr_form,          # NEW
+        "addresses": addresses,          # NEW
+        "ratings": ratings,
+        "wishlist": wishlist_cards,
+        "viewed_cards": viewed_cards,
+        "purchases": purchases,
+        "recent_orders": recent_orders,
+        "lifetime_spend": lifetime_spend,
     }
-    return render(request, 'userprofile/profile.html', context)
+    return render(request, "userprofile/profile.html", context)
 
 
 
@@ -119,3 +145,23 @@ def profile_dashboard_view(request):
     }
 
     return render(request, 'userprofile/profile_dashboard.html', context)
+
+
+
+@require_POST
+@login_required
+def address_set_default(request, pk):
+    addr = get_object_or_404(Address, pk=pk, user=request.user)
+    Address.objects.filter(user=request.user).update(is_default=False)
+    addr.is_default = True
+    addr.save(update_fields=["is_default"])
+    messages.success(request, "Default address updated.")
+    return redirect('profile')  # profile tab shows addresses
+
+@require_POST
+@login_required
+def address_delete(request, pk):
+    addr = get_object_or_404(Address, pk=pk, user=request.user)
+    addr.delete()
+    messages.success(request, "Address deleted.")
+    return redirect('profile')
