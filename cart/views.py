@@ -15,7 +15,7 @@ from django.conf import settings
 from .models import CartItem, Purchase
 from orders.models import Order, OrderItem, Payment
 from browse.models import Card
-from datetime import timedelta, timezone
+from django.utils import timezone
 import stripe
 import requests
 
@@ -25,7 +25,8 @@ stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
 PP_CLIENT = os.environ.get("PAYPAL_CLIENT_ID")
 PP_SECRET = os.environ.get("PAYPAL_SECRET")
-PP_BASE = "https://api-m.paypal.com"  # use https://api-m.sandbox.paypal.com for sandbox
+PP_ENV  = os.environ.get("PAYPAL_ENV", "sandbox")
+PP_BASE = "https://api-m.sandbox.paypal.com" if PP_ENV == "sandbox" else "https://api-m.paypal.com"
 
 @login_required
 def add_to_cart(request, card_id):
@@ -67,15 +68,17 @@ def remove_from_cart(request, card_id):
 
 @login_required
 def checkout(request):
-    # Build/refresh a pending order snapshot from the cart (idempotent per click)
-    order = _create_order_from_cart(request)
+    order = _create_or_refresh_order_from_cart(request)  # <-- new helper below
     if not order:
         messages.warning(request, "Your cart is empty.")
         return redirect('cart:cart')
 
-    # show summary page with Pay buttons
-    return render(request, 'cart/checkout.html', {"order": order})
-
+    request.session['current_order_id'] = order.id
+    return render(
+        request,
+        'cart/checkout.html',
+        {"order": order, "PAYPAL_CLIENT_ID": os.environ.get("PAYPAL_CLIENT_ID","")}
+    )
 
 
 
@@ -99,33 +102,27 @@ def update_cart_quantity(request, card_id):
 
 
 
-def _create_order_from_cart(request):
+def _create_or_refresh_order_from_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
     if not cart_items.exists():
         return None
 
-    email = request.user.email if request.user.is_authenticated else request.POST.get("email","")
-    currency = "EUR"
+    email = request.user.email
+    order = (Order.objects
+             .filter(user=request.user, status="pending")
+             .order_by("-created_at")
+             .first())
+    if not order:
+        order = Order.objects.create(user=request.user, email=email, currency="EUR",
+                                     status="pending", total=Decimal("0.00"))
 
-    order = Order.objects.create(
-        user=request.user if request.user.is_authenticated else None,
-        email=email,
-        currency=currency,
-        status="pending",
-        total=Decimal("0.00"),
-    )
-
+    # rebuild items to exactly mirror cart
+    order.items.all().delete()
     total = Decimal("0.00")
     for ci in cart_items:
-        OrderItem.objects.create(
-            order=order,
-            card=ci.card,
-            name=ci.card.name,
-            unit_price=ci.card.price,
-            quantity=ci.quantity
-        )
-        total += (ci.card.price * ci.quantity)
-
+        OrderItem.objects.create(order=order, card=ci.card, name=ci.card.name,
+                                 unit_price=ci.card.price, quantity=ci.quantity)
+        total += ci.card.price * ci.quantity
     order.total = total
     order.save(update_fields=["total"])
     return order
@@ -134,9 +131,10 @@ def _create_order_from_cart(request):
 @require_POST
 @login_required
 def stripe_checkout(request):
-    order = _create_order_from_cart(request)
-    if not order:
-        return JsonResponse({"error": "empty"}, status=400)
+    order_id = request.session.get("current_order_id")
+    if not order_id:
+        return JsonResponse({"error":"no_order"}, status=400)
+    order = get_object_or_404(Order, id=order_id, user=request.user, status="pending")
 
     line_items = [{
         "price_data": {
@@ -150,7 +148,7 @@ def stripe_checkout(request):
     session = stripe.checkout.Session.create(
         mode="payment",
         line_items=line_items,
-        success_url=request.build_absolute_uri("/cart/thank-you/"),
+        success_url=request.build_absolute_uri("/cart/thank-you/?session_id={CHECKOUT_SESSION_ID}"),
         cancel_url=request.build_absolute_uri("/cart/cart/"),
         customer_email=order.email or None,
         metadata={"order_id": str(order.id)},
@@ -161,13 +159,32 @@ def stripe_checkout(request):
     return JsonResponse({"url": session.url})
 
 
-
-
 @login_required
 def thank_you(request):
+    order_id   = request.session.get("current_order_id")
+    session_id = request.GET.get("session_id")
+    if order_id and session_id:
+        try:
+            order = Order.objects.get(id=order_id, user=request.user)
+            if order.status != "paid":
+                sess = stripe.checkout.Session.retrieve(session_id)
+                if sess.get("payment_status") == "paid":
+                    order.status = "paid"
+                    order.paid_at = timezone.now()
+                    order.gateway = "stripe"
+                    order.gateway_id = sess["id"]
+                    order.save(update_fields=["status","paid_at","gateway","gateway_id"])
+                    Payment.objects.create(
+                        order=order,
+                        gateway="stripe",
+                        gateway_ref=sess.get("payment_intent",""),
+                        amount=order.total,
+                        raw=sess
+                    )
+                    _finalize_order_to_purchases(order)
+        except Exception:
+            pass
     return render(request, 'cart/thank_you.html')
-
-
 
 def _finalize_order_to_purchases(order: Order):
     # create Purchase rows for history
@@ -215,9 +232,15 @@ def _pp_token():
 @require_POST
 @login_required
 def paypal_create(request):
-    order = _create_order_from_cart(request)
-    if not order:
-        return JsonResponse({"error":"empty"}, status=400)
+    order_id = request.session.get("current_order_id")
+    if not order_id:
+        order = _create_or_refresh_order_from_cart(request)
+        if not order:
+            return JsonResponse({"error":"empty"}, status=400)
+        request.session['current_order_id'] = order.id
+    else:
+        order = get_object_or_404(Order, id=order_id, user=request.user, status="pending")
+
     access = _pp_token()
     body = {
         "intent": "CAPTURE",
@@ -226,7 +249,10 @@ def paypal_create(request):
             "custom_id": str(order.id)
         }]
     }
-    r = requests.post(f"{PP_BASE}/v2/checkout/orders", headers={"Authorization": f"Bearer {access}", "Content-Type":"application/json"}, json=body)
+    r = requests.post(f"{PP_BASE}/v2/checkout/orders",
+                      headers={"Authorization": f"Bearer {access}", "Content-Type":"application/json"},
+                      json=body)
+    r.raise_for_status()
     data = r.json()
     order.gateway = "paypal"
     order.gateway_id = data["id"]
