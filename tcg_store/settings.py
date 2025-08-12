@@ -25,7 +25,7 @@ load_dotenv(BASE_DIR / "main.env")
 SECRET_KEY = 'django-insecure-&$m0p$mbtlkc@0z!g0&t%m^zxzhs0w)qbg@5=t_1s@kow1*c)z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = ["shinycards.pythonanywhere.com", "127.0.0.1", "localhost"]
 

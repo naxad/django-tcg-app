@@ -1,164 +1,15 @@
-/* === Pill-Style, Three-Zone Flex Navbar === */
-.navbar {
-    background: #93b2f7;
-    border-radius: 50px;
-    padding: 12px 30px;
-    width: 105%;
-    max-width: none;
-    transform: translateX(-2.5%);
-    margin: 0 auto;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    flex-wrap: nowrap;
-    left: -4.5%;
-    white-space: nowrap;
-}
+/* =======================================================
+   ShinyCards – unified CSS
+   Dark/Purple theme is scoped by .theme-purple
+   (Put .theme-purple on <body> in base.html)
+   ======================================================= */
 
-.navbar .container-fluid {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 3rem;
-}
 
-.navbar-left,
-.navbar-center,
-.navbar-right {
-    display: flex;
-    align-items: center;
-}
-
-.navbar-left {
-    gap: 2rem;
-    flex: 0 1 auto;
-    min-width: 150px;
-
-}
-
-.navbar-center {
-    flex-grow: 1;
-    justify-content: center;
-    min-width: 250px;
-}
-
-.navbar-right {
-    justify-content: flex-end;
-    gap: 2rem;
-    flex: 0 1 auto;
-    min-width: 150px;
-    flex-wrap: nowrap;
-}
-
-/* Brand styling */
-.navbar-brand {
-    font-size: 20px;
-    font-weight: 700;
-    color: #144855;
-    margin-left: 10px;
-}
-
-/* Nav links & logout buttons */
-.navbar .nav-link,
-.logout-form button,
-.logout-form-mobile button {
-    color: #ecf0f1;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: background 0.3s, color 0.3s;
-    background: none;
-    border: none;
-}
-
-.navbar .nav-link:hover,
-.logout-form button:hover,
-.logout-form-mobile button:hover {
-    background: #034180;
-    color: #fff;
-}
-
-/* === Search Form === */
-.search-form,
-.search-form-mobile {
-    position: relative;
-    max-width: 100%;
-    margin: 0 auto;
-}
-
-.search-form .form-control,
-.search-form-mobile .form-control {
-    width: 180px;
-    padding: 0.45rem 2.5rem 0.45rem 1rem;
-    border: none;
-    border-radius: 50px;
-    transition: width 0.3s ease, box-shadow 0.3s ease;
-}
-
-.search-form .form-control:focus,
-.search-form-mobile .form-control:focus {
-    width: 240px;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-    outline: none;
-}
-
-.search-btn {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: #ffffff;
-    cursor: pointer;
-    z-index: 2;
-    transition: color 0.3s, transform 0.2s;
-    border-radius: 20%;
-    /* make it circular */
-
-    border-radius: 30%;
-    padding: 0;
-}
-
-.search-btn:hover {
-    color: #ecf0f1;
-    transform: translateY(-50%) scale(1.15);
-}
-
-/* === Responsive === */
-@media (max-width: 991.98px) {
-    .navbar-center {
-        display: none;
-    }
-}
-
-.logout-form-mobile {
-    display: flex;
-}
-
-.navbar-toggler {
-    margin-left: 1rem;
-}
-
-.navbar-toggler.d-lg-none {
-    display: block;
-}
-
-.navbar-toggler:not(.d-lg-none) {
-    display: none;
-}
-
-.navbar .navbar-collapse {
-    background: #93b2f7;
-    border-radius: 10px;
-    margin-top: 10px;
-    padding: 1rem;
-}
-
-.navbar-collapse ul.navbar-nav {
-    gap: 1rem;
-    flex-wrap: wrap;
-}
+/* --------------------------------------
+   LIGHT / GENERIC STYLES (existing)
+   These keep working in light mode; the
+   .theme-purple overrides above take precedence.
+   -------------------------------------- */
 
 /* === Page layout === */
 body {
@@ -167,6 +18,10 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Only use the light grey when theme-purple is NOT active */
+body:not(.theme-purple) {
     background-color: #f0f2f5;
 }
 
@@ -174,52 +29,41 @@ main {
     flex-grow: 1;
 }
 
+/* Auth */
 .auth-container {
     min-height: 80vh;
-    /* increase from 70vh if needed */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-
 .auth-form .form-group {
     margin-bottom: 1rem;
 }
 
-
-
 .auth-form label {
     font-weight: 500;
-    margin-bottom: 0.3rem;
+    margin-bottom: .3rem;
     display: block;
 }
-
 
 .auth-box {
     background: white;
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
     width: 100%;
     max-width: 400px;
 }
 
-
-
-
 .auth-form input {
     width: 100%;
-    padding: 0.5rem;
+    padding: .5rem;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
 
-
-
-
-
-
+/* Footer (light) */
 footer {
     background-color: #2c3e50;
     color: #fff;
@@ -228,7 +72,7 @@ footer {
     margin-top: auto;
 }
 
-
+/* Fades */
 .fade-carousel {
     position: relative;
 }
@@ -240,32 +84,30 @@ footer {
     bottom: 0;
     width: 60px;
     z-index: 2;
-
 }
 
 .fade-left {
     left: 0;
-    background: linear-gradient(to right, white 0%, transparent 100%);
+    background: linear-gradient(to right, #dde0ff 0%, transparent 100%);
 }
 
 .fade-right {
     right: 0;
-    background: linear-gradient(to left, white 0%, transparent 100%);
+    background: linear-gradient(to left, #dde0ff 0%, transparent 100%);
 }
-
 
 /* === Card Styles === */
 .card-hover {
     border-radius: 16px;
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform .2s ease, box-shadow .2s ease;
     border: 1px solid #e0e0e0;
     position: relative;
 }
 
 .card-hover:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .1);
     z-index: 10;
 }
 
@@ -278,7 +120,7 @@ footer {
     margin: 0 auto;
 }
 
-/* === Wishlist Button === */
+/* Wishlist btn (light) */
 .wishlist-btn {
     background: white;
     border: 1px solid #ccc;
@@ -288,7 +130,7 @@ footer {
     font-size: 18px;
     padding: 0;
     line-height: 1;
-    transition: background 0.2s ease;
+    transition: background .2s ease;
     position: relative;
     z-index: 15;
 }
@@ -297,20 +139,19 @@ footer {
     background: #ffecec;
 }
 
-/* === Hover Overlay === */
+/* Hover overlay (light) */
 .hover-overlay {
     opacity: 0;
-    transition: opacity 0.3s ease;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    transition: opacity .3s ease;
+    background: linear-gradient(to top, rgba(0, 0, 0, .7), transparent);
     color: white;
-    padding: 0.8rem 1rem;
+    padding: .8rem 1rem;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     height: 60%;
     border-radius: 0 0 12px 12px;
-
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -328,25 +169,23 @@ footer {
     z-index: 20;
 }
 
-
-
-
+/* stars */
 .rating-stars {
     position: relative;
     display: flex;
     gap: 2px;
     cursor: pointer;
     z-index: 5;
-    margin-top: 0.3rem;
+    margin-top: .3rem;
     pointer-events: auto !important;
 }
 
 .rating-stars .star {
     font-size: 20px;
     color: #f1c40f;
-    transition: transform 0.2s ease;
+    transition: transform .2s ease;
     pointer-events: auto;
-    z-index: 5
+    z-index: 5;
 }
 
 .rating-stars .star:hover {
@@ -359,79 +198,14 @@ footer {
     color: gold;
 }
 
-
-
-
-
+/* images */
 .card-img-top {
     display: block;
     width: 100%;
     border-radius: 12px 12px 0 0;
 }
 
-.navbar-nav {
-    flex-wrap: nowrap;
-}
-
-.navbar-brand,
-.search-form {
-    z-index: 1050;
-}
-
-/* === Responsive Adjustments === */
-@media (max-width: 768px) {
-    .navbar .container-fluid {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 0 1rem;
-    }
-
-    .navbar-nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .navbar-right {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 0.3rem;
-    }
-
-    .navbar-brand {
-        align-self: flex-start;
-        margin-bottom: 0.5rem;
-    }
-
-    .navbar-toggler {
-        align-self: flex-end;
-    }
-
-    .search-form {
-        position: relative;
-        min-width: 180px;
-        max-width: 240px;
-        width: 100%;
-        margin: 0 auto;
-        flex-shrink: 1;
-    }
-
-    .search-form .form-control {
-        width: 100%;
-        padding: 0.45rem 2.5rem 0.45rem 1rem;
-        border-radius: 50px;
-    }
-
-    .logout-form button {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-        width: 100%;
-        text-align: left;
-    }
-}
-
-
-
+/* Browse grid/cards */
 .browse-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -447,18 +221,16 @@ footer {
     padding: 1rem;
     border-radius: 10px;
     position: relative;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, height 0.3s ease;
+    transition: transform .2s ease, box-shadow .2s ease, height .3s ease;
     align-self: start;
     min-height: auto;
     pointer-events: auto !important;
-
 }
 
 .browse-card-container:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
     transform: scale(1.02);
 }
-
 
 .carousel-cards {
     display: flex;
@@ -472,14 +244,14 @@ footer {
     scroll-snap-align: start;
 }
 
+.browse-card-img {
+    flex: 0 0 130px;
+}
+
 .browse-card-img img {
     max-height: 350px;
     object-fit: contain;
     border-radius: 8px;
-}
-
-.browse-card-img {
-    flex: 0 0 130px;
 }
 
 .browse-card-details {
@@ -492,19 +264,18 @@ footer {
 .add-to-cart-form {
     opacity: 0;
     height: 0;
-    transition: opacity 0.3s ease, height 0.3s ease, margin-top 0.3s ease;
     visibility: hidden;
-
-
+    transition: opacity .3s ease, height .3s ease, margin-top .3s ease;
 }
 
 .browse-card-container:hover .add-to-cart-form {
     opacity: 1;
     visibility: visible;
     height: auto;
-    margin-top: 0.5rem;
+    margin-top: .5rem;
 }
 
+/* Image modal */
 .image-modal {
     display: none;
     position: fixed;
@@ -515,7 +286,7 @@ footer {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, .85);
 }
 
 .image-modal-content {
@@ -542,18 +313,14 @@ footer {
     color: #bbb;
 }
 
-
-
+/* Carousel track */
 .card-carousel {
     display: flex;
-
     gap: 1.5rem;
     padding: 1rem 0;
     overflow-x: hidden;
     position: relative;
-
 }
-
 
 @keyframes scroll-loop {
     0% {
@@ -565,16 +332,11 @@ footer {
     }
 }
 
-
 .card-track {
     display: flex;
     gap: 1rem;
     animation: scroll-loop 30s linear infinite;
-
 }
-
-
-
 
 .card-item {
     flex: 0 0 auto;
@@ -582,52 +344,1223 @@ footer {
     width: 220px;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    padding: .5rem;
     text-align: center;
 }
 
-#homepageBannerCarousel .carousel-inner {
-    /* to round the top carousel edges */
-    border-radius: 1.25rem;
 
+/* Font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+
+/* Headings / links (readable on light) */
+body.theme-purple h1,
+body.theme-purple h2,
+body.theme-purple h3,
+body.theme-purple .section-title {
+    color: var(--text-900);
+    font-weight: 700;
+}
+
+body.theme-purple a {
+    color: var(--primary-500);
+}
+
+body.theme-purple a:hover {
+    color: var(--primary-400);
+    text-decoration: none;
+}
+
+body.theme-purple .text-muted {
+    color: var(--muted) !important;
+}
+
+body.theme-purple ::placeholder {
+    color: #a39dd0;
+    opacity: 1;
+}
+
+
+/* =======================================================
+   CARDS (home carousels & browse grid)
+   ======================================================= */
+body.theme-purple .card-hover,
+body.theme-purple .card-item,
+body.theme-purple .browse-card-container,
+body.theme-purple .auth-box {
+    background: #ffffff;
+    border: 1px solid #e7e8f2;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 22px rgba(17, 12, 46, .06);
+    color: var(--text-900);
+}
+
+body.theme-purple .card-hover:hover,
+body.theme-purple .card-item:hover,
+body.theme-purple .browse-card-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(17, 12, 46, .10);
+}
+
+body.theme-purple .card-img-top,
+body.theme-purple .browse-card-img img,
+body.theme-purple .card-item img {
+    border-radius: 12px;
+}
+
+/* Wishlist + rating color */
+body.theme-purple .wishlist-btn {
+    background: #fff;
+    border: 1px solid #e7e8f2;
+    color: var(--text-900);
+}
+
+body.theme-purple .rating-stars .star {
+    color: #ffd166;
+}
+
+/* subtle fades for the home carousel */
+body.theme-purple .fade-left {
+    background: linear-gradient(to right, #dde0ff 0%, transparent 100%);
+}
+
+body.theme-purple .fade-right {
+    background: linear-gradient(to left, #dde0ff 0%, transparent 100%);
+}
+
+/* =======================================================
+   BUTTONS / BADGES
+   ======================================================= */
+body.theme-purple .btn-primary,
+body.theme-purple .btn-dark {
+    background: linear-gradient(90deg, var(--primary-600), var(--primary-500));
+    border: 1px solid rgba(123, 92, 255, .35);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(123, 92, 255, .35);
+}
+
+body.theme-purple .btn-primary:hover,
+body.theme-purple .btn-dark:hover {
+    background: linear-gradient(90deg, var(--primary-500), var(--primary-400));
+    box-shadow: 0 12px 26px rgba(123, 92, 255, .45);
+}
+
+body.theme-purple .btn-outline-primary {
+    border-color: var(--primary-500);
+    color: var(--primary-500);
+}
+
+body.theme-purple .btn-outline-primary:hover {
+    background: var(--primary-500);
+    color: #fff;
+}
+
+body.theme-purple .badge.bg-warning {
+    color: #2b254f;
+    background-color: #ffd166 !important;
+}
+
+body.theme-purple .badge.bg-success {
+    background-color: #3ddc97 !important;
+}
+
+/* =======================================================
+   TABLES
+   ======================================================= */
+body.theme-purple .table {
+    color: var(--text-900);
+}
+
+body.theme-purple .table thead th {
+    border-bottom-color: #ececf6;
+}
+
+body.theme-purple .table tbody tr {
+    border-color: #ececf6;
+}
+
+/* =======================================================
+   FORMS (profile / edit / address / contact)
+   ======================================================= */
+body.theme-purple .form-control,
+body.theme-purple .form-select,
+body.theme-purple textarea {
+    background: #fff;
+    border: 1px solid #dde0f0;
+    color: var(--text-900);
+    border-radius: 10px;
+}
+
+body.theme-purple .form-control:focus,
+body.theme-purple .form-select:focus,
+body.theme-purple textarea:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 0.2rem rgba(123, 92, 255, .2);
+}
+
+/* =======================================================
+   FOOTER
+   ======================================================= */
+body.theme-purple footer {
+    background: linear-gradient(90deg, var(--surface-700), var(--surface-600));
+    border-top: 1px solid var(--border);
+    color: var(--text-200);
+}
+
+/* =======================================================
+   LAYOUT HELPERS & LEGACY PIECES (kept from your file)
+   ======================================================= */
+
+/* general page structure */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+/* search sizes */
+.search-form,
+.search-form-mobile {
+    position: relative;
+}
+
+.search-form .form-control,
+.search-form-mobile .form-control {
+    width: 200px;
+    padding: .45rem 2.5rem .45rem 1rem;
+    border-radius: 50px;
+    transition: width .3s ease;
+}
+
+.search-form .form-control:focus,
+.search-form-mobile .form-control:focus {
+    width: 260px;
+}
+
+.search-btn {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: inherit;
+}
+
+/* browse grid */
+.browse-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.browse-card-container {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    position: relative;
+    align-self: start;
+}
+
+.browse-card-img {
+    flex: 0 0 130px;
+}
+
+.browse-card-img img {
+    max-height: 350px;
+    object-fit: contain;
+}
+
+.browse-card-details {
+    display: flex;
+    flex-direction: column;
+}
+
+/* modal image viewer */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    inset: 0;
+    background: rgba(0, 0, 0, .85);
+}
+
+.image-modal-content {
+    margin: auto;
+    display: block;
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 12px;
+    box-shadow: 0 0 25px #000;
+}
+
+.image-modal-close {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* small screens */
+@media (max-width: 768px) {
+    .browse-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-form .form-control {
+        width: 100%;
+    }
+}
+
+
+/* ======================================================
+   ShinyCards — Purple Theme
+   (scoped via body.theme-purple)
+   ====================================================== */
+
+/* ---------- Theme variables (slightly lighter purple) ---------- */
+:root {
+    --sc-bg: hsl(233, 100%, 93%);
+    --sc-text: #1f2230;
+    --sc-text-muted: #7b7f97;
+
+    --sc-surface-700: #2b2461;
+    /* lighter */
+    --sc-surface-600: #3a317b;
+    /* lighter */
+    --sc-primary-600: #6a55eb;
+    --sc-primary-500: #7d68f4;
+    /* main */
+    --sc-primary-400: #9987fb;
+    --sc-accent: #00d1ff;
+
+    --sc-border: rgba(15, 10, 35, .08);
+    --sc-shadow: 0 14px 36px rgba(15, 10, 35, .24);
+
+    --sc-radius-xl: 22px;
+    --sc-radius-lg: 16px;
+    --sc-radius-md: 12px;
+}
+
+/* ---------- Base (content stays dark on light bg) ---------- */
+
+
+body.theme-purple h1,
+body.theme-purple h2,
+body.theme-purple h3,
+body.theme-purple h4,
+body.theme-purple h5,
+body.theme-purple h6 {
+    color: var(--sc-text);
+}
+
+body.theme-purple a {
+    color: var(--sc-primary-500);
+}
+
+body.theme-purple a:hover {
+    color: var(--sc-primary-400);
+    text-decoration: none;
+}
+
+
+/* ======================================================
+   CARDS (home carousel + browse list)
+   ====================================================== */
+
+.card-item,
+.card-hover,
+.browse-card-container,
+.auth-box {
+    background: #fff;
+    border: 1px solid var(--sc-border);
+    border-radius: var(--sc-radius-lg);
+    color: var(--sc-text);
+    box-shadow: 0 10px 24px rgba(15, 10, 35, .06);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.card-item:hover,
+.card-hover:hover,
+.browse-card-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(15, 10, 35, .14);
+}
+
+.card-img-top,
+.browse-card-img img,
+.card-item img {
+    border-radius: 12px;
+}
+
+/* rating color */
+.rating-stars .star {
+    color: #ffd166;
+}
+
+/* fade masks over light background */
+.fade-left {
+    background: linear-gradient(to right, var(--sc-bg) 0%, transparent 100%);
+}
+
+.fade-right {
+    background: linear-gradient(to left, var(--sc-bg) 0%, transparent 100%);
+}
+
+/* “Add to cart” reveal on hover in browse cards */
+.add-to-cart-form {
+    opacity: 0;
+    height: 0;
+    visibility: hidden;
+    transition: .25s;
+}
+
+.browse-card-container:hover .add-to-cart-form {
+    opacity: 1;
+    height: auto;
+    visibility: visible;
+    margin-top: .5rem;
+}
+
+/* grid for browse page */
+.browse-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.browse-card-img {
+    flex: 0 0 130px;
+}
+
+.browse-card-img img {
+    max-height: 350px;
+    object-fit: contain;
+}
+
+/* wishlist heart */
+.wishlist-btn {
+    background: #fff;
+    border: 1px solid var(--sc-border);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+}
+
+/* ======================================================
+   FORMS / TABLES (ensure dark text on light surfaces)
+   ====================================================== */
+
+body.theme-purple .form-control,
+body.theme-purple .form-select,
+body.theme-purple textarea {
+    background: #fff;
+    color: var(--sc-text);
+    border: 1px solid #e7e8f1;
+}
+
+body.theme-purple .form-control::placeholder {
+    color: var(--sc-text-muted);
+}
+
+body.theme-purple .form-control:focus,
+body.theme-purple .form-select:focus,
+body.theme-purple textarea:focus {
+    outline: none;
+    border-color: var(--sc-primary-500);
+    box-shadow: 0 0 0 .22rem rgba(125, 104, 244, .25);
+}
+
+body.theme-purple .table {
+    color: var(--sc-text);
+}
+
+body.theme-purple .table thead th {
+    border-bottom-color: #ececf5;
+}
+
+body.theme-purple .table tbody tr {
+    border-color: #ececf5;
+}
+
+/* ======================================================
+   BUTTONS / BADGES (purple accents)
+   ====================================================== */
+
+.btn-primary,
+.btn-dark {
+    background: linear-gradient(90deg, var(--sc-primary-600), var(--sc-primary-500));
+    border: 1px solid rgba(0, 0, 0, .05);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(125, 104, 244, .35);
+}
+
+.btn-primary:hover,
+.btn-dark:hover {
+    background: linear-gradient(90deg, var(--sc-primary-500), var(--sc-primary-400));
+    box-shadow: 0 12px 26px rgba(125, 104, 244, .45);
+}
+
+.badge.bg-warning {
+    color: #2b254f;
+    background-color: #ffd166 !important;
+}
+
+.badge.bg-success {
+    background-color: #3ddc97 !important;
+}
+
+/* ======================================================
+   FOOTER
+   ====================================================== */
+footer.bg-dark {
+    background: linear-gradient(90deg, var(--sc-surface-700), var(--sc-surface-600)) !important;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+}
+
+/* ======================================================
+   HOME: banner carousel corner rounding
+   ====================================================== */
+#homepageBannerCarousel .carousel-inner {
+    border-radius: 1.25rem;
     overflow: hidden;
 }
 
+/* ======================================================
+   Small helpers / responsiveness
+   ====================================================== */
+.navbar-nav {
+    gap: .75rem;
+}
+
+@media (max-width: 991.98px) {
+    .theme-nav .search-form {
+        width: 100%;
+        margin-top: .5rem;
+    }
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 
+/* =========================
+   NAVBAR – single INNER bar
+   ========================= */
 
-.section-title {
-    text-align: center;
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+/* Outer <nav> stays transparent (prevents background pill) */
+.theme-nav {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    margin: 1.75rem auto 0;
+    position: relative;
+    width: clamp(860px, 72vw, 1100px);
+    padding: 0;
+    /* no outer padding */
+    overflow: visible;
+    /* let logo hang outside */
+}
+
+/* The ONLY visible bar — make it squarer with a subtle white outline */
+.theme-nav>.container-fluid {
+    background: linear-gradient(90deg, var(--sc-surface-700), var(--sc-surface-600));
+    border-radius: 18px;
+    /* squarer than pill */
+    border: 0;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, .14),
+        /* thin white outline */
+        var(--sc-shadow);
+    padding: 12px 28px 12px 132px;
+    /* room for the outside logo */
+    position: relative;
+    padding-left: 43px;
+}
+
+/* Brand (floats outside to the left) */
+.theme-nav .navbar-brand {
+    position: absolute;
+    left: -130px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    z-index: 10;
+}
+
+.theme-nav .brand-logo {
+    height: 84px;
+    width: auto;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .25));
+}
+
+/* Links & search (readable on dark bar) */
+.theme-nav .nav-link,
+.theme-nav .btn.btn-link,
+.theme-nav .navbar-toggler {
+    color: #efeaff;
+    transition: .2s;
+}
+
+.theme-nav .nav-link:hover,
+.theme-nav .btn.btn-link:hover {
+    color: #fff;
+}
+
+.theme-nav .search-form {
+    position: relative;
+}
+
+.theme-nav .search-form .form-control {
+    background: rgba(255, 255, 255, .10);
+    border: 1px solid rgba(255, 255, 255, .12);
+    color: #fff;
+    width: 200px;
+    padding: .45rem 2.5rem .45rem 1rem;
+    border-radius: 50px;
+    transition: width .3s;
+}
+
+.theme-nav .search-form .form-control:focus {
+    width: 260px;
+    outline: none;
+    box-shadow: 0 0 0 .22rem rgba(153, 135, 251, .25);
+    border-color: #d9d4ff;
+}
+
+.theme-nav .search-form .form-control::placeholder {
+    color: #d9d4ff;
+}
+
+.theme-nav .search-btn {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* Collapsed drawer look only on mobile/tablet */
+.theme-nav .navbar-collapse {
+    background: linear-gradient(180deg, var(--sc-surface-700), var(--sc-surface-600));
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 16px;
+    margin-top: 12px;
+    padding: .75rem;
+}
+
+/* On desktop, collapse area is transparent (no second inner box) */
+@media (min-width: 992px) {
+    .theme-nav .navbar-collapse {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        margin-top: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+}
+
+/* Responsive logo spacing */
+@media (max-width: 991.98px) {
+    .theme-nav>.container-fluid {
+        padding-left: 132px;
+    }
+
+    .theme-nav .navbar-brand {
+        left: -68px;
+    }
+
+    .theme-nav .brand-logo {
+        height: 66px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .theme-nav>.container-fluid {
+        padding-left: 98px;
+    }
+
+    .theme-nav .navbar-brand {
+        left: -58px;
+    }
+
+    .theme-nav .brand-logo {
+        height: 56px;
+    }
+}
+
+/* Hard override – ensure <nav> itself never paints a background */
+body.theme-purple .navbar.theme-nav,
+.theme-nav {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+@media (min-width: 992px) {
+    .theme-nav .search-form {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0 !important;
+        /* neutralize mx-lg-3 from the HTML */
+        z-index: 2;
+    }
+}
+
+/* Mobile/tablet keeps the “drawer” style you already have */
+@media (max-width: 991.98px) {
+    .theme-nav .search-form {
+        position: relative;
+        left: auto;
+        transform: none;
+        width: 100%;
+        margin-top: .5rem;
+    }
 }
 
 
-.card-item img {
-    max-width: 100%;
+
+/* Fill ALL normal buttons; keep .btn-link text-only and keep outline variants thin by default */
+.btn:not(.btn-link) {
+    background: linear-gradient(90deg, var(--sc-primary-600), var(--sc-primary-500));
+    color: #fff !important;
+    border: 1px solid rgba(0, 0, 0, .06);
+    box-shadow: 0 10px 22px rgba(125, 104, 244, .30);
+}
+
+.btn:hover:not(.btn-link) {
+    background: linear-gradient(90deg, var(--sc-primary-500), var(--sc-primary-400));
+    color: #fff !important;
+    box-shadow: 0 12px 26px rgba(125, 104, 244, .45);
+}
+
+/* Outline primary still looks like an outline but fills on hover */
+.btn-outline-primary {
+    border-color: var(--sc-primary-500);
+    color: var(--sc-primary-500) !important;
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--sc-primary-500);
+    color: #fff !important;
+}
+
+
+/* Make card shells contain their children and stay uniform */
+.card-hover,
+.card-item,
+.browse-card-container {
+    overflow: hidden;
+    /* prevents overlay/image spill */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-item img,
+.card-hover img,
+.browse-card-img img {
+    display: block;
+    width: 100%;
     height: auto;
+    object-fit: cover;
+    /* keeps image inside card */
+}
+
+/* If a row of cards is inside a grid/row, prevent subtle jiggle/overflow */
+.browse-grid {
+    align-items: stretch;
+}
+
+
+/* ===== Make every Bootstrap-style button purple with white text ===== */
+/* Keeps .btn-link as a text link so your navbar "Logout" stays a link.  */
+/* The search icon button in the input is not touched (class = search-btn). */
+
+:root {
+    /* tweak these two if you want a different purple */
+    --btn-purple: var(--sc-primary-600, #6a55eb);
+    --btn-purple-hover: var(--sc-primary-500, #7d68f4);
+}
+
+/* Fill ALL main button variants */
+button.btn,
+a.btn,
+input[type="submit"].btn,
+input[type="button"].btn,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-light,
+.btn-dark {
+    background: var(--btn-purple) !important;
+    border-color: var(--btn-purple) !important;
+    color: #fff !important;
+    text-shadow: none !important;
+}
+
+/* Outline variants become filled, too */
+[class*="btn-outline-"] {
+    background: var(--btn-purple) !important;
+    border-color: var(--btn-purple) !important;
+    color: #fff !important;
+}
+
+/* Hover / active / focus */
+.btn:hover,
+.btn:focus,
+.btn:active,
+[class*="btn-outline-"]:hover,
+[class*="btn-outline-"]:focus,
+[class*="btn-outline-"]:active {
+    background: var(--btn-purple-hover) !important;
+    border-color: var(--btn-purple-hover) !important;
+    color: #fff !important;
+}
+
+/* Disabled look (still purple, just dimmed) */
+.btn:disabled,
+.btn.disabled {
+    background: var(--btn-purple) !important;
+    border-color: var(--btn-purple) !important;
+    color: #fff !important;
+    opacity: .65 !important;
+}
+
+/* Keep text-only buttons as links (navbar logout) */
+.btn-link {
+    background: transparent !important;
+    border-color: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+}
+
+
+
+/* =====================================================
+   BROWSE LIST — image left, details right (fix override)
+   ===================================================== */
+
+/* Force horizontal layout even if Bootstrap .card is present */
+.browse-card-container,
+.card.browse-card-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start;
+    gap: 1rem;
+    border-radius: 16px;
+}
+
+/* Left column: fixed image rail */
+.browse-card-img {
+    flex: 0 0 180px;
+    /* width of the image column */
+    max-width: 180px;
+}
+
+.browse-card-img img,
+.browse-card-container .card-img-top {
+    width: 100%;
+    height: auto;
+    display: block;
     border-radius: 8px;
 }
 
-.card-caption {
-    margin-top: 0.5rem;
-    font-weight: 500;
+/* Right column: details stretch */
+.browse-card-details {
+    flex: 1 1 auto;
+    min-width: 0;
+    /* prevents overflow when long titles */
 }
 
-@media (max-width: 991px) {
-    .navbar img {
-        height: 50px;
-        /* shrink logo */
+/* If template uses .card-body inside the container, neutralize it */
+.browse-card-container .card-body {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+/* Keep the “Add to cart” reveal on hover (optional) */
+.add-to-cart-form {
+    opacity: 0;
+    height: 0;
+    visibility: hidden;
+    transition: .25s;
+}
+
+.browse-card-container:hover .add-to-cart-form {
+    opacity: 1;
+    height: auto;
+    visibility: visible;
+    margin-top: .5rem;
+}
+
+/* Mobile: stack image above details */
+@media (max-width: 768px) {
+
+    .browse-card-container,
+    .card.browse-card-container {
+        flex-direction: column !important;
+        border-radius: 16px;
     }
 
-    .navbar-nav {
-        gap: 1rem;
-        text-align: center;
+    .browse-card-img {
+        max-width: 100%;
+        flex: 0 0 auto;
     }
+}
 
-    .search-form {
-        width: 100%;
-        margin-top: 10px;
-    }
+
+
+/* Reserve space for the add-to-cart area so row height never changes */
+
+
+/* Only reveal visually; no height change */
+.browse-card-container:hover .add-to-cart-form {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+/* Rounder corners for white boxes + clip children */
+.browse-card-container,
+.card-hover,
+.card-item,
+.auth-box {
+    border-radius: 16px !important;
+    /* tiny bit rounder */
+    overflow: hidden;
+}
+
+/* If you also want images inside to match */
+.browse-card-img img,
+.card-img-top {
+    border-radius: 0px;
+}
+
+
+
+/* === Home banner caption: always white & readable === */
+#homepageBannerCarousel .carousel-caption,
+#homepageBannerCarousel .carousel-caption * {
+    color: #fff !important;
+}
+
+#homepageBannerCarousel .carousel-caption {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, .55);
+}
+
+/* === Navbar links: unify style & fix Logout === */
+.theme-nav .nav-link,
+.theme-nav .btn.btn-link.nav-link {
+    /* catches the Logout button */
+    color: #efeaff;
+    background: transparent !important;
+    /* kill purple fill */
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: .45rem .75rem;
+    border-radius: 10px;
+    transition: background .18s ease, color .18s ease, transform .18s ease;
+    text-decoration: none;
+}
+
+/* Hover/active/focus states (subtle lift + glow) */
+.theme-nav .nav-link:hover,
+.theme-nav .btn.btn-link.nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, .10);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .12);
+}
+
+.theme-nav .nav-link:focus-visible,
+.theme-nav .btn.btn-link.nav-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 .2rem rgba(153, 135, 251, .35);
+}
+
+.theme-nav .nav-link.active {
+    background: rgba(255, 255, 255, .14);
+    color: #fff;
+}
+
+
+/* === NAVBAR polish (font, white outline, hover) === */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap');
+
+/* shorten the bar a bit (optional) */
+.theme-nav {
+    width: min(1120px, 92vw);
+}
+
+/* inner pill gets a white outline + subtle inner ring + deeper shadow */
+.theme-nav>.container-fluid {
+    border: 2px solid rgba(255, 255, 255, .92);
+    box-shadow:
+        0 18px 36px rgba(26, 16, 63, .25),
+        /* drop */
+        inset 0 0 0 3px rgba(255, 255, 255, .15);
+    /* inner white ring */
+}
+
+/* nav link typography & base state (also catches Logout button form link) */
+.theme-nav .nav-link,
+.theme-nav .btn.btn-link.nav-link {
+    font-family: "Poppins", "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    letter-spacing: .2px;
+    color: #efeaff;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: .55rem .9rem;
+    border-radius: 10px;
+    position: relative;
+    transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+    text-decoration: none;
+}
+
+/* animated underline on hover */
+.theme-nav .nav-link::after,
+.theme-nav .btn.btn-link.nav-link::after {
+    content: "";
+    position: absolute;
+    left: .9rem;
+    right: .9rem;
+    bottom: .35rem;
+    height: 2px;
+    background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, .65) 60%, transparent 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .22s ease-out;
+    opacity: .95;
+    border-radius: 2px;
+}
+
+.theme-nav .nav-link:hover::after,
+.theme-nav .btn.btn-link.nav-link:hover::after {
+    transform: scaleX(1);
+}
+
+/* hover/focus lift */
+.theme-nav .nav-link:hover,
+.theme-nav .btn.btn-link.nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, .06);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .18);
+}
+
+.theme-nav .nav-link:focus-visible,
+.theme-nav .btn.btn-link.nav-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 .2rem rgba(255, 255, 255, .28);
+}
+
+/* make the mobile drawer border match the white outline */
+.theme-nav .navbar-collapse {
+    border-color: rgba(255, 255, 255, .5);
+}
+
+/* search field: slightly brighter hover/focus */
+.theme-nav .search-form .form-control {
+    backdrop-filter: blur(6px);
+    transition: box-shadow .2s ease, border-color .2s ease, background-color .2s ease;
+}
+
+.theme-nav .search-form .form-control:hover {
+    background: rgba(255, 255, 255, .14);
+}
+
+.theme-nav .search-form .form-control:focus {
+    border-color: #fff;
+    box-shadow: 0 0 0 .2rem rgba(255, 255, 255, .25), 0 10px 20px rgba(0, 0, 0, .18);
+}
+
+
+
+/* Page background that matches the navbar (soft lavender + halos) */
+:root {
+    /* tweak these two to nudge overall tint */
+    --page-bg-1: #ECEBFF;
+    /* top */
+    --page-bg-2: #E4E1FF;
+    /* bottom */
+
+    /* faint halos that pick up navbar hue */
+    --page-halo-1: rgba(58, 49, 123, .14);
+    /* near left/top */
+    --page-halo-2: rgba(58, 49, 123, .10);
+    /* near right/top */
+}
+
+/* === FINAL PAGE BACKGROUND OVERRIDE === */
+/* Force our background to win, even with duplicate earlier rules */
+html,
+body {
+    min-height: 100%;
+}
+
+html body.theme-purple {
+    /* soft lavender gradient + subtle halos that match the navbar */
+    background:
+        radial-gradient(900px 380px at 140px 24px, rgba(58, 49, 123, .12) 0%, rgba(58, 49, 123, 0) 60%),
+        radial-gradient(900px 420px at calc(100% - 140px) 40px, rgba(58, 49, 123, .09) 0%, rgba(58, 49, 123, 0) 55%),
+        linear-gradient(180deg, #EDEBFF 0%, #E6E3FF 100%);
+}
+
+/* Optional: a tiny bit of texture so big areas don’t look flat */
+html body.theme-purple::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .015) 0 2px, transparent 2px 4px);
+    mix-blend-mode: multiply;
+    opacity: .22;
+}
+
+
+html,
+body {
+    min-height: 100%;
+}
+
+html body.theme-purple {
+    background:
+        radial-gradient(900px 380px at 140px 24px, rgba(58, 49, 123, .14) 0%, rgba(58, 49, 123, 0) 60%),
+        radial-gradient(900px 420px at calc(100% - 140px) 40px, rgba(58, 49, 123, .12) 0%, rgba(58, 49, 123, 0) 55%),
+        linear-gradient(180deg, #8576f8 0%, #ffffff 100%) !important;
+}
+
+
+/* ===== Profile tabs (Bootstrap .nav-tabs) ===== */
+.theme-purple .nav-tabs {
+    border-bottom: 0;
+    /* no default underline */
+    padding: 8px 10px 0;
+    gap: .4rem;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(180deg, rgba(58, 49, 123, .20), rgba(58, 49, 123, .12));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .15);
+}
+
+/* base tab */
+.theme-purple .nav-tabs .nav-link {
+    border: 0;
+    color: #EDEAFF;
+    background: transparent;
+    border-radius: 10px 10px 0 0;
+    padding: .55rem .9rem;
+    transition: background .18s ease, color .18s ease;
+}
+
+.theme-purple .nav-tabs .nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, .10);
+}
+
+/* active tab merges with the content panel */
+.theme-purple .nav-tabs .nav-link.active {
+    color: var(--sc-text);
+    background: #fff;
+    position: relative;
+    z-index: 2;
+    /* sit above panel border */
+    box-shadow: 0 -1px 0 #fff inset, 0 -2px 10px rgba(17, 12, 46, .06);
+}
+
+/* the content wrapper right after tabs */
+.theme-purple .nav-tabs+.tab-content {
+    margin-top: -1px;
+    /* kill the hairline gap */
+}
+
+/* style the inner panel so it connects to the active tab */
+.theme-purple .nav-tabs+.tab-content,
+.theme-purple .nav-tabs+.tab-content .card,
+.theme-purple .nav-tabs+.tab-content .list-group,
+.theme-purple .nav-tabs+.tab-content>.tab-pane>.card {
+    background: #fff;
+    border: 1px solid #e7e8f1;
+    border-top: 0;
+    /* merge with active tab */
+    border-radius: 0 12px 12px 12px;
+    /* rounded corners */
+    box-shadow: 0 10px 24px rgba(17, 12, 46, .06);
+}
+
+/* optional: make the section header inside the panel look cleaner */
+.theme-purple .nav-tabs+.tab-content .card-header {
+    background: transparent;
+    border-bottom-color: #ececf5;
+    font-weight: 600;
+}
+
+
+/* Address panel tidy */
+.address-panel .list-group-item {
+    border-left: 0;
+    border-right: 0;
+}
+
+/* Address form polish */
+.address-form .form-label {
+    font-weight: 600;
+    color: #2b254f;
+    margin-bottom: .35rem;
+}
+
+.address-form .form-control,
+.address-form .form-select {
+    border: 1px solid rgba(125, 104, 244, .25);
+    border-radius: 12px;
+    background: #fff;
+}
+
+.address-form .form-control:focus,
+.address-form .form-select:focus {
+    border-color: var(--sc-primary-500);
+    box-shadow: 0 0 0 .2rem rgba(125, 104, 244, .25);
+}
+
+/* Nice purple switch */
+.form-switch .form-check-input {
+    width: 2.5rem;
+    height: 1.3rem;
+    background-color: #e9e6ff;
+    border-color: rgba(125, 104, 244, .35);
+}
+
+.form-switch .form-check-input:checked {
+    background-color: var(--sc-primary-500);
+    border-color: var(--sc-primary-500);
 }

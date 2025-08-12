@@ -40,3 +40,6 @@ urlpatterns = [
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='shop/password_change.html'), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='shop/password_change_done.html'), name='password_change_done'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

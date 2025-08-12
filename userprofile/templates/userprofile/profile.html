@@ -36,7 +36,7 @@
   </div>
 
   <!-- Tabs -->
-  <ul class="nav nav-tabs" role="tablist">
+  <ul class="nav nav-tabs profile-tabs" role="tablist">
     <li class="nav-item">
       <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-orders" type="button" role="tab">Orders</button>
     </li>
@@ -168,20 +168,37 @@
       <div class="row g-3">
         <!-- Profile + basic fields -->
         <div class="col-lg-6">
-          <div class="card shadow-sm">
+          <div class="card shadow-sm profile-page">
             <div class="card-header"><strong>Edit Profile</strong></div>
             <div class="card-body">
               <form method="POST" novalidate>
                 {% csrf_token %}
                 <input type="hidden" name="profile_submit" value="1">
-                <h5 class="mt-2 mb-3">User Information</h5>
-                {{ form.as_p }}
+
+                <h6 class="mt-2 mb-3">User Information</h6>
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                  <div class="mb-3">
+                    {{ field.label_tag }}{{ field }}
+                    {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                    {{ field.errors }}
+                  </div>
+                {% endfor %}
 
                 <hr>
-                <h5 class="mt-4 mb-3">Profile details</h5>
-                {{ profile_form.as_p }}
+                
+                {{ profile_form.non_field_errors }}
+                {% for field in profile_form %}
+                  {% if field.name != 'address' and field.name != 'addresses' and field.name != 'shipping_address' and field.name != 'billing_address' %}
+                    <div class="mb-3">
+                      {{ field.label_tag }}{{ field }}
+                      {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                      {{ field.errors }}
+                    </div>
+                  {% endif %}
+                {% endfor %}
 
-                <button type="submit" class="btn btn-primary mt-3 w-100">Save Changes</button>
+                <button type="submit" class="btn btn-primary mt-2 w-100">Save Changes</button>
               </form>
             </div>
           </div>
@@ -189,7 +206,7 @@
 
         <!-- Saved addresses -->
         <div class="col-lg-6">
-          <div class="card shadow-sm mb-3">
+          <div class="card shadow-sm mb-3 address-panel">
             <div class="card-header"><strong>Saved addresses</strong></div>
             <ul class="list-group list-group-flush">
               {% for a in addresses %}
@@ -224,17 +241,77 @@
           </div>
 
           <!-- Add new address -->
-          <div class="card shadow-sm">
+          <div class="card shadow-sm profile-page">
             <div class="card-header"><strong>Add new address</strong></div>
             <div class="card-body">
-              <form method="POST" novalidate>
+              <form method="POST" novalidate class="address-form">
                 {% csrf_token %}
                 <input type="hidden" name="address_submit" value="1">
-                {{ addr_form.as_p }}
-                <button type="submit" class="btn btn-outline-primary w-100">Save address</button>
+
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label" for="{{ addr_form.full_name.id_for_label }}">Full name:</label>
+                    {{ addr_form.full_name }}
+                    {{ addr_form.full_name.errors }}
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="{{ addr_form.phone.id_for_label }}">Phone:</label>
+                    {{ addr_form.phone }}
+                    {{ addr_form.phone.errors }}
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="{{ addr_form.line1.id_for_label }}">Line 1:</label>
+                    {{ addr_form.line1 }}
+                    {{ addr_form.line1.errors }}
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label" for="{{ addr_form.line2.id_for_label }}">Line 2 (optional):</label>
+                    {{ addr_form.line2 }}
+                    {{ addr_form.line2.errors }}
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label" for="{{ addr_form.city.id_for_label }}">City:</label>
+                    {{ addr_form.city }}
+                    {{ addr_form.city.errors }}
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label" for="{{ addr_form.state.id_for_label }}">State:</label>
+                    {{ addr_form.state }}
+                    {{ addr_form.state.errors }}
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label" for="{{ addr_form.postal_code.id_for_label }}">Postal code:</label>
+                    {{ addr_form.postal_code }}
+                    {{ addr_form.postal_code.errors }}
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="{{ addr_form.country.id_for_label }}">Country:</label>
+                    {{ addr_form.country }}
+                    {{ addr_form.country.errors }}
+                  </div>
+
+                  <div class="col-md-6 d-flex align-items-center">
+                    <div class="form-check mt-4">
+                      {{ addr_form.set_as_default }}
+                      <label class="form-check-label" for="{{ addr_form.set_as_default.id_for_label }}">
+                        Make default
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary w-100">Save address</button>
+                  </div>
+                </div>
               </form>
+
             </div>
           </div>
+
         </div>
       </div>
     </div>

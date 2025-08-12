@@ -25,6 +25,7 @@ from decimal import Decimal
 from .forms import UserUpdateForm, UserProfileForm, AddressForm   # NEW
 from .models import UserProfile, Address 
 from orders.models import Order
+from django.urls import reverse
 
 # Create your views here.
 
@@ -38,70 +39,69 @@ from .forms import UserUpdateForm, UserProfileForm
 
 from userprofile.models import UserProfile
 
+
 @login_required
 def profile_view(request):
     user = request.user
     profile, _ = UserProfile.objects.get_or_create(user=user)
 
-    # ----- handle form posts -----
-    if request.method == "POST" and "profile_submit" in request.POST:
+    if request.method == "POST":
         # Save basic user/profile fields
-        user_form = UserUpdateForm(request.POST, instance=user)
-        profile_form = UserProfileForm(request.POST, instance=profile)
-        addr_form = AddressForm()  # blank for render
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, "Profile updated successfully!")
-            return redirect("profile")
+        if "profile_submit" in request.POST:
+            user_form = UserUpdateForm(request.POST, instance=user)
+            profile_form = UserProfileForm(request.POST, instance=profile)
+            addr_form = AddressForm()  # blank for re-render
 
-    elif request.method == "POST" and "address_submit" in request.POST:
-        # Create a new saved address
-        user_form = UserUpdateForm(instance=user)
-        profile_form = UserProfileForm(instance=profile)
-        addr_form = AddressForm(request.POST)
-        if addr_form.is_valid():
-            addr = addr_form.save(commit=False)
-            addr.user = user
-            addr.save()
-            # set as default if checked
-            if addr_form.cleaned_data.get("set_as_default"):
-                Address.objects.filter(user=user).exclude(id=addr.id).update(is_default=False)
-                addr.is_default = True
-                addr.save(update_fields=["is_default"])
-            messages.success(request, "Address saved.")
-            return redirect("profile")
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                messages.success(request, "Profile updated successfully!")
+                return redirect(reverse("profile") + "#tab-profile")
+
+        # Add address
+        elif "address_submit" in request.POST:
+            user_form = UserUpdateForm(instance=user)
+            profile_form = UserProfileForm(instance=profile)
+            addr_form = AddressForm(request.POST)
+
+            if addr_form.is_valid():
+                # AddressForm handles is_default logic internally
+                addr_form.save(user=user)
+                messages.success(request, "Address saved.")
+                return redirect(reverse("profile") + "#tab-profile")
 
     else:
-        # initial GET
         user_form = UserUpdateForm(instance=user)
         profile_form = UserProfileForm(instance=profile)
         addr_form = AddressForm()
 
-    # ----- read-only data for the dashboard -----
-    ratings = Rating.objects.filter(user=user).select_related('card')
-    wishlist_items = WishlistItem.objects.filter(user=user).select_related('card')
+    # ----- Read-only dashboard data -----
+    ratings = Rating.objects.filter(user=user).select_related("card")
+
+    wishlist_items = (
+        WishlistItem.objects.filter(user=user)
+        .select_related("card")
+    )
     wishlist_cards = [w.card for w in wishlist_items]
 
-    viewed_ids = request.session.get('recently_viewed', [])
+    viewed_ids = request.session.get("recently_viewed", [])
     viewed_qs = Card.objects.filter(id__in=viewed_ids)
     viewed_cards = sorted(viewed_qs, key=lambda c: viewed_ids.index(c.id)) if viewed_ids else []
 
-    purchases = Purchase.objects.filter(user=user).order_by('-purchased_at')
-    recent_orders = Order.objects.filter(user=user).order_by('-created_at')[:5]
+    purchases = Purchase.objects.filter(user=user).order_by("-purchased_at")
+    recent_orders = Order.objects.filter(user=user).order_by("-created_at")[:5]
     lifetime_spend = (
-        Order.objects.filter(user=user, status='paid')
-        .aggregate(total=Sum('total'))
-        .get('total') or Decimal('0.00')
+        Order.objects.filter(user=user, status="paid").aggregate(total=Sum("total")).get("total")
+        or Decimal("0.00")
     )
 
-    addresses = Address.objects.filter(user=user)
+    addresses = Address.objects.filter(user=user).order_by("-is_default", "-id")
 
     context = {
         "form": user_form,
         "profile_form": profile_form,
-        "addr_form": addr_form,          # NEW
-        "addresses": addresses,          # NEW
+        "addr_form": addr_form,
+        "addresses": addresses,
         "ratings": ratings,
         "wishlist": wishlist_cards,
         "viewed_cards": viewed_cards,
@@ -165,3 +165,26 @@ def address_delete(request, pk):
     addr.delete()
     messages.success(request, "Address deleted.")
     return redirect('profile')
+
+
+@require_POST
+@login_required
+def address_set_default(request, pk):
+    addr = get_object_or_404(Address, pk=pk, user=request.user)
+    Address.objects.filter(user=request.user).update(is_default=False)
+    addr.is_default = True
+    addr.save(update_fields=["is_default"])
+    messages.success(request, "Default address updated.")
+    return redirect(reverse("profile") + "#tab-profile")
+
+
+
+
+
+@require_POST
+@login_required
+def address_delete(request, pk):
+    addr = get_object_or_404(Address, pk=pk, user=request.user)
+    addr.delete()
+    messages.success(request, "Address deleted.")
+    return redirect(reverse("profile") + "#tab-profile")

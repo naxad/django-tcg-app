@@ -1,68 +1,62 @@
 {% load static %}
 
+<div class="pt-4">
+  <!-- Outer nav: keep it clean; no rounded-pill/shadow here -->
+  <nav class="navbar navbar-expand-lg navbar-dark theme-nav">
+    <!-- The inner pill is applied to this container via CSS -->
+    <div class="container-fluid">
 
-<div class="d-flex justify-content-center pt-4">
-
-  <div class="d-flex align-items-center" style="max-width: 1500px; width: 100%; padding: 0 30px;">
-    
-    <!-- logo area -->
-
-    <div class="navbar-brand ms-3">
-      <a href="{% url 'home:home' %}" class="logo-link d-flex align-items-center">
-        <img src="{% static 'logo.png' %}" alt="Home" height="95" style=" margin-left: -30px; ">
+      <!-- Brand (CSS positions it outside the pill) -->
+      <a class="navbar-brand d-flex align-items-center" href="{% url 'home:home' %}">
+        <img src="{% static 'logo.png' %}" alt="ShinyCards" class="brand-logo">
       </a>
-    </div>
 
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-  
-    <div class="flex-grow-1 d-flex justify-content-center">
-      <div class="navbar-container">
-        <nav class="navbar navbar-expand-lg">
-          <div class="container-fluid justify-content-between align-items-center">
+      <!-- Collapsible -->
+      <div class="collapse navbar-collapse" id="mainNav">
+        <!-- Left links -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-3">
+          <li class="nav-item"><a class="nav-link" href="{% url 'browse:browse' %}">Browse</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'contact:contact' %}">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'sell:sell' %}">Sell Your Card</a></li>
+        </ul>
 
-            <!-- left group -->
-            <div class="navbar-left d-flex align-items-center gap-3">
-              <a class="nav-link" href="{% url 'browse:browse' %}">Browse</a>
-              <a class="nav-link" href="{% url 'contact:contact' %}">Contact</a>
-              <a class="nav-link" href="{% url 'sell:sell' %}">Sell Your Card</a>
-            </div>
+        <!-- Center search -->
+        <form class="d-flex mx-lg-3 my-3 my-lg-0 search-form" method="GET" action="{% url 'browse:browse' %}" role="search">
+          <input class="form-control me-2" type="search" name="q" placeholder="Search cards…" aria-label="Search">
+          <button class="search-btn" type="submit" aria-label="Search">🔍</button>
+        </form>
 
-            <!-- ccenter is the search -->
-            <div class="navbar-center d-flex justify-content-center">
-              <form class="search-form d-flex" method="GET" action="{% url 'browse:browse' %}">
-                <input class="form-control me-2" type="search" name="q" placeholder="Search cards…" />
-                <button class="search-btn btn btn-white" type="submit">🔍</button>
+        <!-- Right links -->
+        <ul class="navbar-nav ms-lg-3 mb-2 mb-lg-0 gap-lg-3 align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart:cart' %}">🛒 Cart</a></li>
+
+          {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+              <li class="nav-item"><a class="nav-link" href="/admin/">🛠️ Admin</a></li>
+            {% endif %}
+            {% if user.is_staff %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'backoffice:orders_list' %}">📦 Staff</a></li>
+            {% endif %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li class="nav-item">
+              <form method="post" action="{% url 'accounts:logout' %}" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="nav-link btn btn-link p-0">Logout</button>
               </form>
-            </div>
-
-            <!-- right group -->
-            <div class="navbar-right d-flex align-items-center gap-3">
-              <a class="nav-link" href="{% url 'cart:cart' %}">🛒 Cart</a>
-
-              {% if user.is_authenticated %}
-                {% if user.is_superuser %}
-                  <a class="nav-link" href="/admin/">🛠️ Admin Panel</a>
-                {% endif %}
-
-                {% if user.is_staff %}
-                  <a class="nav-link" href="{% url 'backoffice:orders_list' %}">📦 Staff</a>
-                {% endif %}
-                
-                <a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a>
-                <form method="post" action="{% url 'accounts:logout' %}" class="logout-form m-0">
-                  {% csrf_token %}
-                  <button type="submit" class="nav-link">Logout</button>
-                </form>
-              {% else %}
-                <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
-                <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
-              {% endif %}
-            </div>
-
-          </div>
-        </nav>
+            </li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Register</a></li>
+          {% endif %}
+        </ul>
       </div>
     </div>
-
-  </div>
+  </nav>
 </div>
