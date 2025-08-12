@@ -30,6 +30,8 @@ PP_SECRET = os.environ.get("PAYPAL_SECRET")
 PP_ENV  = os.environ.get("PAYPAL_ENV", "sandbox")
 PP_BASE = "https://api-m.sandbox.paypal.com" if PP_ENV == "sandbox" else "https://api-m.paypal.com"
 
+MIN_ORDER_TOTAL = Decimal("0.50")  # Stripe minimum in EUR
+
 @login_required
 def add_to_cart(request, card_id):
     card = get_object_or_404(Card, id=card_id)
@@ -71,6 +73,18 @@ def remove_from_cart(request, card_id):
 @login_required
 @require_http_methods(["GET", "POST"])
 def checkout(request):
+    # --- Guard: empty cart / minimum total ---
+    cart_items = CartItem.objects.filter(user=request.user)
+    if not cart_items.exists():
+        messages.warning(request, "Your cart is empty.")
+        return redirect('cart:cart')
+
+    cart_total = sum(ci.card.price * ci.quantity for ci in cart_items)
+    if cart_total < MIN_ORDER_TOTAL:
+        messages.error(request, "Minimum order is €0.50.")
+        return redirect('cart:cart')
+    # ----------------------------------------
+
     order = _create_or_refresh_order_from_cart(request)
     if not order:
         messages.warning(request, "Your cart is empty.")
@@ -90,7 +104,6 @@ def checkout(request):
             shipping_ready = True
             messages.success(request, "Shipping address selected.")
         else:
-            # minimal inline new address (or you can redirect to profile to add)
             messages.error(request, "Please select an address.")
 
     return render(request, 'cart/checkout.html', {
@@ -99,7 +112,6 @@ def checkout(request):
         "shipping_ready": shipping_ready,
         "PAYPAL_CLIENT_ID": os.environ.get("PAYPAL_CLIENT_ID","")
     })
-
 
 
 @login_required
@@ -119,7 +131,6 @@ def update_cart_quantity(request, card_id):
                 else:
                     item.save()
     return redirect('cart:cart')
-
 
 
 def _create_or_refresh_order_from_cart(request):
@@ -157,7 +168,7 @@ def stripe_checkout(request):
 
     order = get_object_or_404(Order, id=order_id, user=request.user, status="pending")
 
-    # ✅ Guard: require shipping snapshot on the order
+    # Guard: require shipping snapshot
     if not all([
         order.shipping_name,
         order.shipping_line1,
@@ -166,6 +177,10 @@ def stripe_checkout(request):
         order.shipping_country,
     ]):
         return JsonResponse({"error": "shipping_missing", "message": "Please select a shipping address first."}, status=400)
+
+    # Guard: minimum total
+    if order.total < MIN_ORDER_TOTAL:
+        return JsonResponse({"error": "min_total", "message": "Minimum order is €0.50."}, status=400)
 
     if not order.items.exists() or order.total <= 0:
         return JsonResponse({"error": "empty_order"}, status=400)
@@ -191,7 +206,6 @@ def stripe_checkout(request):
     order.gateway_id = session.id
     order.save(update_fields=["gateway", "gateway_id"])
     return JsonResponse({"url": session.url})
-
 
 
 @login_required
@@ -220,7 +234,6 @@ def thank_you(request):
         except Exception:
             pass
     return render(request, 'cart/thank_you.html')
-
 
 
 def _finalize_order_to_purchases(order: Order):
@@ -256,7 +269,6 @@ def stripe_webhook(request):
             amount=order.total,
             raw=event
         )
-        # materialize Purchases, clear cart
         _finalize_order_to_purchases(order)
     return HttpResponse(status=200)
 
@@ -278,7 +290,7 @@ def paypal_create(request):
     else:
         order = get_object_or_404(Order, id=order_id, user=request.user, status="pending")
 
-    # ✅ Guard: require shipping snapshot on the order
+    # Guard: require shipping snapshot
     if not all([
         order.shipping_name,
         order.shipping_line1,
@@ -291,7 +303,9 @@ def paypal_create(request):
             status=400
         )
 
-
+    # Guard: minimum total
+    if order.total < MIN_ORDER_TOTAL:
+        return JsonResponse({"error":"min_total", "message":"Minimum order is €0.50."}, status=400)
 
     access = _pp_token()
     body = {
@@ -317,14 +331,11 @@ def paypal_capture(request, order_id):
     access = _pp_token()
     r = requests.post(f"{PP_BASE}/v2/checkout/orders/{order_id}/capture", headers={"Authorization": f"Bearer {access}"})
     data = r.json()
-    # Verify
     if data.get("status") == "COMPLETED":
-        # Pull our order id
         custom_id = None
         try:
             custom_id = data["purchase_units"][0]["payments"]["captures"][0]["custom_id"]
         except KeyError:
-            # older field path; fall back to order.gateway_id
             pass
         order = Order.objects.get(id=int(custom_id)) if custom_id else Order.objects.get(gateway_id=order_id)
         order.status = "paid"

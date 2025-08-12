@@ -237,3 +237,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 })();
+
+
+
+// Cart: block checkout below €0.50 with a red toast
+document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('btn-checkout');
+    if (!btn) return;
+
+    btn.addEventListener('click', function (e) {
+        const raw = btn.getAttribute('data-total');
+        const total = parseFloat((raw || '0').replace(',', '.'));
+        if (isNaN(total) || total < 0.50) {
+            e.preventDefault();
+            const toastEl = document.getElementById('minOrderToast');
+            if (toastEl && window.bootstrap) {
+                const toast = bootstrap.Toast.getOrCreateInstance(toastEl);
+                toast.show();
+            } else {
+                alert('Minimum order is €0.50. Please add more items to continue.');
+            }
+        }
+    });
+});

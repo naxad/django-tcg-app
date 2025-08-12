@@ -1,0 +1,164 @@
+{% extends "home/base.html" %}
+{% block title %}Order #{{ o.id }} (staff){% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Order #{{ o.id }}</h2>
+    <a class="btn btn-outline-secondary" href="{% url 'backoffice:orders_list' %}">← Back to orders</a>
+  </div>
+
+  <p class="text-muted">Placed {{ o.created_at|date:"M d, Y H:i" }}</p>
+
+  <div class="row g-4">
+    <!-- ITEMS -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-header"><strong>Items</strong></div>
+        <div class="card-body">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th class="text-center">Qty</th>
+                <th class="text-end">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for it in o.items.all %}
+              <tr>
+                <td>{{ it.name }}</td>
+                <td class="text-center">{{ it.quantity }}</td>
+                <td class="text-end">€{{ it.unit_price }}</td>
+              </tr>
+              {% endfor %}
+              <tr class="table-light">
+                <td colspan="2" class="text-end"><strong>Total</strong></td>
+                <td class="text-end"><strong>€{{ o.total }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-lg-5">
+
+      <!-- PAYMENT / STATUS -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-header"><strong>Status</strong></div>
+        <div class="card-body">
+          <div>
+            Payment:
+            {% if o.status == 'paid' %}
+              <span class="badge bg-success">Paid</span>
+            {% elif o.status == 'pending' %}
+              <span class="badge bg-warning text-dark">Pending</span>
+            {% elif o.status == 'failed' %}
+              <span class="badge bg-danger">Failed</span>
+            {% else %}
+              <span class="badge bg-secondary">{{ o.status|title }}</span>
+            {% endif %}
+            <span class="text-muted ms-2">via {{ o.gateway|default:"—" }}</span>
+          </div>
+          {% if o.paid_at %}
+            <div class="text-muted">Paid at: {{ o.paid_at|date:"Y-m-d H:i" }}</div>
+          {% endif %}
+
+          {% if o.payment %}
+            <hr>
+            <div class="small text-muted">
+              <div>Gateway ref: <code>{{ o.payment.gateway_ref }}</code></div>
+              <div>Recorded: {{ o.payment.created_at|date:"Y-m-d H:i" }}</div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- FULFILLMENT -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-header"><strong>Fulfillment</strong></div>
+        <div class="card-body">
+          <form method="post" class="d-grid gap-2">
+            {% csrf_token %}
+            <input type="hidden" name="save_fulfillment" value="1">
+            <div>
+              <label class="form-label">Fulfillment status</label>
+              <select name="fulfillment_status" class="form-select">
+                {% for k,v in o.FULFILL_CHOICES %}
+                  <option value="{{ k }}" {% if o.fulfillment_status == k %}selected{% endif %}>{{ v }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Tracking number</label>
+              <input type="text" name="tracking_number" value="{{ o.tracking_number }}" class="form-control">
+            </div>
+            <div>
+              <label class="form-label">Carrier</label>
+              <input type="text" name="carrier" value="{{ o.carrier }}" class="form-control" placeholder="e.g. DHL, UPS">
+            </div>
+            <div>
+              <label class="form-label">Admin note</label>
+              <textarea name="admin_note" rows="3" class="form-control" placeholder="Internal notes…">{{ o.admin_note }}</textarea>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <button class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+
+          <form method="post" class="mt-2">
+            {% csrf_token %}
+            <input type="hidden" name="mark_shipped" value="1">
+            <button class="btn btn-outline-success w-100"
+                    {% if o.fulfillment_status == 'shipped' %}disabled{% endif %}>
+              Mark as shipped
+            </button>
+            {% if o.shipped_at %}
+              <div class="small text-muted mt-2">Shipped at: {{ o.shipped_at|date:"Y-m-d H:i" }}</div>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+
+      <!-- CUSTOMER / SHIPPING -->
+      <div class="card shadow-sm">
+        <div class="card-header"><strong>Customer & shipping</strong></div>
+        <div class="card-body">
+          <div class="mb-2">
+            <div><strong>User:</strong>
+              {% if o.user %}
+                {{ o.user.username }} (id {{ o.user.id }})
+              {% else %}
+                <span class="text-muted">Guest</span>
+              {% endif %}
+            </div>
+            <div><strong>Email:</strong> {{ o.email }}</div>
+          </div>
+
+          <hr>
+          <div class="mb-2">
+            <div class="fw-semibold">Ship to</div>
+            {% if o.shipping_line1 %}
+              <div>{{ o.shipping_name }}</div>
+              <div>{{ o.shipping_line1 }}{% if o.shipping_line2 %}, {{ o.shipping_line2 }}{% endif %}</div>
+              <div>{{ o.shipping_city }} {{ o.shipping_postal_code }}, {{ o.shipping_country }}</div>
+              {% if o.shipping_phone %}<div>☎ {{ o.shipping_phone }}</div>{% endif %}
+            {% else %}
+              <div class="text-muted">No shipping address on file.</div>
+            {% endif %}
+          </div>
+
+          <div class="small text-muted">
+            <div>Gateway session/id: <code>{{ o.gateway_id|default:"—" }}</code></div>
+            <div>Created: {{ o.created_at|date:"Y-m-d H:i" }}</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /right col -->
+  </div><!-- /row -->
+</div>
+{% endblock %}

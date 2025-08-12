@@ -43,6 +43,11 @@
                 {% if user.is_superuser %}
                   <a class="nav-link" href="/admin/">🛠️ Admin Panel</a>
                 {% endif %}
+
+                {% if user.is_staff %}
+                  <a class="nav-link" href="{% url 'backoffice:orders_list' %}">📦 Staff</a>
+                {% endif %}
+                
                 <a class="nav-link" href="{% url 'profile' %}">👤 My Profile</a>
                 <form method="post" action="{% url 'accounts:logout' %}" class="logout-form m-0">
                   {% csrf_token %}

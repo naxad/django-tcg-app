@@ -1,10 +1,8 @@
-from django.db import models
-
-# Create your models here.
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from browse.models import Card
+
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -13,6 +11,7 @@ class Order(models.Model):
         ("failed", "Failed"),
         ("refunded", "Refunded"),
     ]
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     email = models.EmailField()
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="pending")
@@ -23,7 +22,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     paid_at = models.DateTimeField(null=True, blank=True)
 
-    # --- NEW: shipping snapshot stored on the order ---
+    # --- Shipping snapshot stored on the order ---
     shipping_name = models.CharField(max_length=120, blank=True)
     shipping_phone = models.CharField(max_length=30, blank=True)
     shipping_line1 = models.CharField(max_length=255, blank=True)
@@ -32,16 +31,37 @@ class Order(models.Model):
     shipping_state = models.CharField(max_length=120, blank=True)
     shipping_postal_code = models.CharField(max_length=20, blank=True)
     shipping_country = models.CharField(max_length=2, blank=True)
-    # link back to a saved address for convenience (string ref avoids import cycle)
-    shipping_address = models.ForeignKey(
+    shipping_address = models.ForeignKey(  # convenience back-link
         "userprofile.Address",
         null=True, blank=True,
         on_delete=models.SET_NULL,
-        related_name="orders"
+        related_name="orders",
     )
+
+    # --- NEW: fulfillment/admin fields (for staff panel) ---
+    FULFILL_CHOICES = [
+        ("new", "New"),
+        ("processing", "Processing"),
+        ("packed", "Packed"),
+        ("shipped", "Shipped"),
+        ("delivered", "Delivered"),
+        ("cancelled", "Cancelled"),
+    ]
+    fulfillment_status = models.CharField(max_length=20, choices=FULFILL_CHOICES, default="new")
+    tracking_number   = models.CharField(max_length=100, blank=True)
+    carrier           = models.CharField(max_length=100, blank=True)
+    shipped_at        = models.DateTimeField(null=True, blank=True)
+    admin_note        = models.TextField(blank=True)
 
     def __str__(self):
         return f"Order #{self.id} - {self.status}"
+
+    # helper your staff UI can call
+    def mark_shipped(self):
+        self.fulfillment_status = "shipped"
+        self.shipped_at = timezone.now()
+        self.save(update_fields=["fulfillment_status", "shipped_at"])
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
@@ -55,6 +75,7 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} × {self.name} (Order #{self.order_id})"
+
 
 class Payment(models.Model):
     order = models.OneToOneField(Order, related_name="payment", on_delete=models.CASCADE)
