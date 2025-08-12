@@ -64,7 +64,7 @@ def profile_view(request):
             profile_form = UserProfileForm(instance=profile)
             addr_form = AddressForm(request.POST)
             if addr_form.is_valid():
-                addr_form.save(user=request.user)  # <- pass owner to form's save()
+                addr_form.save(user=request.user)  # <- pass owner to form's save() test change 
                 messages.success(request, "Address saved.")
                 return redirect("profile")
 
