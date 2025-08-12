@@ -92,3 +92,28 @@ def order_detail(request, order_id):
             return redirect("backoffice:order_detail", order_id=o.id)
 
     return render(request, "backoffice/order_detail.html", {"o": o})
+
+
+# backoffice/views.py
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from orders.models import Order
+from .forms import OrderShippingForm
+
+@staff_member_required
+def order_shipping_edit(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    if request.method == "POST":
+        form = OrderShippingForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            # IMPORTANT: refresh items_subtotal, shipping_amount (if method computes it), and total
+            order.recompute_totals()
+            messages.success(request, "Shipping updated.")
+            return redirect("backoffice:order_detail", order_id=order.pk)
+    else:
+        form = OrderShippingForm(instance=order)
+
+    return render(request, "backoffice/order_shipping_edit.html", {"order": order, "form": form})
+

@@ -4,9 +4,15 @@
 {% block content %}
 <div class="container mt-5">
 
+  <!-- Title + actions -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="mb-0">Order #{{ o.id }}</h2>
-    <a class="btn btn-outline-secondary" href="{% url 'backoffice:orders_list' %}">← Back to orders</a>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-primary" href="{% url 'backoffice:order_shipping_edit' o.id %}">
+        Edit shipping
+      </a>
+      <a class="btn btn-outline-secondary" href="{% url 'backoffice:orders_list' %}">← Back to orders</a>
+    </div>
   </div>
 
   <p class="text-muted">Placed {{ o.created_at|date:"M d, Y H:i" }}</p>
@@ -33,10 +39,31 @@
                 <td class="text-end">€{{ it.unit_price }}</td>
               </tr>
               {% endfor %}
+
+              <!-- Totals block -->
+              <tr>
+                <td colspan="2" class="text-end">Subtotal</td>
+                <td class="text-end">€{{ o.total }}</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="text-end">
+                  Shipping{% if o.shipping_method %} — {{ o.shipping_method }}{% endif %}
+                </td>
+                <td class="text-end">€{{ o.shipping_amount|default:"0.00" }}</td>
+              </tr>
+              <tr class="table-light">
+                <td colspan="2" class="text-end"><strong>Grand total</strong></td>
+                <td class="text-end">
+                  <strong>€{{ o.total|add:o.shipping_amount }}</strong>
+                </td>
+              </tr>
+
+              {# If your o.total ALREADY includes shipping, replace the 3 rows above with:
               <tr class="table-light">
                 <td colspan="2" class="text-end"><strong>Total</strong></td>
                 <td class="text-end"><strong>€{{ o.total }}</strong></td>
               </tr>
+              #}
             </tbody>
           </table>
         </div>
@@ -125,7 +152,12 @@
 
       <!-- CUSTOMER / SHIPPING -->
       <div class="card shadow-sm">
-        <div class="card-header"><strong>Customer & shipping</strong></div>
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Customer & shipping</strong>
+          <a class="btn btn-sm btn-outline-primary" href="{% url 'backoffice:order_shipping_edit' o.id %}">
+            Edit shipping
+          </a>
+        </div>
         <div class="card-body">
           <div class="mb-2">
             <div><strong>User:</strong>
@@ -139,7 +171,7 @@
           </div>
 
           <hr>
-          <div class="mb-2">
+          <div class="mb-3">
             <div class="fw-semibold">Ship to</div>
             {% if o.shipping_line1 %}
               <div>{{ o.shipping_name }}</div>
@@ -151,6 +183,14 @@
             {% endif %}
           </div>
 
+          <div class="small">
+            {% if o.shipping_method %}
+              <div><strong>Shipping method:</strong> {{ o.shipping_method }}</div>
+            {% endif %}
+            <div><strong>Shipping amount:</strong> €{{ o.shipping_amount|default:"0.00" }}</div>
+          </div>
+
+          <hr>
           <div class="small text-muted">
             <div>Gateway session/id: <code>{{ o.gateway_id|default:"—" }}</code></div>
             <div>Created: {{ o.created_at|date:"Y-m-d H:i" }}</div>

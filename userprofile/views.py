@@ -59,16 +59,14 @@ def profile_view(request):
                 return redirect(reverse("profile") + "#tab-profile")
 
         # Add address
-        elif "address_submit" in request.POST:
+        elif request.method == "POST" and request.POST.get("address_submit"):
             user_form = UserUpdateForm(instance=user)
             profile_form = UserProfileForm(instance=profile)
             addr_form = AddressForm(request.POST)
-
             if addr_form.is_valid():
-                # AddressForm handles is_default logic internally
-                addr_form.save(user=user)
+                addr_form.save(user=request.user)  # <- pass owner to form's save()
                 messages.success(request, "Address saved.")
-                return redirect(reverse("profile") + "#tab-profile")
+                return redirect("profile")
 
     else:
         user_form = UserUpdateForm(instance=user)
