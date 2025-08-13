@@ -1,0 +1,36 @@
+{% extends "home/base.html" %}
+{% block title %}Grade your card{% endblock %}
+{% block content %}
+<div class="container my-5" style="max-width: 860px;">
+  <h2 class="mb-3">Grade your card (AI preview)</h2>
+  <p class="text-muted">
+    Upload front optionally back photos of the card you want to grade. You’ll get per-category scores and a predicted PSA-style grade.
+    This is an estimate for guidance only — not an official grade.
+  </p>
+
+  <form method="post" enctype="multipart/form-data" class="card p-3 shadow-sm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Card name (optional)</label>
+      {{ form.card_name }}
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Front image *</label>
+        <input type="file" name="front_image" accept="image/*" required class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Back image (optional)</label>
+        <input type="file" name="back_image" accept="image/*" class="form-control">
+      </div>
+    </div>
+
+    <button class="btn btn-primary mt-3">Analyze</button>
+  </form>
+
+  <div class="mt-4 small text-muted">
+    Tips: shoot straight on, good lighting, full card visible (no heavy crops), avoid glare & blur.
+  </div>
+</div>
+{% endblock %}

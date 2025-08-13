@@ -68,8 +68,10 @@ footer {
     background-color: #2c3e50;
     color: #fff;
     text-align: center;
-    padding: 12px 0;
+    padding: 120px 0;
     margin-top: auto;
+    min-height: 150px;
+    position: relative;
 }
 
 /* Fades */
@@ -500,14 +502,53 @@ body.theme-purple textarea:focus {
     box-shadow: 0 0 0 0.2rem rgba(123, 92, 255, .2);
 }
 
+
+
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
 /* =======================================================
    FOOTER
    ======================================================= */
 body.theme-purple footer {
-    background: linear-gradient(90deg, var(--surface-700), var(--surface-600));
-    border-top: 1px solid var(--border);
-    color: var(--text-200);
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #7d68f4 0%, #6a55eb 100%);
+    /* purple stripe */
+    color: #fff;
+    border-top: 1px solid rgba(255, 255, 255, .15);
+    padding: 12px 0;
+    position: relative;
+    z-index: 1;
+    /* keep above any backgrounds */
+    min-height: 5vh;
+    margin-top: auto;
+
+
 }
+
+.site-footer .footer-link {
+    color: #fff;
+    text-decoration: none;
+}
+
+.site-footer .footer-link:hover {
+    text-decoration: underline;
+}
+
+
+
 
 /* =======================================================
    LAYOUT HELPERS & LEGACY PIECES (kept from your file)
@@ -823,13 +864,8 @@ body.theme-purple .table tbody tr {
     background-color: #3ddc97 !important;
 }
 
-/* ======================================================
-   FOOTER
-   ====================================================== */
-footer.bg-dark {
-    background: linear-gradient(90deg, var(--sc-surface-700), var(--sc-surface-600)) !important;
-    border-top: 1px solid rgba(255, 255, 255, .12);
-}
+
+
 
 /* ======================================================
    HOME: banner carousel corner rounding

@@ -1,0 +1,65 @@
+{% extends "home/base.html" %}
+{% block title %}Your AI grade{% endblock %}
+{% block content %}
+<div class="container my-5" style="max-width: 980px;">
+  <h2 class="mb-3">AI grading result</h2>
+
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="mb-3">
+            <img src="{{ gr.front_image.url }}" alt="Front" class="img-fluid rounded">
+          </div>
+          {% if gr.back_image %}
+          <div>
+            <img src="{{ gr.back_image.url }}" alt="Back" class="img-fluid rounded">
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          {% if gr.card_name %}<div class="h5">{{ gr.card_name }}</div>{% endif %}
+          <div class="display-6 fw-bold">≈ PSA {{ gr.predicted_grade }}</div>
+          {% if gr.predicted_label %}<div class="text-muted">{{ gr.predicted_label }}</div>{% endif %}
+
+          <hr>
+          <div class="row text-center g-3">
+            <div class="col"><div class="fw-semibold">Centering</div><div class="fs-4">{{ gr.score_centering }}</div></div>
+            <div class="col"><div class="fw-semibold">Surface</div><div class="fs-4">{{ gr.score_surface }}</div></div>
+            <div class="col"><div class="fw-semibold">Edges</div><div class="fs-4">{{ gr.score_edges }}</div></div>
+            <div class="col"><div class="fw-semibold">Corners</div><div class="fs-4">{{ gr.score_corners }}</div></div>
+            <div class="col"><div class="fw-semibold">Color</div><div class="fs-4">{{ gr.score_color }}</div></div>
+          </div>
+
+          <hr>
+          {% if gr.needs_better_photos %}
+            <div class="alert alert-warning">
+              <strong>Photo quality issue:</strong> {{ gr.photo_feedback|default:"Try higher resolution, even lighting, and keep the whole card in frame." }}
+            </div>
+          {% endif %}
+
+          {% if gr.explanation_md %}
+            <div class="markdown">
+              {{ gr.explanation_md|linebreaksbr }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="text-muted small mt-3">
+        This is an AI estimate for educational purposes only and may differ from official grading
+        by PSA/CGC/Beckett, etc.
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <a class="btn btn-outline-primary" href="{% url 'grading:grade' %}">Grade another card</a>
+  </div>
+</div>
+{% endblock %}

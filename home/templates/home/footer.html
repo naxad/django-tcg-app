@@ -1,3 +1,7 @@
-<footer class="bg-dark text-white text-center py-3 mt-5">
-  <small>&copy; {{ now|date:"Y" }} ShinyCards Store. All rights reserved.</small>
+<footer class="site-footer">
+  <div class="container d-flex justify-content-between align-items-center">
+    <span class="copy">© ShinyCards Store. All rights reserved.</span>
+    <a class="footer-link" href="{% url 'contact:contact' %}">Contact Us</a>
+    
+  </div>
 </footer>
