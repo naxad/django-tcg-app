@@ -1,0 +1,23 @@
+{
+  "image_size": 384,
+  "val_loss": 5.971921920776367,
+  "mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "heads": [
+    "centering",
+    "surface",
+    "edges",
+    "corners",
+    "color",
+    "overall"
+  ],
+  "arch": "PairRegressor"
+}

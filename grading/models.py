@@ -38,3 +38,40 @@ class GradeRequest(models.Model):
     def __str__(self):
         who = self.user.username if self.user else "guest"
         return f"GradeRequest #{self.pk} by {who} – PSA~{self.predicted_grade}"
+
+
+
+# grading/models.py
+from django.db import models
+from django.conf import settings
+
+class GradedCard(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    card_name = models.CharField(max_length=255, blank=True)
+
+    # Image paths
+    front_image = models.ImageField(upload_to="graded_cards/front/")
+    back_image = models.ImageField(upload_to="graded_cards/back/")
+
+    # AI-predicted scores
+    score_centering = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    score_surface   = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    score_edges     = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    score_corners   = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    score_color     = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+
+    predicted_grade = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    predicted_label = models.CharField(max_length=100, blank=True)
+    issues          = models.JSONField(default=list, blank=True)
+    needs_better_photos = models.BooleanField(default=False)
+    photo_feedback  = models.TextField(blank=True)
+    summary         = models.TextField(blank=True)
+
+    # Manual override
+    human_verified_grade = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.card_name or 'Unnamed Card'} - {self.predicted_label or 'Ungraded'}"
