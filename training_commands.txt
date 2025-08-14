@@ -1,0 +1,3 @@
+python manage.py export_dataset --no-copy
+
+python -m grading.ml.train --csv dataset/metadata.csv --epochs 12 --device cuda

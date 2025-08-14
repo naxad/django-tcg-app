@@ -64,15 +64,7 @@ main {
 }
 
 /* Footer (light) */
-footer {
-    background-color: #2c3e50;
-    color: #fff;
-    text-align: center;
-    padding: 120px 0;
-    margin-top: auto;
-    min-height: 150px;
-    position: relative;
-}
+
 
 /* Fades */
 .fade-carousel {
@@ -507,16 +499,23 @@ body.theme-purple textarea:focus {
 
 html {
     height: 100%;
+
 }
 
 body {
     display: flex;
     flex-direction: column;
     height: 100%;
+
+
 }
 
 main {
+
     flex: 1 0 auto;
+
+    margin-bottom: 120px;
+
 }
 
 /* =======================================================
@@ -533,7 +532,7 @@ body.theme-purple footer {
     z-index: 1;
     /* keep above any backgrounds */
     min-height: 5vh;
-    margin-top: auto;
+
 
 
 }
@@ -906,7 +905,7 @@ body.theme-purple .table tbody tr {
     width: clamp(860px, 72vw, 1100px);
     padding: 0;
     /* no outer padding */
-    overflow: visible;
+
     /* let logo hang outside */
 }
 
@@ -1460,42 +1459,17 @@ input[type="button"].btn,
 
 /* === FINAL PAGE BACKGROUND OVERRIDE === */
 /* Force our background to win, even with duplicate earlier rules */
-html,
-body {
-    min-height: 100%;
-}
 
-html body.theme-purple {
-    /* soft lavender gradient + subtle halos that match the navbar */
-    background:
-        radial-gradient(900px 380px at 140px 24px, rgba(58, 49, 123, .12) 0%, rgba(58, 49, 123, 0) 60%),
-        radial-gradient(900px 420px at calc(100% - 140px) 40px, rgba(58, 49, 123, .09) 0%, rgba(58, 49, 123, 0) 55%),
-        linear-gradient(180deg, #EDEBFF 0%, #E6E3FF 100%);
-}
+
+
 
 /* Optional: a tiny bit of texture so big areas don’t look flat */
-html body.theme-purple::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .015) 0 2px, transparent 2px 4px);
-    mix-blend-mode: multiply;
-    opacity: .22;
-}
 
 
-html,
-body {
-    min-height: 100%;
-}
 
-html body.theme-purple {
-    background:
-        radial-gradient(900px 380px at 140px 24px, rgba(58, 49, 123, .14) 0%, rgba(58, 49, 123, 0) 60%),
-        radial-gradient(900px 420px at calc(100% - 140px) 40px, rgba(58, 49, 123, .12) 0%, rgba(58, 49, 123, 0) 55%),
-        linear-gradient(180deg, #8576f8 0%, #ffffff 100%) !important;
-}
+
+
+
 
 
 /* ===== Profile tabs (Bootstrap .nav-tabs) ===== */
@@ -1600,3 +1574,289 @@ html body.theme-purple {
     background-color: var(--sc-primary-500);
     border-color: var(--sc-primary-500);
 }
+
+
+/* --- grading image carousel --- */
+.grade-carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.gc-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    /* card-like shape */
+    background: #fff;
+}
+
+.gc-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity .25s ease;
+    background: #fff;
+}
+
+.gc-img.gc-active {
+    opacity: 1;
+}
+
+.gc-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .45);
+    color: #fff;
+    font-size: 22px;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.gc-prev {
+    left: 10px;
+}
+
+.gc-next {
+    right: 10px;
+}
+
+.gc-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.gc-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .25);
+}
+
+.gc-dot.gc-dot-active {
+    background: rgba(0, 0, 0, .6);
+}
+
+
+
+
+
+/* ===== Footer / layout normalizer (put at END of stylesheet) ===== */
+
+/* Canonical page structure: one flex column that fills the viewport */
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Use padding (not margin) to create space above the footer */
+:root {
+    --footer-safe-space: 96px;
+}
+
+/* tweak 72–120px if you want more/less space */
+main {
+    flex: 1 0 auto;
+    padding-bottom: var(--footer-safe-space);
+    margin-bottom: 0 !important;
+    /* kill any earlier margin-bottom */
+}
+
+/* Keep the footer at the bottom without overlapping content */
+
+/* Make sure decorative page background is behind the footer */
+
+
+/* Safety guard: if a template accidentally renders two footers, hide extras */
+footer.site-footer:not(:first-of-type),
+body footer:not(:first-of-type) {
+    display: none !important;
+}
+
+
+
+/* ===== FIX GHOST STRIPE UNDER CONTENT (put at very end) ===== */
+main {
+    /* space above footer without exposing the body background */
+    padding-bottom: 100px;
+    margin-bottom: 0 !important;
+    /* override earlier margin-bottom */
+    flex: 1 0 auto;
+    /* keep the page-flex layout */
+}
+
+/* Prevent last child margins from collapsing out of <main> */
+main>*:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Make sure only one footer can ever show (safety) */
+footer.site-footer:not(:first-of-type),
+body footer:not(:first-of-type) {
+    display: none !important;
+}
+
+
+
+
+/* Force page base to white so nothing shows below footer */
+html,
+body {
+    background: #fff !important;
+}
+
+/* Paint the gradient only behind the main content area */
+main#page-content {
+    position: relative;
+    /* create a containing block */
+    z-index: 0;
+}
+
+/* The gradient layer */
+main#page-content::before {
+    content: "";
+    position: absolute;
+    /* Start a little above main to blend under the navbar; end exactly at the bottom of main */
+    top: -32px;
+    /* tweak if you want more/less under the navbar */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    /* sit behind content */
+    pointer-events: none;
+
+    /* Your previous gradient, unchanged */
+    background:
+        radial-gradient(900px 380px at 140px 24px, rgba(58, 49, 123, .14) 0%, rgba(58, 49, 123, 0) 60%),
+        radial-gradient(900px 420px at calc(100% - 140px) 40px, rgba(58, 49, 123, .12) 0%, rgba(58, 49, 123, 0) 55%),
+        linear-gradient(180deg, #8576f8 100%, #8576f8 100%);
+}
+
+/* Keep the footer above the gradient layer */
+footer.site-footer,
+footer {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+/* Make the gradient layer span the viewport width */
+main#page-content {
+    position: relative;
+    z-index: 0;
+}
+
+main#page-content::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    /* how far it sits under the navbar */
+    left: 50%;
+    width: 100vw;
+    /* full viewport width */
+    transform: translateX(-50%);
+    /* center the layer under the centered container */
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+    /* replaces your current background on main#page-content::before */
+    background:
+        /* NEW: soft center halo to balance the sides */
+
+
+        /* existing side halos (you can keep your exact sizes if you prefer) */
+
+
+        /* smoother top→bottom blend */
+        linear-gradient(180deg, #8576f8 10%, #ffffff 100%);
+
+}
+
+
+
+/* ===== FINAL PAGE BACKDROP (single source of truth) ===== */
+html {
+    /* full-page gradient (same one you liked) */
+    background:
+
+        linear-gradient(180deg, #8576f8 100%, #8576f8 100%) !important;
+    background-attachment: fixed;
+    /* keeps it steady while scrolling */
+    min-height: 100%;
+}
+
+/* Body layout: content grows, footer sticks to bottom */
+body {
+    background: transparent !important;
+    /* gradient only on html */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    /* kill tiny horizontal scroll */
+}
+
+/* Main should take remaining height above footer */
+main {
+    flex: 1 0 auto;
+}
+
+/* Footer visual */
+footer {
+    position: relative;
+    z-index: 1;
+    /* keep your purple footer look */
+    background: linear-gradient(180deg, #7d68f4 0%, #7d68f4 100%);
+    color: #fff;
+    border-top: 1px solid rgba(255, 255, 255, .15);
+}
+
+/* The navbar pill has a brand positioned outside the pill.
+   Prevent it from extending document width. */
+
+
+/* Fallback for older browsers if needed: */
+/* body { overflow-x: hidden; }  -- already set above */
+
+
+
+
+/* Keep the page from getting a horizontal scrollbar, but don't clip the navbar */
+body {
+    overflow-x: hidden;
+}
+
+.theme-nav,
+.theme-nav>.container-fluid {
+    overflow: visible;
+    /* allow rounded corners / shadow to render */
+}
+
+/* Give the navbar just a hair of breathing room so nothing touches its edge */
+
+
+/* adjust 0–4px to taste */

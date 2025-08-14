@@ -21,3 +21,8 @@ main.env
 .DS_Store
 Thumbs.db
 "main.env" 
+
+grading/ml/models/cardgrader_v1.pt
+
+/media/
+/dataset/

@@ -5,21 +5,28 @@
   <h2 class="mb-3">AI grading result</h2>
 
   <div class="row g-4">
+    <!-- Left: image carousel -->
     <div class="col-lg-5">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <div class="mb-3">
-            <img src="{{ gr.front_image.url }}" alt="Front" class="img-fluid rounded">
-          </div>
+      <div class="grade-carousel card shadow-sm">
+        <div class="gc-frame">
+          <img src="{{ gr.front_image.url }}" alt="Front of card" class="gc-img gc-active">
           {% if gr.back_image %}
-          <div>
-            <img src="{{ gr.back_image.url }}" alt="Back" class="img-fluid rounded">
-          </div>
+          <img src="{{ gr.back_image.url }}" alt="Back of card" class="gc-img">
           {% endif %}
         </div>
+
+        {% if gr.back_image %}
+        <button class="gc-nav gc-prev" aria-label="Previous">‹</button>
+        <button class="gc-nav gc-next" aria-label="Next">›</button>
+        <div class="gc-dots">
+          <span class="gc-dot gc-dot-active"></span>
+          <span class="gc-dot"></span>
+        </div>
+        {% endif %}
       </div>
     </div>
 
+    <!-- Right: grading box -->
     <div class="col-lg-7">
       <div class="card shadow-sm">
         <div class="card-body">

@@ -21,3 +21,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const root = document.querySelector(".grade-carousel");
+    if (!root) return;
+
+    const slides = root.querySelectorAll(".gc-img");
+    const prev = root.querySelector(".gc-prev");
+    const next = root.querySelector(".gc-next");
+    const dots = root.querySelectorAll(".gc-dot");
+    let idx = 0;
+
+    function show(i) {
+        idx = (i + slides.length) % slides.length;
+        slides.forEach((el, j) => el.classList.toggle("gc-active", j === idx));
+        dots.forEach((d, j) => d.classList.toggle("gc-dot-active", j === idx));
+    }
+
+    if (next) next.addEventListener("click", () => show(idx + 1));
+    if (prev) prev.addEventListener("click", () => show(idx - 1));
+    dots.forEach((d, j) => d.addEventListener("click", () => show(j)));
+});
