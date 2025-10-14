@@ -24,14 +24,14 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&$m0p$mbtlkc@0z!g0&t%m^zxzhs0w)qbg@5=t_1s@kow1*c)z'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "CHANGE_ME")
 
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = [ "shinyverse.eu", "www.shinyverse.eu"]
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
 CSRF_TRUSTED_ORIGINS = [
     "https://shinyverse.eu",
