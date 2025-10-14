@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <body style="font-family: Arial, sans-serif;">
+    <h2>🎉 Your order has been shipped!</h2>
+    <p>Order <strong>#{{ order.id }}</strong> is on the way.</p>
+
+    {% if tracking_number %}
+      <p>
+        <strong>Tracking:</strong> {{ tracking_number }}
+        {% if carrier %} ({{ carrier }}){% endif %}
+      </p>
+    {% endif %}
+
+    <h3>Ship to</h3>
+    <p>
+      {{ order.shipping_name }}<br>
+      {{ order.shipping_line1 }}{% if order.shipping_line2 %}, {{ order.shipping_line2 }}{% endif %}<br>
+      {{ order.shipping_city }} {{ order.shipping_postal_code }} {{ order.shipping_country }}
+    </p>
+
+    <p>Thanks for shopping with <strong>ShinyCards</strong>!</p>
+  </body>
+</html>

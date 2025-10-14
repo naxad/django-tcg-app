@@ -1,0 +1,146 @@
+{
+  "final_result": {
+    "scores": {
+      "centering": 7.0,
+      "surface": 3.0,
+      "edges": 2.0,
+      "corners": 2.0,
+      "color": 7.0
+    },
+    "predicted_grade": 2.0,
+    "predicted_label": "GOOD (Good)",
+    "needs_better_photos": false,
+    "photo_feedback": "",
+    "observations": [
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "large tear on top left",
+        "box": [
+          0,
+          0,
+          2,
+          2
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "back",
+        "note": "large tear on top left",
+        "box": [
+          0,
+          0,
+          2,
+          2
+        ]
+      },
+      {
+        "category": "edges",
+        "side": "front",
+        "note": "significant edge wear on top left",
+        "box": [
+          0,
+          0,
+          2,
+          2
+        ]
+      },
+      {
+        "category": "edges",
+        "side": "back",
+        "note": "significant edge wear on top left",
+        "box": [
+          0,
+          0,
+          2,
+          2
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "front",
+        "note": "top left corner missing due to tear",
+        "box": [
+          0,
+          0,
+          2,
+          2
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "back",
+        "note": "top left corner missing due to tear",
+        "box": [
+          0,
+          0,
+          2,
+          2
+        ]
+      }
+    ],
+    "summary": "The card shows slight off-centering, heavy surface damage, edge wear, and corner wear.",
+    "detected": {
+      "set_code": "",
+      "set_name": "",
+      "era": "",
+      "border": "",
+      "language": "unknown",
+      "card_name": "",
+      "style_flags": [],
+      "symbol_key": "",
+      "symbol_score": 0.0,
+      "ptcgoCode": "",
+      "set_id": "",
+      "set_logo_url": "",
+      "set_symbol_url": "",
+      "card_large_url": "",
+      "rarity": "",
+      "subtypes": [],
+      "supertype": "",
+      "types": [],
+      "regulationMark": ""
+    },
+    "debug": {
+      "gate": {
+        "detected_sides": {
+          "image_1": "front",
+          "image_2": "back"
+        },
+        "image_quality": "medium"
+      },
+      "ocr": {
+        "set_code_info": {
+          "set_code": "",
+          "language": "unknown"
+        },
+        "card_name": ""
+      },
+      "set_info": {
+        "set_name": "",
+        "era": "",
+        "border": "",
+        "style_flags": [],
+        "set_code": "",
+        "language": "unknown",
+        "card_name": "",
+        "card_large_url": "",
+        "set_logo_url": "",
+        "set_symbol_url": ""
+      },
+      "cv_flags": {
+        "scribble": false,
+        "scribble_conf": 0.5817286408339623,
+        "glare": false,
+        "glare_conf": 0.0,
+        "blur": false,
+        "blur_conf": 0.0
+      },
+      "models": {
+        "classifier": "gpt-4o-mini",
+        "grader": "gpt-4o"
+      },
+      "hint_parts": []
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block title %}AI Grading — Coming Soon{% endblock %}
+
+{% block content %}
+
+
+<div class="container my-4 my-md-5">
+  <!-- HERO -->
+  <section class="gs-hero p-4 p-md-5">
+    <div class="gs-blob one"></div>
+    <div class="gs-blob two"></div>
+
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <div class="d-inline-flex align-items-center gap-2 mb-3">
+          <span class="gs-chip">
+            <span class="gs-check">✓</span>
+            Private Beta
+          </span>
+          <span class="gs-chip">Computer-Vision Grader</span>
+        </div>
+
+        <h1 class="display-5 fw-bold mb-3">AI Grading is almost ready.</h1>
+        <p class="fs-5 gs-muted mb-4">
+          We’re finishing our vision model that scores <strong>centering, corners, edges, surface,</strong> and
+          <strong>color</strong> from front & back photos – then estimates a PSA-style grade.
+        </p>
+
+        <div class="d-flex flex-wrap gap-2">
+          <a href="{% url 'browse:browse' %}" class="btn btn-light btn-lg fw-semibold">
+            Continue shopping
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="gs-card p-3 p-md-4">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <span class="gs-icon">🃏</span>
+            <div>
+              <div class="fw-semibold">What you’ll get at launch</div>
+              <div class="small gs-muted">Fast, on-device-ready grading with human-readable reasons</div>
+            </div>
+          </div>
+          <ul class="gs-list list-unstyled mb-0">
+            <li>• Instant centering map & border measurements</li>
+            <li>• Corner wear & edge chipping detection</li>
+            <li>• Surface glare/print-line flags + photo quality</li>
+            <li>• Side-by-side front/back and detailed sub-scores with summary</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE / STATUS -->
+  <section class="mt-4 mt-md-5">
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="gs-card p-4 h-100">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <span class="gs-icon">📈</span>
+            <h3 class="h4 mb-0">Road to public release</h3>
+          </div>
+          <ol class="mb-0">
+            <li class="mb-2"><strong>Data lock-in</strong> – benchmark set & evaluation suite ✅</li>
+            <li class="mb-2"><strong>Preprocessing</strong> – robust card detection & rectification ✅</li>
+            <li class="mb-2"><strong>Analytical baselines</strong> – centering/edges/corners in code 🟡</li>
+            <li class="mb-2"><strong>Model v2</strong> – multi-task CNN trained on our dataset 🟡</li>
+            <li class="mb-2"><strong>Beta</strong> – limited rollout with feedback 🔜</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="col-md-6" id="waitlist">
+        <div class="gs-card p-4 h-100">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <span class="gs-icon">✉️</span>
+            <h3 class="h4 mb-0">Join the waitlist</h3>
+          </div>
+          <p class="mb-3">Get an invite when the grader opens. We’ll only email for this launch.</p>
+
+         
+          <form class="row g-2" action="mailto:info@shinyverse.eu" method="post" enctype="text/plain">
+            {% csrf_token %}
+            <div class="col-12 col-sm-8">
+              <input type="email" class="form-control form-control-lg" name="email"
+                     placeholder="you@example.com" required>
+            </div>
+            <div class="col-12 col-sm-4 d-grid">
+              <button class="btn btn-light btn-lg fw-semibold" type="submit">Notify me</button>
+            </div>
+          </form>
+
+          <div class="small mt-2" style="color: rgba(255,255,255,.8)">
+            By joining, you agree to our <a class="text-white text-decoration-underline" href="{% url 'legal:privacy' %}">Privacy Policy</a>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPS -->
+  <section class="mt-4 mt-md-5">
+    <div class="p-4 p-md-5 bg-white gs-tip">
+      <div class="row g-4 align-items-center">
+        <div class="col-md-6">
+          <h3 class="h4 mb-2">How to photograph your card (for best results)</h3>
+          <ul class="mb-0">
+            <li>Fill the frame with the card; keep edges fully visible.</li>
+            <li>Shoot straight on (not at an angle) in bright, even light.</li>
+            <li>Avoid glare or heavy shadows; wipe the sleeve if dusty.</li>
+            <li>Take both <strong>front & back</strong> photos.</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <div class="ratio ratio-16x9 bg-light rounded-3 border d-flex align-items-center justify-content-center">
+            <!-- Placeholder illustration -->
+            <div class="text-muted text-center p-3">
+              <div style="font-size:52px">📷</div>
+              <div class="fw-semibold">Example shot</div>
+              <div class="small">Flat, centered, no glare, edges visible</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BACK LINKS -->
+  <div class="d-flex gap-2 mt-4">
+    <a href="{% url 'browse:browse' %}" class="btn btn-outline-secondary">Back to Browse</a>
+    <a href="/" class="btn btn-outline-secondary">Home</a>
+  </div>
+</div>
+{% endblock %}

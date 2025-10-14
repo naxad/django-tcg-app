@@ -1,0 +1,118 @@
+{
+  "final_result": {
+    "scores": {
+      "centering": 8.0,
+      "surface": 8.0,
+      "edges": 7.0,
+      "corners": 7.0,
+      "color": 9.0
+    },
+    "predicted_grade": 7.0,
+    "predicted_label": "NM (Near Mint)",
+    "needs_better_photos": false,
+    "photo_feedback": "",
+    "observations": [
+      {
+        "category": "centering",
+        "side": "front",
+        "note": "Slightly off-center to the right",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "centering",
+        "side": "back",
+        "note": "Slightly off-center to the left",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "Minor surface wear",
+        "box": [
+          2,
+          2,
+          3,
+          3
+        ]
+      },
+      {
+        "category": "edges",
+        "side": "back",
+        "note": "Some edge whitening",
+        "box": [
+          0,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "back",
+        "note": "Slight corner wear",
+        "box": [
+          0,
+          0,
+          1,
+          1
+        ]
+      }
+    ],
+    "summary": "The card shows slight edge wear, and slight corner wear. Detected: Jangmo-o.",
+    "detected": {
+      "set_code": "",
+      "set_name": "",
+      "era": "",
+      "border": "",
+      "language": "unknown",
+      "card_name": "Jangmo-o",
+      "style_flags": [],
+      "symbol_key": "",
+      "symbol_score": 0.0,
+      "ptcgoCode": "",
+      "set_id": "",
+      "set_logo_url": "",
+      "set_symbol_url": "",
+      "card_large_url": "",
+      "rarity": "",
+      "subtypes": [],
+      "supertype": "",
+      "types": [],
+      "regulationMark": ""
+    },
+    "debug": {
+      "gate": {
+        "detected_sides": {
+          "image_1": "front",
+          "image_2": "back"
+        },
+        "image_quality": "high"
+      },
+      "ocr": {
+        "set_code_info": {
+          "set_code": "",
+          "language": "unknown"
+        },
+        "card_name": "Jangmo-o"
+      },
+      "set_info": {
+        "set_name": "",
+        "era": "",
+        "border": "",
+        "style_flags": [],
+        "set_code": "",
+        "language": "unknown",
+        "card_name": "Jangmo-o"
+      },
+      "cv_flags": {
+        "scribble": 

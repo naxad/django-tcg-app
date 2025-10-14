@@ -1,10 +1,9 @@
+# orders/views.py
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
-from .models import Order
-from decimal import Decimal
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from decimal import Decimal
+
 from .models import Order, ShippingMethod
 from .forms import ShippingChoiceForm
 
@@ -12,8 +11,6 @@ from .forms import ShippingChoiceForm
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'orders/order_detail.html', {'order': order})
-
-
 
 @login_required
 def checkout_shipping(request):
@@ -26,7 +23,8 @@ def checkout_shipping(request):
             order.shipping_method = method
             order.recompute_totals()
             messages.success(request, "Shipping method saved.")
-            return redirect("checkout:payment")   # <-- change to your payment step URL name
+            # NOTE: Adjust the redirect to your real payment-step URL name if needed.
+            return redirect("checkout:payment")
     else:
         form = ShippingChoiceForm(
             initial={"method": order.shipping_method_id} if order.shipping_method_id else None

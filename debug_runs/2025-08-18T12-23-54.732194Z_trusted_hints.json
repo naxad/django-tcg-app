@@ -1,0 +1,10 @@
+{
+  "trusted_set": {
+    "set_name": "Temporal Forces",
+    "ptcgoCode": "TEF",
+    "set_id": "sv5",
+    "set_logo_url": "https://images.pokemontcg.io/sv5/logo.png",
+    "set_symbol_url": "https://images.pokemontcg.io/sv5/symbol.png"
+  },
+  "trusted_card": {}
+}

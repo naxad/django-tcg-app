@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.db.models import Avg
+
 from .models import Card
 from wishlist.models import WishlistItem
-from userprofile.models import Rating
+
 from django.contrib.admin.views.decorators import staff_member_required
 
 # Browse cards with filtering, sorting, and rating calculation
@@ -16,6 +16,8 @@ def browse(request):
 
     cards = Card.objects.all()
 
+    if not request.user.is_staff:
+        cards = cards.filter(quantity__gt=0)
     if query:
         cards = cards.filter(name__icontains=query)
     if brand:
@@ -31,8 +33,6 @@ def browse(request):
         cards = cards.order_by("price")
     elif sort == "price_desc":
         cards = cards.order_by("-price")
-    elif sort == "rating_desc":
-        cards = sorted(cards, key=lambda c: c.average_rating() or 0, reverse=True)
     elif sort == "newest":
         cards = cards.order_by("-id")
 
@@ -49,11 +49,6 @@ def browse(request):
     if 'cart_added' in request.session:
         show_popup = request.session.pop('cart_added')
 
-    # Attach rating info to each card
-    for card in cards:
-        avg = card.ratings.aggregate(avg=Avg('score'))['avg']
-        card.avg_rating = avg or 0
-        card.num_ratings = card.ratings.count()
 
     return render(request, 'browse/browse.html', {
         'cards': cards,
@@ -79,37 +74,26 @@ def add_card(request):
         release_date = request.POST.get("release_date")
         price = request.POST.get("price")
         image = request.FILES.get("image")
+        quantity_raw = request.POST.get("quantity", "0")
+        set_name = request.POST.get("set_name", "").strip()
+        try:
+            quantity = max(0, int(quantity_raw))
+        except ValueError:
+            quantity = 0
 
         Card.objects.create(
             name=name,
             brand=brand,
             condition=condition,
-            release_date=release_date,
+            
             price=price,
             image=image,
+            quantity=quantity,
+            set_name=set_name,
         )
     return redirect("browse:browse")
 
 
-# AJAX view to handle user rating a card
-@login_required
-def rate_card(request):
-    if request.method == 'POST':
-        card_id = request.POST.get('card_id')
-        score = request.POST.get('score')
-
-        try:
-            card = Card.objects.get(id=card_id)
-            Rating.objects.update_or_create(
-                user=request.user,
-                card=card,
-                defaults={'score': score}
-            )
-            return JsonResponse({'success': True})
-        except Card.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Card not found'})
-
-    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
 
@@ -148,10 +132,7 @@ def card_detail(request, card_id):
     if 'cart_added' in request.session:
         show_popup = request.session.pop('cart_added')
 
-    # Add rating info
-    avg = card.ratings.aggregate(avg=Avg('score'))['avg']
-    card.avg_rating = avg or 0
-    card.num_ratings = card.ratings.count()
+
 
     return render(request, 'browse/card_detail.html', {
         'card': card,

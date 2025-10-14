@@ -1,0 +1,26 @@
+<!doctype html>
+<html><body style="font-family:Arial,sans-serif">
+  <h2>Thanks for your purchase! 🎉</h2>
+  <p>Order <strong>#{{ order.id }}</strong> is confirmed.</p>
+
+  <h3>Items</h3>
+  <ul>
+    {% for it in items %}
+      <li>{{ it.quantity }} × {{ it.name }} — €{{ it.unit_price }}</li>
+    {% endfor %}
+  </ul>
+
+  <p>Items subtotal: <strong>€{{ items_subtotal }}</strong><br>
+     Shipping{% if order.shipping_method_name %} ({{ order.shipping_method_name }}){% endif %}: <strong>€{{ shipping_price }}</strong><br>
+     Grand total: <strong>€{{ grand_total }}</strong>
+  </p>
+
+  <h3>Ship to</h3>
+  <p>
+    {{ order.shipping_name }}<br>
+    {{ order.shipping_line1 }}{% if order.shipping_line2 %}, {{ order.shipping_line2 }}{% endif %}<br>
+    {{ order.shipping_city }} {{ order.shipping_postal_code }} {{ order.shipping_country }}
+  </p>
+
+  <p>We’ll send tracking once it ships.<br>— ShinyCards</p>
+</body></html>

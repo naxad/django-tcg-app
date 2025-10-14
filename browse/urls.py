@@ -10,9 +10,7 @@ urlpatterns = [
     path('card/<int:card_id>/', views.card_detail, name='card_detail'),
    
     path('card/<int:pk>/', views.card_detail, name='card_detail'),
-
-    # for ajax star rating
-    path('rate/', views.rate_card, name='rate_card'),
+    
 
 
 

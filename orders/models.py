@@ -1,22 +1,30 @@
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
-from browse.models import Card
+from django.db.models import F
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from decimal import Decimal
 
+from browse.models import Card
 
 
-
-
+# -------------------------------
+# Shipping setup
+# -------------------------------
 class ShippingMethod(models.Model):
-    name = models.CharField(max_length=80)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    code = models.SlugField(max_length=32, unique=True)          # e.g. "standard", "express"
+    name = models.CharField(max_length=80)                       # e.g. "Standard (Tracked)"
     is_active = models.BooleanField(default=True)
-    free_over = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True,
-        help_text="If items subtotal ≥ this number, shipping becomes €0"
-    )
-    eta = models.CharField(max_length=60, blank=True)  # e.g. "2–4 business days"
+    sort_order = models.PositiveIntegerField(default=10)
+
+    # (optional global fallback)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
+    free_over = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    eta = models.CharField(max_length=60, blank=True)
+
+    class Meta:
+        ordering = ["sort_order", "name"]
 
     def effective_price(self, items_subtotal: Decimal) -> Decimal:
         if self.free_over is not None and items_subtotal >= self.free_over:
@@ -27,8 +35,21 @@ class ShippingMethod(models.Model):
         return self.name
 
 
+class ShippingRate(models.Model):
+    method  = models.ForeignKey(ShippingMethod, on_delete=models.CASCADE, related_name="rates")
+    country = models.CharField(max_length=2)  # ISO alpha-2, e.g. "DE", "FR", "US"
+    price   = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        unique_together = ("method", "country")
+
+    def __str__(self):
+        return f"{self.method.name} → {self.country}: {self.price}"
 
 
+# -------------------------------
+# Orders / Items / Payments
+# -------------------------------
 class Order(models.Model):
     STATUS_CHOICES = [
         ("pending", "Pending"),
@@ -76,20 +97,31 @@ class Order(models.Model):
     shipped_at        = models.DateTimeField(null=True, blank=True)
     admin_note        = models.TextField(blank=True)
 
-    # --- PRICING pieces you asked about ---
+    # --- pricing pieces ---
     shipping_method = models.ForeignKey(ShippingMethod, null=True, blank=True, on_delete=models.SET_NULL)
     shipping_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
     items_subtotal  = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
+    shipping_method_code = models.SlugField(max_length=32, blank=True)      # "standard", "express"
+    shipping_method_name = models.CharField(max_length=64, blank=True)      # human label snapshot
+    shipping_price = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal("0.00"))
+
+    # --- stock accounting guard ---
+    stock_debited = models.BooleanField(default=False)  # NEW: prevents double-decrement
 
     def __str__(self):
         return f"Order #{self.id} - {self.status}"
+
+    def mark_paid(self):
+        self.status = "paid"
+        self.paid_at = timezone.now()
+        self.save(update_fields=["status", "paid_at"])
 
     def mark_shipped(self):
         self.fulfillment_status = "shipped"
         self.shipped_at = timezone.now()
         self.save(update_fields=["fulfillment_status", "shipped_at"])
 
-    # ------ WHERE items_subtotal comes from ------
+    # ------ items subtotal helpers ------
     def _line_items_qs(self):
         """
         Tries common related names. If your OrderItem has related_name='items',
@@ -109,14 +141,11 @@ class Order(models.Model):
         """
         total = Decimal("0.00")
         for li in self._line_items_qs():
-            # Preferred: a stored field called 'total'
             line_total = getattr(li, "total", None)
             if line_total is not None:
                 total += Decimal(line_total)
                 continue
-
             qty = Decimal(getattr(li, "quantity", 1))
-            # try 'unit_price' first, fallback to 'price'
             unit_price = getattr(li, "unit_price", None)
             if unit_price is None:
                 unit_price = getattr(li, "price", "0")
@@ -124,16 +153,28 @@ class Order(models.Model):
         return total
 
     def recompute_totals(self):
-        """
-        Refresh items_subtotal, shipping_amount (optional logic from method),
-        and grand total.
-        """
         self.items_subtotal = self._calc_items_subtotal()
         if self.shipping_method:
-            # comment this out if you want the manually-entered shipping_amount to stay as-is
-            self.shipping_amount = self.shipping_method.effective_price(self.items_subtotal)
+            self.shipping_amount = self._effective_shipping_amount()
         self.total = self.items_subtotal + self.shipping_amount
         self.save(update_fields=["items_subtotal", "shipping_amount", "total"])
+
+    def _shipping_base_for_country(self) -> Decimal:
+        if not self.shipping_method or not self.shipping_country:
+            return Decimal("0.00")
+        rate = self.shipping_method.rates.filter(country=(self.shipping_country or "").upper()).first()
+        return Decimal(rate.price) if rate else Decimal(self.shipping_method.price)
+
+    def _effective_shipping_amount(self) -> Decimal:
+        base = self._shipping_base_for_country()
+        free_over = self.shipping_method.free_over if self.shipping_method else None
+        if free_over is not None and self.items_subtotal >= free_over:
+            return Decimal("0.00")
+        return base
+
+    @property
+    def grand_total(self):
+        return (self.total or Decimal("0.00")) + (self.shipping_price or Decimal("0.00"))
 
 
 class OrderItem(models.Model):
@@ -151,6 +192,10 @@ class OrderItem(models.Model):
 
 
 class Payment(models.Model):
+    """
+    Creating a Payment row is treated as a successful charge/capture.
+    The stock decrement logic is hooked on post_save(created=True).
+    """
     order = models.OneToOneField(Order, related_name="payment", on_delete=models.CASCADE)
     gateway = models.CharField(max_length=20)                  # 'stripe' or 'paypal'
     gateway_ref = models.CharField(max_length=255)             # intent/capture id
@@ -162,4 +207,48 @@ class Payment(models.Model):
         return f"{self.gateway} {self.amount} for Order #{self.order_id}"
 
 
+# -------------------------------
+# Stock decrement on successful payment
+# -------------------------------
+@receiver(post_save, sender=Payment)
+def reduce_stock_on_success(sender, instance: Payment, created, **kwargs):
+    """
+    When a Payment is created, decrement stock for each OrderItem.
+    Guards with order.stock_debited to avoid double-debit.
+    Uses select_for_update + F() for atomicity.
+    """
+    if not created:
+        return
 
+    order = instance.order
+
+    # Already debited? bail out (prevents double decrement if duplicate signals)
+    if order.stock_debited:
+        return
+
+    with transaction.atomic():
+        items = order.items.select_related("card").select_for_update()
+        for it in items:
+            # Ensure Card has a 'quantity' field
+            if not hasattr(it.card, "quantity"):
+                raise AttributeError("Card model must have a 'quantity' field for stock control.")
+
+            # Atomic decrement only if enough stock
+            updated = Card.objects.filter(
+                id=it.card_id,
+                quantity__gte=it.quantity
+            ).update(quantity=F("quantity") - it.quantity)
+
+            if not updated:
+                # Not enough stock; raise to signal a serious issue
+                # (You could alternatively set order.status='failed' and alert staff)
+                raise ValueError(f"Insufficient stock for '{it.card.name}' (requested {it.quantity}).")
+
+        # Mark debited & paid if not already paid
+        order.stock_debited = True
+        if order.status != "paid":
+            order.status = "paid"
+            order.paid_at = timezone.now()
+            order.save(update_fields=["stock_debited", "status", "paid_at"])
+        else:
+            order.save(update_fields=["stock_debited"])

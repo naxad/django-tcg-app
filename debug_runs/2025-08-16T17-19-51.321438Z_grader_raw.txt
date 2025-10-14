@@ -1,0 +1,17 @@
+```json
+{
+  "scores": {"centering": 8, "surface": 7, "edges": 7, "corners": 7, "color": 8},
+  "predicted_grade": 7,
+  "predicted_label": "Near Mint",
+  "needs_better_photos": false,
+  "photo_feedback": "",
+  "observations": [
+    {"category":"centering","side":"front","note":"Slightly off-center to the left","box":[0,0,5,5]},
+    {"category":"centering","side":"back","note":"Slightly off-center to the right","box":[0,0,5,5]},
+    {"category":"surface","side":"front","note":"Minor surface wear visible","box":[2,2,3,3]},
+    {"category":"edges","side":"back","note":"Some edge whitening visible","box":[0,0,5,0]},
+    {"category":"corners","side":"back","note":"Minor corner wear","box":[0,0,1,1]}
+  ],
+  "summary": "The card is in Near Mint condition with slight centering issues and minor surface and edge wear. Corners show minimal wear."
+}
+```

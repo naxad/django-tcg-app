@@ -1,0 +1,130 @@
+{% extends "home/base.html" %}
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-md-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <h1 class="mb-3">About ShinyVerse</h1>
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4 p-md-5">
+          <p class="lead">
+            We’re collectors and hobby lovers on a mission to make buying, selling, and grading trading cards <strong>fast, fair, and fun</strong>—with zero guesswork.
+          </p>
+          <p>
+            ShinyVerse started as an idea by collectors who wanted a marketplace where <strong>condition, pricing, and trust</strong> come first. We obsess over the details—clear photos, honest descriptions, and a support team that actually answers. Our upcoming <strong>AI Grader</strong> combines computer vision with curated datasets to estimate sub-scores like <em>centering, corners, edges, surface, and print quality</em>, and to generate <strong>transparent, human-readable</strong> grading notes.
+          </p>
+          <p>
+            Whether you’re chasing a grail SAR or listing your binder finds, we want the process to be <strong>simple, protected, and rewarding</strong>. If you have feedback or want to partner, drop us a line at
+            <a href="mailto:info@shinycards.eu">info@shinycards.eu</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+              <h5>What we value</h5>
+              <ul class="mb-0">
+                <li><strong>Transparency & fair pricing</strong> — clear conditions, no surprises.</li>
+                <li><strong>Great photos & helpful listings</strong> — what you see is what you get.</li>
+                <li><strong>Privacy & data protection</strong> — GDPR-compliant by design.</li>
+                <li><strong>Community-first</strong> — built with and for collectors.</li>
+                <li><strong>Integrity</strong> — anti-fraud protocols that protect honest buyers and sellers.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+              <h5>Where we’re heading</h5>
+              <ul class="mb-0">
+                <li>Seller tools, bulk imports, and inventory sync.</li>
+                <li>Verified AI grading reports with exportable PDFs.</li>
+                <li>Price tracking, alerts, and personalized watchlists.</li>
+                <li>Photo assistant & mobile shooting guide for crisp listings.</li>
+                <li>Buyer protection & tamper-evident packing flow.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust & Safety -->
+      <div class="card shadow-sm border-0 my-4">
+        <div class="card-body p-4 p-md-5">
+          <h5 class="mb-3">Trust &amp; Safety</h5>
+          <ul class="mb-0">
+            <li><strong>Condition standards:</strong> M, NM, EX, LP, MP, HP, DMG tags are applied consistently with visual checks.</li>
+            <li><strong>Anti-fraud by default:</strong> evidence-based claims (unboxing video, packing verification) to keep things fair.</li>
+            <li><strong>Secure checkout:</strong> payments processed by trusted providers—no raw card data stored on our servers.</li>
+            <li><strong>Shipping clarity:</strong> carrier tracking, optional insurance, and clear responsibility boundaries.</li>
+            <li><strong>Responsible AI:</strong> AI grading is an estimate and never replaces your own judgment; we show our work with explainable notes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Our Story -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4 p-md-5">
+          <h5 class="mb-3">Our Story</h5>
+          <p>
+            We began as collectors trading locally, then selling online, and eventually building tools we wished existed: consistent and easy to use grading tools. As demand grew, we formalized ShinyVerse P.C. and focused on two pillars: <strong>great marketplace UX</strong> and <strong>explainable AI grading</strong>. The goal isn’t to replace human expertise—it’s to make it easier for everyone to <em>buy and sell with confidence</em>.
+          </p>
+          <p class="mb-0">
+            Today, our roadmap reflects what the community asks for most: fast listing, reliable grading support, and strong buyer protections. We iterate openly and ship improvements weekly.
+          </p>
+        </div>
+      </div>
+
+      <!-- How We Grade (High Level) -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4 p-md-5">
+          <h5 class="mb-3">How Our AI Grader Helps</h5>
+          <p>
+            Our AI models analyze uploaded photos to estimate sub-scores for <strong>centering, corners, edges,</strong> and <strong>surface</strong>. We combine model outputs with rule-based checks (e.g., border alignment tolerances) to produce a <strong>transparent assessment</strong>. Results include a numeric estimate, confidence range, and short notes (e.g., “micro whitening top-right; faint print line”).
+          </p>
+          <p class="mb-0">
+            <em>Important:</em> AI grades are advisory and may differ from third-party graders (PSA/CGC/Beckett). They’re designed to help you make informed decisions and create consistent listings—not to guarantee a specific slab grade.
+          </p>
+        </div>
+      </div>
+
+      <!-- Compliance & Details -->
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+              <h5>Company Details</h5>
+              <ul class="mb-0">
+                <li><strong>Legal entity:</strong> ShinyVerse P.C.</li>
+                <li><strong>Jurisdiction:</strong> Athens, Greece</li>
+                <li><strong>Email:</strong> <a href="mailto:info@shinycards.eu">info@shinycards.eu</a></li>
+                <li><strong>Support hours:</strong> Mon–Fri, 10:00–18:00 (EET)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+              <h5>Policies & Links</h5>
+              <ul class="mb-0">
+                <li><a href="{% url 'legal:terms' %}">Terms &amp; Agreements</a></li>
+                <li><a href="{% url 'legal:privacy' %}">Privacy Policy</a></li>
+                <li><a href="{% url 'legal:privacy' %}">Privacy Policy</a></li>
+                <li><a href="{% url 'contact:contact' %}">Contact &amp; Support</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+{% endblock %}

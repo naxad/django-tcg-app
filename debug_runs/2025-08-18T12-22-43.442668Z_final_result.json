@@ -1,0 +1,146 @@
+{
+  "final_result": {
+    "scores": {
+      "centering": 8.0,
+      "surface": 2.0,
+      "edges": 8.0,
+      "corners": 8.0,
+      "color": 9.0
+    },
+    "predicted_grade": 3.0,
+    "predicted_label": "VG (Very Good)",
+    "needs_better_photos": false,
+    "photo_feedback": "",
+    "observations": [
+      {
+        "category": "centering",
+        "side": "front",
+        "note": "Slightly off-center to the right",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "centering",
+        "side": "back",
+        "note": "Slightly off-center to the right",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "Minor surface wear visible",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "edges",
+        "side": "front",
+        "note": "Minor edge wear visible",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "front",
+        "note": "Minor corner wear visible",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "Detected pen/marker (high confidence CV).",
+        "box": [
+          0,
+          0,
+          1,
+          1
+        ]
+      }
+    ],
+    "summary": "The card shows heavy surface damage",
+    "detected": {
+      "set_code": "",
+      "set_name": "",
+      "era": "",
+      "border": "",
+      "language": "unknown",
+      "card_name": "",
+      "style_flags": [],
+      "symbol_key": "",
+      "symbol_score": 0.0,
+      "ptcgoCode": "",
+      "set_id": "",
+      "set_logo_url": "",
+      "set_symbol_url": "",
+      "card_large_url": "",
+      "rarity": "",
+      "subtypes": [],
+      "supertype": "",
+      "types": [],
+      "regulationMark": ""
+    },
+    "debug": {
+      "gate": {
+        "detected_sides": {
+          "image_1": "front",
+          "image_2": "back"
+        },
+        "image_quality": "high"
+      },
+      "ocr": {
+        "set_code_info": {
+          "set_code": "",
+          "language": "unknown"
+        },
+        "card_name": ""
+      },
+      "set_info": {
+        "set_name": "",
+        "era": "",
+        "border": "",
+        "style_flags": [],
+        "set_code": "",
+        "language": "unknown",
+        "card_name": "",
+        "card_large_url": "",
+        "set_logo_url": "",
+        "set_symbol_url": ""
+      },
+      "cv_flags": {
+        "scribble": true,
+        "scribble_conf": 1.0,
+        "glare": false,
+        "glare_conf": 0.0,
+        "blur": false,
+        "blur_conf": 0.0
+      },
+      "models": {
+        "classifier": "gpt-4o-mini",
+        "grader": "gpt-4o"
+      },
+      "hint_parts": []
+    }
+  }
+}

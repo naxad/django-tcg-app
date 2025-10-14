@@ -13,6 +13,7 @@ import os
 
 from pathlib import Path
 from dotenv import load_dotenv
+GRADING_ENABLED = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,10 +26,43 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-&$m0p$mbtlkc@0z!g0&t%m^zxzhs0w)qbg@5=t_1s@kow1*c)z'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = ["shinycards.pythonanywhere.com", "127.0.0.1", "localhost"]
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
+
+ALLOWED_HOSTS = [ "shinyverse.eu", "www.shinyverse.eu"]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://shinyverse.eu",
+    "https://www.shinyverse.eu",
+     # keep if still in use
+]
+
+
+DEFAULT_FROM_EMAIL = "ShinyVerse <info@shinyverse.eu>"
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+ORDER_ALERT_RECIPIENTS = ["info@shinyverse.eu"]
+
+
+
+
+
+
+# For dev:
+#EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# For prod (example with SMTP):
+import os
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.office365.com")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
+EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "20"))
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "ShinyVerse <info@shinyverse.eu>")
+SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
+
 
 
 # Application definition
@@ -39,6 +73,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
     'userprofile.apps.UserprofileConfig', 
     'browse',
@@ -52,6 +87,7 @@ INSTALLED_APPS = [
     'contact',
     'backoffice',
     'grading',
+    'legal',
 
 ]
 
@@ -63,7 +99,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 
 ROOT_URLCONF = 'tcg_store.urls'
 

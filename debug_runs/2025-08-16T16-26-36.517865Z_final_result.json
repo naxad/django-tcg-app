@@ -1,0 +1,133 @@
+{
+  "final_result": {
+    "scores": {
+      "centering": 8.0,
+      "surface": 8.0,
+      "edges": 8.0,
+      "corners": 8.0,
+      "color": 9.0
+    },
+    "predicted_grade": 8.0,
+    "predicted_label": "NM-MT (Near Mint-Mint)",
+    "needs_better_photos": false,
+    "photo_feedback": "",
+    "observations": [
+      {
+        "category": "centering",
+        "side": "front",
+        "note": "Slightly off-center to the right",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "centering",
+        "side": "back",
+        "note": "Slightly off-center to the left",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "Minor surface wear visible",
+        "box": [
+          2,
+          2,
+          3,
+          3
+        ]
+      },
+      {
+        "category": "edges",
+        "side": "back",
+        "note": "Minor edge wear visible",
+        "box": [
+          0,
+          0,
+          4,
+          0
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "front",
+        "note": "Slight corner wear",
+        "box": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "summary": "The card presents very well with minimal visible wear. Detected: Jangmo-o — SM.",
+    "detected": {
+      "set_code": "SM",
+      "set_name": "",
+      "era": "",
+      "border": "",
+      "language": "en",
+      "card_name": "Jangmo-o",
+      "style_flags": [],
+      "symbol_key": "",
+      "symbol_score": 0.0,
+      "ptcgoCode": "",
+      "set_id": "",
+      "set_logo_url": "",
+      "set_symbol_url": "",
+      "card_large_url": "",
+      "rarity": "",
+      "subtypes": [],
+      "supertype": "",
+      "types": [],
+      "regulationMark": ""
+    },
+    "debug": {
+      "gate": {
+        "detected_sides": {
+          "image_1": "front",
+          "image_2": "back"
+        },
+        "image_quality": "high"
+      },
+      "ocr": {
+        "set_code_info": {
+          "set_code": "SM",
+          "language": "en"
+        },
+        "card_name": "Jangmo-o"
+      },
+      "set_info": {
+        "set_name": "",
+        "era": "",
+        "border": "",
+        "language": "en",
+        "set_code": "SM",
+        "card_name": "Jangmo-o"
+      },
+      "cv_flags": {
+        "scribble": false,
+        "scribble_conf": 0.14403075027388926,
+        "glare": false,
+        "glare_conf": 0.0,
+        "blur": false,
+        "blur_conf": 0.0
+      },
+      "models": {
+        "classifier": "gpt-4o-mini",
+        "grader": "gpt-4o"
+      },
+      "hint_parts": [
+        "card:\"Jangmo-o\""
+      ]
+    }
+  }
+}

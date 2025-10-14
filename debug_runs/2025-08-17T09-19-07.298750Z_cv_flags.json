@@ -1,0 +1,10 @@
+{
+  "cv_flags": {
+    "scribble": true,
+    "scribble_conf": 1.0,
+    "glare": true,
+    "glare_conf": 0.09150390625,
+    "blur": false,
+    "blur_conf": 0.0
+  }
+}

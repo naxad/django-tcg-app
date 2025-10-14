@@ -1,7 +1,12 @@
-<footer class="site-footer">
-  <div class="container d-flex justify-content-between align-items-center">
-    <span class="copy">© ShinyCards Store. All rights reserved.</span>
-    <a class="footer-link" href="{% url 'contact:contact' %}">Contact Us</a>
-    
+<footer class="site-footer py-4 border-top">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+    <span class="copy small text-muted">© {% now "Y" %} ShinyVerse Store. All rights reserved.</span>
+
+    <nav class="footer-nav d-flex flex-wrap gap-3">
+      <a class="footer-link text-decoration-none" href="{% url 'legal:about' %}">About Us</a>
+      <a class="footer-link text-decoration-none" href="{% url 'legal:privacy' %}">Privacy Policy</a>
+      <a class="footer-link text-decoration-none" href="{% url 'legal:terms' %}">Terms & Agreements</a>
+      <a class="footer-link text-decoration-none" href="{% url 'contact:contact' %}">Contact Us</a>
+    </nav>
   </div>
 </footer>

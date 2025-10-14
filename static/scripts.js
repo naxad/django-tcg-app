@@ -19,43 +19,7 @@ function getCookie(name) {
 }
 const CSRFTOKEN = window.csrfToken || getCookie("csrftoken") || "";
 
-// -----------------------------
-// Ratings (stars)
-// -----------------------------
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".rating-stars .star").forEach((star) => {
-        star.addEventListener("click", function () {
-            const score = this.getAttribute("data-score");
-            const cardId = this.getAttribute("data-card-id");
 
-            fetch("/browse/rate/", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": CSRFTOKEN,
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: `card_id=${encodeURIComponent(cardId)}&score=${encodeURIComponent(score)}`,
-            })
-                .then((res) => {
-                    if (res.status === 401) {
-                        alert("Please log in to rate cards!");
-                        return null;
-                    }
-                    return res.json();
-                })
-                .then((data) => {
-                    if (!data) return;
-                    if (data.success) {
-                        alert("Thanks for your rating!");
-                        location.reload();
-                    } else {
-                        alert("Error: " + (data.error || "Something went wrong."));
-                    }
-                })
-                .catch(() => alert("Network error. Please try again."));
-        });
-    });
-});
 
 // -----------------------------
 // Modal image view

@@ -1,0 +1,20 @@
+Hi {{ order.shipping_name|default:order.email }},
+
+Thanks for your purchase! We’ve received your payment.
+
+Order #: {{ order.id }}
+Items:
+{% for it in items %}- {{ it.quantity }} × {{ it.name }}  (€{{ it.unit_price }})
+{% endfor %}
+Items subtotal: €{{ items_subtotal }}
+Shipping{% if order.shipping_method_name %} ({{ order.shipping_method_name }}){% endif %}: €{{ shipping_price }}
+Grand total: €{{ grand_total }}
+
+Ship to:
+{{ order.shipping_name }}
+{{ order.shipping_line1 }}{% if order.shipping_line2 %}, {{ order.shipping_line2 }}{% endif %}
+{{ order.shipping_city }} {{ order.shipping_postal_code }} {{ order.shipping_country }}
+
+We’ll email tracking once it ships. Questions? Reply to this email.
+
+— ShinyCards

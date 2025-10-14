@@ -28,7 +28,7 @@ urlpatterns = [
     path('userprofile/', include('userprofile.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('wishlist/', include('wishlist.urls', namespace='wishlist')),
-
+    
     path('cart/', include('cart.urls', namespace='cart')),
     path('dashboard/', include('dashboard.urls')),
     path('', include('home.urls', namespace='home')), # all views are routed to the home app
@@ -37,6 +37,7 @@ urlpatterns = [
     path('sell/', include('sell.urls', namespace='sell')),
     path('orders/', include('orders.urls', namespace='orders')),
     path("staff/", include("backoffice.urls", namespace='backoffice')),
+    path("legal/", include("legal.urls", namespace="legal")),
     path("grading/", include("grading.urls", namespace='grading')),
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='shop/password_change.html'), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='shop/password_change_done.html'), name='password_change_done'),

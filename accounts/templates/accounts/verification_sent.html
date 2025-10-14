@@ -1,0 +1,11 @@
+{% extends "home/base.html" %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-box text-center">
+    <h3>Verify your email</h3>
+    <p>We’ve sent a verification link to your email. Please click it to activate your account.</p>
+    <p class="text-muted">Didn’t get it? Check your spam folder, or try registering again with the correct address.</p>
+    <a href="{% url 'accounts:login' %}" class="btn btn-outline-secondary mt-3">Back to Login</a>
+  </div>
+</div>
+{% endblock %}

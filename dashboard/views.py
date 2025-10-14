@@ -13,11 +13,11 @@ def dashboard_view(request):
         cards = Card.objects.filter(id__in=recently_viewed_ids)
         recently_viewed_cards = sorted(cards, key=lambda c: recently_viewed_ids.index(c.id))
 
-    user_ratings = Rating.objects.filter(user=user) #to see every rating a users has given
+     #to see every rating a users has given
 
     context = {
-        'recently_viewed_cards': recently_viewed_cards,
-        'user_ratings': user_ratings,
+        'recently_viewed_cards': recently_viewed_cards
+        
     }
 
     return render(request, 'dashboard/dashboard.html', context)

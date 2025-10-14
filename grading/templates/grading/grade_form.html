@@ -14,6 +14,39 @@
       <label class="form-label">Card name (optional)</label>
       {{ form.card_name }}
     </div>
+    <!-- REQUIRED: Set code (PTCGO) + Collector number -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+      <div>
+        <label for="id_ptcgo_code" class="block text-sm font-medium">Set code (required)</label>
+        <input id="id_ptcgo_code" name="ptcgo_code" required
+              class="w-full input"
+              placeholder="e.g. SVI, PAR, TEF, EVS, SM12, CRZ" list="ptcgo-codes">
+        <!-- Optional quick suggestions -->
+        <datalist id="ptcgo-codes">
+          <option value="SVI"><option value="PAL"><option value="OBF"><option value="PAR">
+          <option value="TEF"><option value="TWM"><option value="SFA"><option value="SCR">
+          <option value="SSP"><option value="PRE"><option value="SV151">
+          <option value="BRS"><option value="EVS"><option value="CRZ"><option value="SM12">
+        </datalist>
+        <p class="text-xs text-gray-500 mt-1">Short set code from the card (PTCGO style).</p>
+      </div>
+
+      <div>
+        <label for="id_collector_number" class="block text-sm font-medium">Collector number (required)</label>
+        <input id="id_collector_number" name="collector_number" required
+              class="w-full input" placeholder="e.g. 161/236 or 045">
+        <p class="text-xs text-gray-500 mt-1">Printed collector number on the card.</p>
+      </div>
+    </div>
+
+    <select name="game" required>
+      <option value="pokemon">Pokémon</option>
+      <option value="one_piece">One Piece</option>
+      <option value="mtg">Magic: The Gathering</option>
+    </select>
+
+
+
 
     <div class="row g-3">
       <div class="col-md-6">

@@ -1,0 +1,12 @@
+Hi {{ order.shipping_name|default:"there" }},
+
+Good news! Your order #{{ order.id }} is on the way.
+
+{% if tracking_number %}Tracking number: {{ tracking_number }}{% if carrier %} ({{ carrier }}){% endif %}
+{% endif %}
+Ship to:
+{{ order.shipping_name }}
+{{ order.shipping_line1 }}{% if order.shipping_line2 %}, {{ order.shipping_line2 }}{% endif %}
+{{ order.shipping_city }} {{ order.shipping_postal_code }} {{ order.shipping_country }}
+
+Thanks for shopping with ShinyCards!

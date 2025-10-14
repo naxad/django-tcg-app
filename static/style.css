@@ -1860,3 +1860,448 @@ body {
 
 
 /* adjust 0–4px to taste */
+/* Hide Add to Cart button initially */
+.add-to-cart-form {
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Show on hover */
+.browse-card-container:hover .add-to-cart-form {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Keep layout stable even when hidden */
+.add-to-cart-form {
+    min-height: 40px;
+    /* same height as button to prevent jump */
+}
+
+/* Give the details area room so the absolute button doesn't overlap text */
+.browse-card-details {
+    padding-bottom: 52px;
+    /* ~btn height + spacing */
+}
+
+/* Position the Add-to-Cart button at the bottom of each card, hidden by default */
+.add-to-cart-btn {
+    position: absolute;
+    /* relative to .browse-card-container (has Bootstrap's position-relative) */
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .2s ease, transform .2s ease;
+    pointer-events: none;
+    /* prevent focus/click when hidden */
+    z-index: 2;
+    /* sit above the content */
+}
+
+/* Reveal the button when hovering the card */
+.browse-card-container:hover .add-to-cart-btn {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* (Optional) a touch more polish for the card hover */
+.browse-card-container {
+    overflow: hidden;
+    /* avoid any overflow during the slide-in */
+}
+
+/* The text column becomes the positioning context */
+.browse-card-details {
+    position: relative;
+    /* <- important */
+    padding-bottom: 52px;
+    /* space for the hidden button */
+}
+
+/* Hide the button by default and place it at the bottom of the text column */
+.browse-card-details .add-to-cart-btn {
+    position: absolute;
+    /* now relative to .browse-card-details */
+    left: 0;
+    /* span only the text column width */
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .2s ease, transform .2s ease;
+    pointer-events: none;
+    /* avoid clicks when hidden */
+    z-index: 1;
+}
+
+/* Reveal on hover of the whole card */
+.browse-card-container:hover .browse-card-details .add-to-cart-btn {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* keep this if you added it earlier for neatness */
+.browse-card-container {
+    overflow: hidden;
+}
+
+/* Ensure the card is a positioning context */
+.browse-card-container {
+    position: relative;
+}
+
+/* Make sure the absolute wishlist form sits above the image/content */
+.browse-card-container>form.position-absolute {
+    z-index: 30;
+    /* higher than image/content */
+    pointer-events: auto;
+}
+
+/* Heart button styling (visible and clickable) */
+.wishlist-btn {
+    /* reset and layout */
+    appearance: none;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    /* size/shape */
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+
+    /* visuals */
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+    /* icon */
+    font-size: 18px;
+    line-height: 1;
+    color: #7b5cf3;
+    /* purple outline/filled heart */
+
+    /* behavior */
+    cursor: pointer;
+    z-index: 31;
+    /* higher than its parent just in case */
+}
+
+.wishlist-btn:hover {
+    background: #f5f0ff;
+    box-shadow: 0 3px 10px rgba(123, 92, 243, 0.25);
+}
+
+.wishlist-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(123, 92, 243, 0.25);
+}
+
+/* If any global img overlay tries to cover it, keep clicks on the heart */
+.browse-card-img,
+.browse-card-img img {
+    position: relative;
+    z-index: 1;
+}
+
+/* Make each card a positioning context (Bootstrap already adds position-relative in your HTML) */
+.browse-card-container {
+    position: relative;
+}
+
+/* Ensure the absolute wishlist form sits ABOVE image/content */
+.browse-card-container>form.position-absolute {
+    z-index: 50;
+    /* higher than anything inside the card */
+    pointer-events: auto;
+}
+
+/* Image should NOT sit above the heart */
+.browse-card-img,
+.browse-card-img img {
+    position: relative;
+    z-index: 1;
+}
+
+/* Heart button: visible, sized, styled */
+.wishlist-btn {
+    display: inline-flex !important;
+    /* defeat any hidden/inline-block overrides */
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    font-size: 18px;
+    line-height: 1;
+    color: #7b5cf3;
+    cursor: pointer;
+    z-index: 51;
+    /* above its parent just in case */
+}
+
+.wishlist-btn:hover {
+    background: #f5f0ff;
+    box-shadow: 0 3px 10px rgba(123, 92, 243, 0.25);
+}
+
+.wishlist-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(123, 92, 243, 0.25);
+}
+
+/* --- WISHLIST HEART: force it above everything --- */
+
+/* The absolute form that wraps the heart has .z-3 (Bootstrap uses !important).
+   We must beat it with a higher z-index AND !important. */
+.browse-card-container>form.position-absolute.z-3 {
+    z-index: 999 !important;
+    /* sit above image, overlays, etc. */
+    pointer-events: auto;
+}
+
+/* Image stack should be below the heart */
+.browse-card-img,
+.browse-card-img img {
+    position: relative;
+    z-index: 1;
+}
+
+/* Heart button styling (visible & clickable) */
+.wishlist-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    font-size: 18px;
+    line-height: 1;
+    color: #7b5cf3;
+    cursor: pointer;
+    z-index: 1000;
+    /* higher than its parent just in case */
+}
+
+.wishlist-btn:hover {
+    background: #f5f0ff;
+    box-shadow: 0 3px 10px rgba(123, 92, 243, 0.25);
+}
+
+.wishlist-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(123, 92, 243, 0.25);
+}
+
+
+
+/* --- WISHLIST HEART: pin and stack above everything --- */
+
+/* Target exactly the wishlist form in your HTML */
+.browse-card-container>form.position-absolute.top-0.end-0.m-2.z-3 {
+    position: absolute !important;
+    /* make sure it is absolute */
+    top: 8px !important;
+    /* don't rely on utility margins */
+    right: 8px !important;
+    left: auto !important;
+    bottom: auto !important;
+    z-index: 2000 !important;
+    /* beat Bootstrap's z-* and any overlays */
+    pointer-events: auto;
+}
+
+/* Ensure the image never sits over the heart */
+.browse-card-img,
+.browse-card-img img {
+    position: relative;
+    z-index: 1;
+    /* below the form above */
+}
+
+/* Force the heart button to render visibly and be clickable */
+.browse-card-container>form.position-absolute.top-0.end-0.m-2.z-3 .wishlist-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    font-size: 18px;
+    line-height: 1;
+    color: #7b5cf3;
+    cursor: pointer;
+    z-index: 2100;
+    /* higher than its parent just in case */
+}
+
+.browse-card-container>form.position-absolute.top-0.end-0.m-2.z-3 .wishlist-btn:hover {
+    background: #f5f0ff;
+    box-shadow: 0 3px 10px rgba(123, 92, 243, 0.25);
+}
+
+
+
+/* --- WISHLIST HEART: force visible, pinned top-right, above everything --- */
+
+/* Make each card its own stacking context so z-index works predictably */
+.browse-card-container {
+    position: relative;
+    /* you already have this in HTML */
+    isolation: isolate;
+    /* NEW: creates a new stacking context */
+}
+
+/* Target the exact wishlist form you have in HTML */
+.browse-card-container>form.position-absolute.top-0.end-0.m-2.z-3 {
+    position: absolute !important;
+    inset: 8px 8px auto auto !important;
+    /* top/right with !important */
+    z-index: 9999 !important;
+    /* beat Bootstrap's z-* and overlays */
+    pointer-events: auto;
+}
+
+/* The image/content should sit below the heart */
+.browse-card-img,
+.browse-card-img img {
+    position: relative;
+    z-index: 1;
+}
+
+/* Heart button: visible & clickable no matter what */
+.browse-card-container>form.position-absolute.top-0.end-0.m-2.z-3 .wishlist-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    font-size: 18px;
+    line-height: 1;
+    color: #7b5cf3 !important;
+    /* ensure the heart is visible */
+    cursor: pointer;
+    z-index: 10000;
+    /* above its parent just in case */
+}
+
+/* Hover polish */
+.browse-card-container>form.position-absolute.top-0.end-0.m-2.z-3 .wishlist-btn:hover {
+    background: #f5f0ff;
+    box-shadow: 0 3px 10px rgba(123, 92, 243, 0.25);
+}
+
+
+/* Page background */
+.gs-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    background: radial-gradient(1200px 600px at 10% 0%, #c6b7ff 0%, #a890ff 15%, #8f78ff 30%, #6e65f5 55%, #6a5ae7 100%);
+    color: #fff;
+}
+
+/* Floating blobs */
+.gs-blob {
+    position: absolute;
+    filter: blur(40px);
+    opacity: .35;
+    border-radius: 999px;
+}
+
+.gs-blob.one {
+    width: 320px;
+    height: 320px;
+    top: -60px;
+    right: -60px;
+    background: #ffb1c1;
+}
+
+
+/* Glass cards */
+.gs-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+}
+
+.gs-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .4rem .8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .15);
+    border: 1px solid rgba(255, 255, 255, .25);
+    font-weight: 600;
+}
+
+.gs-check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #3be17a;
+    color: #0b3b22;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.gs-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .18);
+    border: 1px solid rgba(255, 255, 255, .25);
+    color: #fff;
+    font-size: 22px;
+}
+
+.gs-list li+li {
+    margin-top: .65rem;
+}
+
+.gs-muted {
+    color: rgba(255, 255, 255, .85);
+}
+
+/* Light section below */
+.gs-tip {
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, .06);
+}
+
+.site-footer .footer-link {
+    color: inherit;
+    opacity: .85;
+}
+
+.site-footer .footer-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}

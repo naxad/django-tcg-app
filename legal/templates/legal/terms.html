@@ -1,0 +1,100 @@
+{% extends "home/base.html" %}
+{% block title %}Terms & Agreements{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-md-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <h1 class="mb-3">Terms & Agreements</h1>
+      <p class="text-muted">Last updated: {% now "F j, Y" %}</p>
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-md-5">
+
+          <h5>1. Who we are</h5>
+          <p><strong>Business name: ShinyVerse P.C</strong>  (“we”, “us”, “our”).<br>
+             <strong>Trading as:</strong> ShinyVerse<br>
+             <strong>Registered address:</strong> [Address, City, Country].<br>
+             <strong>Contact:</strong> <a href="mailto:info@shinyverse.eu">info@shinyverse.eu</a><br>
+             <strong>VAT ID:</strong> 803034963
+          </p>
+
+          <h5 class="mt-4">2. Acceptance of Terms</h5>
+          <p>By using our website, creating an account, or purchasing any product, you agree to these Terms & Conditions, along with our Privacy and Cookie Policies. If you do not agree, please do not use the site.</p>
+
+          <h5 class="mt-4">3. Accounts & Security</h5>
+          <p>You must be at least 18 years old to create an account. You are responsible for your login credentials and all activity under your account. We reserve the right to suspend or terminate accounts for fraudulent or abusive behavior.</p>
+
+          <h5 class="mt-4">4. Product Categories</h5>
+          <ul>
+            <li><strong>Singles:</strong> Individual trading cards (raw).</li>
+            <li><strong>Graded:</strong> Individual graded trading cards by authenticators such as PSA, Beckett Grading or CGC.</li>
+            <li><strong>Sealed Product:</strong> Unopened boxes, packs, ETBs, or decks.</li>
+            <li><strong>Pre-Orders:</strong> Items offered before release; subject to allocation and date changes.</li>
+          </ul>
+
+          <h5 class="mt-4">5. Condition & Grading Standards</h5>
+          <p>All singles follow industry-standard condition scales (Near Mint, Excellent, Lightly Played, Moderately Played, Heavily Played, Damaged). Condition is our good-faith opinion. Unless otherwise noted, all singles are raw/ungraded.</p>
+
+          <h5 class="mt-4">6. Pricing, Taxes & Payment</h5>
+          <p>All prices are listed in <strong>Euro (€)</strong>. Taxes and shipping costs are shown at checkout. We reserve the right to correct pricing errors. Payments are processed securely via <strong>Stripe / PayPal / Credit Card</strong>. All orders are subject to fraud screening.</p>
+
+          <h5 class="mt-4">7. Order Processing & Shipping</h5>
+          <ul>
+            <li>Processing time: typically <strong>3–10 business days</strong> after payment.</li>
+            <li>Risk of loss transfers once the order is accepted by the carrier.</li>
+            <li>We are not responsible for carrier delays, customs, or damage caused during transit.</li>
+            <li>Ensure your shipping address is correct; reship fees apply for returned parcels.</li>
+          </ul>
+
+          <h5 class="mt-4">8. Pre-Orders</h5>
+          <p>Pre-orders depend on manufacturer allocation. If supply is reduced, we may partially fulfill or cancel and refund. Combining pre-orders with in-stock items may delay shipment unless you purchase split shipping.</p>
+
+          <h5 class="mt-4">9. Returns & Refunds — Singles</h5>
+          <p>No returns or refunds for single cards <strong>unless</strong> the card received is not as described in condition or identity, or was damaged before dispatch. You must contact us within 48 hours of delivery and provide:</p>
+          <ul>
+            <li>A continuous unboxing video from unopened parcel to card reveal.</li>
+            <li>High-resolution photos of the card and packaging.</li>
+          </ul>
+          <p>Approved claims may result in replacement or refund at our discretion. False or abusive claims will result in denial and account termination.</p>
+
+          <h5 class="mt-4">10. Returns & Refunds — Sealed Products</h5>
+          <p>No returns for change of mind. Refunds are only issued if you receive the wrong item or a product that is damaged upon arrival. We are not liable for how shipping carriers handle packages. Minor box dents that don’t break the factory seal are not considered damage.</p>
+
+          <h5 class="mt-4">11. Lost or Delayed Shipments</h5>
+          <p>If tracking shows “delivered” but you did not receive the package, file a claim with the carrier. We will assist in investigations, but cannot refund orders marked as delivered unless confirmed lost by the carrier.</p>
+
+          <h5 class="mt-4">12. Authenticity</h5>
+          <p>All products sold are guaranteed authentic. If you suspect a counterfeit, contact us within 7 days with clear evidence. False claims will result in permanent account suspension.</p>
+
+          <h5 class="mt-4">13. AI Grading (Beta)</h5>
+          <p>AI grading results are approximate and provided for informational purposes only. Grades may differ from third-party graders (PSA, CGC, Beckett, etc.). We do not guarantee consistency and in no way we promise that you will receive the same grade when officially submitting.</p>
+
+          <h5 class="mt-4">14. Prohibited Activities</h5>
+          <ul>
+            <li>Fraud, chargeback abuse, or resale manipulation.</li>
+            <li>Automated scraping, denial-of-service, or interference with the site.</li>
+          </ul>
+
+          <h5 class="mt-4">15. Intellectual Property</h5>
+          <p>All site content is owned by us or licensed to us. Pokémon, One Piece, Magic: The Gathering and Riftbound products are the property of their respective owners and are used only to identify genuine products. Do not copy or redistribute content without permission.</p>
+
+          <h5 class="mt-4">16. Limitation of Liability</h5>
+          <p>We are not liable for indirect, incidental, or consequential damages, including loss of profit or data. Our total liability shall not exceed the amount paid for the product in question.</p>
+
+          <h5 class="mt-4">17. Governing Law & Jurisdiction</h5>
+          <p>These Terms & Agreements are governed by the laws of <strong>Greece</strong>. Any disputes shall be resolved in the competent courts of <strong>Athens, Greece</strong>. EU consumers may access the ODR platform for alternative dispute resolution.</p>
+
+          <h5 class="mt-4">18. Contact</h5>
+          <p>For questions regarding these Terms, please contact <a href="mailto:info@shinyverse.eu">info@shinyverse.eu</a>.</p>
+
+        </div>
+      </div>
+
+      <div class="text-muted small mt-3">
+        We may update these Terms & Agreements at any time; changes take effect upon posting.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

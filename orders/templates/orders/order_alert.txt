@@ -1,0 +1,11 @@
+Order #{{ order.id }} paid.
+
+Customer: {{ order.email }}
+Subtotal: €{{ items_subtotal }}
+Shipping: €{{ shipping_price }}{% if order.shipping_method_name %} ({{ order.shipping_method_name }}){% endif %}
+Grand total: €{{ grand_total }}
+
+Ship to:
+{{ order.shipping_name }}
+{{ order.shipping_line1 }}{% if order.shipping_line2 %}, {{ order.shipping_line2 }}{% endif %}
+{{ order.shipping_city }} {{ order.shipping_postal_code }} {{ order.shipping_country }}

@@ -1,0 +1,153 @@
+{
+  "final_result": {
+    "scores": {
+      "centering": 8.0,
+      "surface": 2.0,
+      "edges": 8.0,
+      "corners": 8.0,
+      "color": 9.0
+    },
+    "predicted_grade": 3.0,
+    "predicted_label": "VG (Very Good)",
+    "needs_better_photos": false,
+    "photo_feedback": "Glare detected; results may be conservative.",
+    "observations": [
+      {
+        "category": "centering",
+        "side": "front",
+        "note": "Slightly off-center to the right",
+        "box": [
+          0,
+          0,
+          4,
+          0
+        ]
+      },
+      {
+        "category": "centering",
+        "side": "back",
+        "note": "Slightly off-center to the left",
+        "box": [
+          0,
+          0,
+          4,
+          0
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "Minor surface wear visible",
+        "box": [
+          2,
+          2,
+          3,
+          3
+        ]
+      },
+      {
+        "category": "edges",
+        "side": "back",
+        "note": "Minor edge wear",
+        "box": [
+          0,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "front",
+        "note": "Slight corner wear",
+        "box": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "Detected pen/marker (high confidence CV).",
+        "box": [
+          0,
+          0,
+          1,
+          1
+        ]
+      }
+    ],
+    "summary": "The card shows heavy surface damage Photo quality issue detected (glare); result may be conservative. Detected: Umbreon ex — Prismatic Evolutions — PRE EN.",
+    "detected": {
+      "set_code": "PRE EN",
+      "set_name": "Prismatic Evolutions",
+      "era": "SV",
+      "border": "silver",
+      "language": "en",
+      "card_name": "Umbreon ex",
+      "style_flags": [],
+      "symbol_key": "",
+      "symbol_score": 0.0,
+      "ptcgoCode": "PRE",
+      "set_id": "sv8pt5",
+      "set_logo_url": "https://images.pokemontcg.io/sv8pt5/logo.png",
+      "set_symbol_url": "https://images.pokemontcg.io/sv8pt5/symbol.png",
+      "card_large_url": "",
+      "rarity": "",
+      "subtypes": [],
+      "supertype": "",
+      "types": [],
+      "regulationMark": ""
+    },
+    "debug": {
+      "gate": {
+        "detected_sides": {
+          "image_1": "front",
+          "image_2": "back"
+        },
+        "image_quality": "high"
+      },
+      "ocr": {
+        "set_code_info": {
+          "set_code": "PRE EN",
+          "language": "en"
+        },
+        "card_name": "Umbreon ex"
+      },
+      "set_info": {
+        "set_name": "Prismatic Evolutions",
+        "era": "SV",
+        "border": "silver",
+        "language": "en",
+        "set_code": "PRE EN",
+        "ptcgoCode": "PRE",
+        "set_id": "sv8pt5",
+        "set_logo_url": "https://images.pokemontcg.io/sv8pt5/logo.png",
+        "set_symbol_url": "https://images.pokemontcg.io/sv8pt5/symbol.png",
+        "card_name": "Umbreon ex",
+        "card_large_url": ""
+      },
+      "cv_flags": {
+        "scribble": true,
+        "scribble_conf": 1.0,
+        "glare": true,
+        "glare_conf": 0.09150390625,
+        "blur": false,
+        "blur_conf": 0.0
+      },
+      "models": {
+        "classifier": "gpt-4o-mini",
+        "grader": "gpt-4o"
+      },
+      "hint_parts": [
+        "set:Prismatic Evolutions",
+        "era:SV",
+        "border:silver",
+        "ptcgo:PRE",
+        "card:\"Umbreon ex\""
+      ]
+    }
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "final_result": {
+    "scores": {
+      "centering": 8.0,
+      "surface": 8.0,
+      "edges": 8.0,
+      "corners": 8.0,
+      "color": 9.0
+    },
+    "predicted_grade": 8.0,
+    "predicted_label": "NM-MT (Near Mint-Mint)",
+    "needs_better_photos": false,
+    "photo_feedback": "Glare detected; results may be conservative.",
+    "observations": [
+      {
+        "category": "centering",
+        "side": "front",
+        "note": "Slightly off-center to the right",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "centering",
+        "side": "back",
+        "note": "Slightly off-center to the left",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "Minor surface wear visible",
+        "box": [
+          2,
+          2,
+          3,
+          3
+        ]
+      },
+      {
+        "category": "edges",
+        "side": "back",
+        "note": "Minor edge wear on top edge",
+        "box": [
+          0,
+          0,
+          4,
+          0
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "front",
+        "note": "Slight corner wear on bottom left",
+        "box": [
+          0,
+          4,
+          1,
+          5
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "back",
+        "note": "Slight corner wear on top right",
+        "box": [
+          3,
+          0,
+          4,
+          1
+        ]
+      }
+    ],
+    "summary": "The card presents very well with minimal visible wear. Photo quality issue detected (glare); result may be conservative. Detected: Leafeon ex — Prismatic Evolutions — PRE EN.",
+    "detected": {
+      "set_code": "PRE EN",
+      "set_name": "Prismatic Evolutions",
+      "era": "SV",
+      "border": "silver",
+      "language": "en",
+      "card_name": "Leafeon ex",
+      "style_flags": [],
+      "symbol_key": "",
+      "symbol_score": 0.0,
+      "ptcgoCode": "",
+      "set_id": "",
+      "set_logo_url": "",
+      "set_symbol_url": "",
+      "card_large_url": "",
+      "rarity": "",
+      "subtypes": [],
+      "supertype": "",
+      "types": [],
+      "regulationMark": ""
+    },
+    "debug": {
+      "gate": {
+        "detected_sides": {
+          "image_1": "front",
+          "image_2": "back"
+        },
+        "image_quality": "high"
+      },
+      "ocr": {
+        "set_code_info": {
+          "set_code": "PRE EN",
+          "language": "en"
+        },
+        "card_name": "Leafeon ex"
+      },
+      "set_info": {
+        "set_name": "Prismatic Evolutions",
+        "era": "SV",
+        "border": "silver",
+        "language": "en",
+        "set_code": "PRE EN",
+        "card_name": "Leafeon ex",
+        "card_large_url": "",
+        "set_logo_url": "",
+        "set_symbol_url": ""
+      },
+      "cv_flags": {
+        "scribble": false,
+        "scribble_conf": 0.5583389062274231,
+        "glare": true,
+        "glare_conf": 0.23069893973214284,
+        "blur": false,
+        "blur_conf": 0.0
+      },
+      "models": {
+        "classifier": "gpt-4o-mini",
+        "grader": "gpt-4o"
+      },
+      "hint_parts": [
+        "set:Prismatic Evolutions",
+        "era:SV",
+        "border:silver",
+        "card:\"Leafeon ex\""
+      ]
+    }
+  }
+}

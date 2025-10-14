@@ -1,0 +1,18 @@
+```json
+{
+  "scores": {"centering": 7, "surface": 3, "edges": 2, "corners": 2, "color": 7},
+  "predicted_grade": 2,
+  "predicted_label": "Good",
+  "needs_better_photos": false,
+  "photo_feedback": "",
+  "observations": [
+    {"category":"surface","side":"front","note":"large tear on top left","box":[0,0,2,2]},
+    {"category":"surface","side":"back","note":"large tear on top left","box":[0,0,2,2]},
+    {"category":"edges","side":"front","note":"significant edge wear on top left","box":[0,0,2,2]},
+    {"category":"edges","side":"back","note":"significant edge wear on top left","box":[0,0,2,2]},
+    {"category":"corners","side":"front","note":"top left corner missing due to tear","box":[0,0,2,2]},
+    {"category":"corners","side":"back","note":"top left corner missing due to tear","box":[0,0,2,2]}
+  ],
+  "summary": "The card has a large tear on the top left corner affecting both the front and back, leading to significant edge wear and a missing corner. These defects severely impact the card's condition, resulting in a low grade."
+}
+```

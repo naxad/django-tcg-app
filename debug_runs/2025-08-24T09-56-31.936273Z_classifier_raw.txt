@@ -1,0 +1,9 @@
+```json
+{
+  "detected_sides": {
+    "image_1": "front",
+    "image_2": "back"
+  },
+  "image_quality": "medium"
+}
+```

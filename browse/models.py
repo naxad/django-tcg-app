@@ -19,8 +19,11 @@ class Card(models.Model):
     release_date = models.DateField(blank=True, null=True)
     condition = models.CharField(max_length=50, blank=True)
     is_featured = models.BooleanField(default=False)
-
-
+    quantity = models.PositiveIntegerField(default=0)
+    set_name = models.CharField("Set", max_length=120, blank=True, default="")
+    @property
+    def in_stock(self) -> bool:
+        return self.quantity > 0
 
     def __str__(self):
         return f"{self.name} ({self.brand})"

@@ -1,0 +1,8 @@
+Hi {{ user.first_name }},
+
+Thanks for signing up to ShinyCards TCG Store!
+Please verify your email by clicking the link below:
+
+{{ activate_url }}
+
+If you didn’t create this account, you can ignore this email.

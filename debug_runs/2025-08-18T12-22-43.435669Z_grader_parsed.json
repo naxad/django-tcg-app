@@ -1,0 +1,73 @@
+{
+  "grader_parsed": {
+    "scores": {
+      "centering": 8,
+      "surface": 8,
+      "edges": 8,
+      "corners": 8,
+      "color": 9
+    },
+    "predicted_grade": 8,
+    "predicted_label": "NM-MT",
+    "needs_better_photos": false,
+    "photo_feedback": "",
+    "observations": [
+      {
+        "category": "centering",
+        "side": "front",
+        "note": "Slightly off-center to the right",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "centering",
+        "side": "back",
+        "note": "Slightly off-center to the right",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "surface",
+        "side": "front",
+        "note": "Minor surface wear visible",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "edges",
+        "side": "front",
+        "note": "Minor edge wear visible",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      },
+      {
+        "category": "corners",
+        "side": "front",
+        "note": "Minor corner wear visible",
+        "box": [
+          0,
+          0,
+          4,
+          4
+        ]
+      }
+    ],
+    "summary": "The card is in Near Mint to Mint condition with slight off-centering to the right on both sides. Minor surface, edge, and corner wear are present, but the color remains vibrant."
+  }
+}

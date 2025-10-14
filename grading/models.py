@@ -20,7 +20,7 @@ class GradeRequest(models.Model):
     score_edges     = models.DecimalField(max_digits=4, decimal_places=1, default=0)
     score_corners   = models.DecimalField(max_digits=4, decimal_places=1, default=0)
     score_color     = models.DecimalField(max_digits=4, decimal_places=1, default=0)
-
+    game = models.CharField(max_length=20, blank=True, default="")
     predicted_grade = models.DecimalField(max_digits=4, decimal_places=1, default=0)
     predicted_label = models.CharField(max_length=20, blank=True)  # e.g. "PSA 9 (Mint)"
 

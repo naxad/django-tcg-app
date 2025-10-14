@@ -26,3 +26,10 @@ grading/ml/models/cardgrader_v1.pt
 
 /media/
 /dataset/
+
+training_commands.txt
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

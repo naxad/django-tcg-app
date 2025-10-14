@@ -1,0 +1,1 @@
+Your ShinyCards order #{{ order.id }} is confirmed 🎉

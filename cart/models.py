@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from browse.models import Card
+from django_countries.fields import CountryField
+from decimal import Decimal
+from django.db import models
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -19,3 +22,8 @@ class Purchase(models.Model):
 
     def __str__(self):
         return f"{self.user.username} bought {self.card.name}"
+    
+
+
+
+

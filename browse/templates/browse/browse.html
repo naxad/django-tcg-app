@@ -24,7 +24,6 @@
     Sorted by:
     {% if current_sort == "price_asc" %}Price (Low → High){% endif %}
     {% if current_sort == "price_desc" %}Price (High → Low){% endif %}
-    {% if current_sort == "rating_desc" %}Rating (High → Low){% endif %}
     {% if current_sort == "newest" %}Newest Added{% endif %}
   </span></p>
   {% endif %}
@@ -50,7 +49,6 @@
           <option value="">Sort By</option>
           <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Price: Low → High</option>
           <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Price: High → Low</option>
-          <option value="rating_desc" {% if request.GET.sort == "rating_desc" %}selected{% endif %}>Rating: High → Low</option>
           <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest</option>
         </select>
       </div>
@@ -58,15 +56,17 @@
         <button type="submit" class="btn btn-primary flex-fill">Filter</button>
         <a href="{% url 'browse:browse' %}" class="btn btn-secondary flex-fill">Clear</a>
       </div>
-      </div>
+    </div>
   </form>
 
-  <!-- Staff-only Add Card Button -->
   {% if user_is_staff %}
   <div class="d-flex justify-content-end mb-3">
     <button id="addCardBtn" type="button"
             class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
-            style="width: 42px; height: 42px;" title="Add Card">
+            style="width: 42px; height: 42px;"
+            title="Add Card"
+            data-bs-toggle="modal"
+            data-bs-target="#addCardModal">
       <span style="font-size: 25px; line-height: 0px; margin-bottom: 5px;">＋</span>
     </button>
   </div>
@@ -75,117 +75,132 @@
   {% if cards %}
   <div class="browse-grid">
     {% for card in cards %}
-    <div class="browse-card-container">
-
-      <!-- Wishlist Button -->
-      {% if user.is_authenticated %}
-      <form method="POST" action="{% url 'wishlist:toggle_wishlist' card.id %}" class="position-absolute top-0 end-0 m-2 z-3">
-        {% csrf_token %}
-        <button type="submit" class="wishlist-btn">
-          {% if card in wishlist_cards %}♥{% else %}♡{% endif %}
-        </button>
-      </form>
-      {% endif %}
-
-      <!-- Card Image -->
-      <div class="browse-card-img">
-        {% if card.image %}
-        <img src="{{ card.image.url }}" alt="{{ card.name }}" class="img-fluid rounded card-img-clickable" data-img="{{ card.image.url }}">
-        {% endif %}
-      </div>
-
-      <!-- Card Details -->
-      <div class="browse-card-details flex-grow-1">
-        <h5 class="mb-1">{{ card.name }}</h5>
-        <p class="mb-1"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
-        <p class="mb-1"><strong>Condition:</strong> {{ card.condition }}</p>
-        <p class="mb-1"><strong>Release Date:</strong> {{ card.release_date|date:"F j, Y" }}</p>
-        <p class="mb-1"><strong>Price:</strong> €{{ card.price }}</p>
-
-        <!-- Always show rating stars -->
-        <div class="rating-stars" data-card-id="{{ card.id }}">
-          {% with avg=card.avg_rating %}
-            {% for i in "12345" %}
-              <span class="star"
-                    data-score="{{ forloop.counter }}"
-                    data-card-id="{{ card.id }}"
-                    style="color: {% if forloop.counter <= avg %}gold{% else %}gray{% endif %};
-                           {% if user.is_authenticated %}cursor: pointer;{% else %}cursor: default;{% endif %}">
-                {% if forloop.counter <= avg %}
-                  &#9733;
-                {% else %}
-                  &#9734;
-                {% endif %}
-              </span>
-            {% endfor %}
-          {% endwith %}
-          <span class="text-muted ms-2">({{ card.num_ratings }} rating{{ card.num_ratings|pluralize }})</span>
+      {# Hide sold-out items for non-staff #}
+      {% if user_is_staff or card.quantity|default:0 > 0 %}
+      <div class="browse-card-container position-relative">
+        <!-- Card Image -->
+        <div class="browse-card-img text-center">
+          {% if card.image %}
+          <img src="{{ card.image.url }}" alt="{{ card.name }}" class="img-fluid rounded card-img-clickable" data-img="{{ card.image.url }}">
+          {% endif %}
         </div>
 
-        {% if not user.is_authenticated %}
-        <small class="text-muted">Login to rate</small>
-        {% endif %}
+        <!-- Card Details (space reserved on the right for the heart) -->
+        <div class="browse-card-details d-flex flex-column justify-content-between position-relative" style="padding-right: 48px;">
 
-        <!-- Buttons -->
-        {% if user.is_staff %}
-          <form method="post" action="{% url 'browse:delete_card' card.id %}" onsubmit="return confirm('Are you sure you want to delete this card?');">
+          {% if user.is_authenticated %}
+          <!-- Wishlist Button anchored in the details column (top-right) -->
+          <form method="POST"
+                action="{% url 'wishlist:toggle_wishlist' card.id %}"
+                class="position-absolute"
+                style="top:0; right:0; z-index:5;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-danger mt-2">🗑 Remove</button>
+            <button type="submit" class="wishlist-btn"
+                    title="Toggle wishlist"
+                    style="font-size:22px; line-height:1; background:rgba(255,255,255,.95);
+                           border:0; width:32px; height:32px; border-radius:50%;
+                           display:flex; align-items:center; justify-content:center;">
+              {% if card in wishlist_cards %}♥{% else %}♡{% endif %}
+            </button>
           </form>
-        {% else %}
-          <form method="post" action="{% url 'cart:add_to_cart' card.id %}" class="add-to-cart-form">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-success mt-2">🛒 Add to Cart</button>
-          </form>
-        {% endif %}
+          {% endif %}
+
+          <div>
+            <h5 class="mb-1 text-start">
+              {{ card.name }}
+              {% if user_is_staff and card.quantity|default:0 == 0 %}
+                <span class="badge bg-danger ms-2">Out of stock</span>
+              {% endif %}
+            </h5>
+            <p class="mb-1"><strong>Brand:</strong> {{ card.get_brand_display }}</p>
+            <p class="mb-1"><strong>Condition:</strong> {{ card.condition }}</p>
+            <p class="mb-1"><strong>Set:</strong> {{ card.set_name|default:"—" }}</p>
+            <p class="mb-2"><strong>Price:</strong> €{{ card.price }}</p>
+
+            {% if card.quantity|default:0 > 0 %}
+              <p class="mb-3 text-success"><strong>In stock:</strong> {{ card.quantity }}</p>
+            {% else %}
+              <p class="mb-3"><span class="badge bg-secondary">Out of stock</span></p>
+            {% endif %}
+          </div>
+
+          <!-- Buttons -->
+          {% if user_is_staff %}
+            <form method="post" action="{% url 'browse:delete_card' card.id %}" onsubmit="return confirm('Are you sure you want to delete this card?');" class="mt-auto">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-danger w-100">🗑 Remove</button>
+            </form>
+          {% else %}
+            <form method="post" action="{% url 'cart:add_to_cart' card.id %}" class="mt-auto">
+              {% csrf_token %}
+              {% if card.quantity|default:0 > 0 %}
+                <button type="submit" class="btn btn-sm btn-primary add-to-cart-btn w-100">🛒 Add to Cart</button>
+              {% else %}
+                <button type="button" class="btn btn-sm btn-secondary w-100" disabled>Out of stock</button>
+              {% endif %}
+            </form>
+          {% endif %}
+        </div>
       </div>
-    </div>
+      {% endif %}
     {% endfor %}
   </div>
   {% else %}
   <p>No cards found.</p>
   {% endif %}
 </div>
+{% endblock %}
 
-<!-- Modal -->
-<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-transparent border-0">
-      <div class="modal-body p-0">
-        <img id="modalImage" class="img-fluid rounded shadow">
+{# -------- Modals render directly under <body> via base.html's modal_portal block -------- #}
+{% block modal_portal %}
+  <!-- Large Image Modal -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-body p-0">
+          <img id="modalImage" class="img-fluid rounded shadow" alt="Preview">
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Add Card Modal -->
-<div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content p-4">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addCardModalLabel">Add New Card</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <!-- Add Card Modal -->
+  <div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-4">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCardModalLabel">Add New Card</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" action="{% url 'browse:add_card' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-body d-flex flex-column gap-3">
+            <input type="text" name="name" class="form-control" placeholder="Card Name" required>
+            <select name="brand" class="form-select" required>
+              <option value="">-- Select Brand --</option>
+              {% for b in brands %}
+                <option value="{{ b }}">{{ b }}</option>
+              {% endfor %}
+            </select>
+            <input type="text" name="condition" class="form-control" placeholder="Condition" required>
+            <input type="text" name="set_name" class="form-control" placeholder="Set (e.g., Scarlet & Violet—151)" required>
+            <input type="number" step="0.01" name="price" class="form-control" placeholder="Price" required>
+            <!-- NEW: Quantity -->
+            <input type="number" name="quantity" class="form-control" placeholder="Quantity" min="0" value="1" required>
+            <input type="file" name="image" class="form-control" required>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
       </div>
-      <form method="post" action="{% url 'browse:add_card' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="modal-body d-flex flex-column gap-3">
-          <input type="text" name="name" class="form-control" placeholder="Card Name" required>
-          <select name="brand" class="form-select" required>
-            <option value="">-- Select Brand --</option>
-            {% for b in brands %}
-              <option value="{{ b }}">{{ b }}</option>
-            {% endfor %}
-          </select>
-          <input type="text" name="condition" class="form-control" placeholder="Condition" required>
-          <input type="date" name="release_date" class="form-control" required>
-          <input type="number" step="0.01" name="price" class="form-control" placeholder="Price" required>
-          <input type="file" name="image" class="form-control" required>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Submit</button>
-        </div>
-      </form>
     </div>
   </div>
-</div>
+
+  <style>
+    .modal { z-index: 2000; }
+    .modal-backdrop { z-index: 1990; }
+    /* avoid AOS/transform stacking issues when modal is open */
+    .modal-open [data-aos] { transform: none !important; }
+  </style>
 {% endblock %}
