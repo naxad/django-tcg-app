@@ -86,10 +86,14 @@ INSTALLED_APPS = [
     'home',
     'contact',
     'backoffice',
-    'grading',
     'legal',
 
 ]
+
+if os.getenv("ENABLE_GRADING", "0") == "1":
+    INSTALLED_APPS += ['grading']
+    
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
+import os
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -42,6 +42,11 @@ urlpatterns = [
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='shop/password_change.html'), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='shop/password_change_done.html'), name='password_change_done'),
 ]
+
+
+if os.getenv("ENABLE_GRADING", "0") == "1":
+    urlpatterns += [path('grading/', include('grading.urls', namespace='grading')),]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
