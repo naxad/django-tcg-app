@@ -98,9 +98,8 @@ INSTALLED_APPS = [
     'grading.apps.GradingConfig',
 ]
 
-# Prevent accidental duplicate 'grading' entries
-if os.getenv("ENABLE_GRADING", "0") == "1" and 'grading.apps.GradingConfig' not in INSTALLED_APPS:
-    INSTALLED_APPS += ['grading.apps.GradingConfig']
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -131,7 +130,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.payment_keys',
+                
             ],
         },
     },
