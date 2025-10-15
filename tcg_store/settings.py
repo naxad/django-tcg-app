@@ -177,3 +177,35 @@ LOGOUT_REDIRECT_URL = 'home:home'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+import logging
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{levelname}] {asctime} {name}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        # 500 errors, tracebacks for views
+        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": True},
+        # host header / bad request messages
+        "django.security": {"handlers": ["console"], "level": "WARNING", "propagate": True},
+        "django.security.csrf": {"handlers": ["console"], "level": "WARNING", "propagate": True},
+        # if you want DB errors too
+        "django.db.backends": {"handlers": ["console"], "level": "ERROR", "propagate": False},
+    },
+}
+
+# (Optional) force tracebacks to bubble to logs even with DEBUG=False
+DEBUG_PROPAGATE_EXCEPTIONS = True
