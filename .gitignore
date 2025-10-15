@@ -33,3 +33,4 @@ training_commands.txt
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+-e "__pycache__\n*.pyc\nstaticfiles\n.env\n.env.*\n" 
