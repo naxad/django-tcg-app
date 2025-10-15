@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
-
 from pathlib import Path
 from dotenv import load_dotenv
+
 GRADING_ENABLED = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,35 +26,44 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "CHANGE_ME")
 
-
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", ".onrender.com").split(",")
+# ----- Hosts / CSRF (Render-friendly) -----
+_env_hosts = (os.getenv("DJANGO_ALLOWED_HOSTS") or "").strip()
+if _env_hosts == "*":
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com"]
+    ALLOWED_HOSTS += [h.strip() for h in _env_hosts.split(",") if h.strip()]
 
+RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# CSRF trusted origins – include your domains and Render
 CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
     "https://shinyverse.eu",
     "https://www.shinyverse.eu",
     "https://shinyverse-test.onrender.com",
     "https://www.shinyverse-test.onrender.com",
-     # keep if still in use
 ]
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
 
+# Honor X-Forwarded-Proto from Render/Cloudflare
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# TEMP: log effective values at boot for debugging (safe to keep)
+print("ALLOWED_HOSTS at boot ->", ALLOWED_HOSTS)
+print("CSRF_TRUSTED_ORIGINS ->", CSRF_TRUSTED_ORIGINS)
 
 DEFAULT_FROM_EMAIL = "ShinyVerse <info@shinyverse.eu>"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 ORDER_ALERT_RECIPIENTS = ["info@shinyverse.eu"]
 
-
-
-
-
-
-# For dev:
-#EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-# For prod (example with SMTP):
-import os
+# Email
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.office365.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
@@ -65,10 +74,7 @@ EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "20"))
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "ShinyVerse <info@shinyverse.eu>")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 
-
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -77,7 +83,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
-    'userprofile.apps.UserprofileConfig', 
+    'userprofile.apps.UserprofileConfig',
     'browse',
     'accounts',
     'dashboard',
@@ -90,33 +96,28 @@ INSTALLED_APPS = [
     'backoffice',
     'legal',
     'grading.apps.GradingConfig',
-
 ]
 
-if os.getenv("ENABLE_GRADING", "0") == "1":
-    INSTALLED_APPS += ['grading']
-    
-
+# Prevent accidental duplicate 'grading' entries
+if os.getenv("ENABLE_GRADING", "0") == "1" and 'grading.apps.GradingConfig' not in INSTALLED_APPS:
+    INSTALLED_APPS += ['grading.apps.GradingConfig']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise should follow SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
-
 
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
 
 ROOT_URLCONF = 'tcg_store.urls'
 
@@ -138,10 +139,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tcg_store.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -149,53 +148,33 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+# Static & media
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home:home'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')   
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
