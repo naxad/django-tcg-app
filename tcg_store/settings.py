@@ -29,19 +29,8 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "CHANGE_ME")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 
-# ----- Hosts / CSRF (Render-friendly) -----
-_env_hosts = (os.getenv("DJANGO_ALLOWED_HOSTS") or "").strip()
-if _env_hosts == "*":
-    ALLOWED_HOSTS = ["*"]
-else:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com"]
-    ALLOWED_HOSTS += [h.strip() for h in _env_hosts.split(",") if h.strip()]
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", ".onrender.com").split(",")
 
-RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
-if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
-# CSRF trusted origins – include your domains and Render
 CSRF_TRUSTED_ORIGINS = [
     "https://*.onrender.com",
     "https://shinyverse.eu",
@@ -49,15 +38,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://shinyverse-test.onrender.com",
     "https://www.shinyverse-test.onrender.com",
 ]
-if RENDER_EXTERNAL_HOSTNAME:
-    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
-
-# Honor X-Forwarded-Proto from Render/Cloudflare
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-# TEMP: log effective values at boot for debugging (safe to keep)
-print("ALLOWED_HOSTS at boot ->", ALLOWED_HOSTS)
-print("CSRF_TRUSTED_ORIGINS ->", CSRF_TRUSTED_ORIGINS)
 
 DEFAULT_FROM_EMAIL = "ShinyVerse <info@shinyverse.eu>"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
@@ -98,12 +78,12 @@ INSTALLED_APPS = [
     'grading.apps.GradingConfig',
 ]
 
-
-
+if os.getenv("ENABLE_GRADING", "0") == "1":
+    INSTALLED_APPS += ['grading']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise should follow SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # recommended position
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -111,12 +91,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 
 ROOT_URLCONF = 'tcg_store.urls'
 
@@ -130,7 +104,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
+                'cart.context_processors.payment_keys',
             ],
         },
     },
@@ -150,10 +124,10 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 # Internationalization
@@ -163,49 +137,31 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static & media
+# Static & Media
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL = 'profile'
-LOGOUT_REDIRECT_URL = 'home:home'
+# Django 5 STORAGES: define both 'default' and 'staticfiles'
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+            "location": MEDIA_ROOT,
+            "base_url": MEDIA_URL,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-import logging
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "[{levelname}] {asctime} {name}: {message}",
-            "style": "{",
-        },
-    },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        },
-    },
-    "loggers": {
-        # 500 errors, tracebacks for views
-        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": True},
-        # host header / bad request messages
-        "django.security": {"handlers": ["console"], "level": "WARNING", "propagate": True},
-        "django.security.csrf": {"handlers": ["console"], "level": "WARNING", "propagate": True},
-        # if you want DB errors too
-        "django.db.backends": {"handlers": ["console"], "level": "ERROR", "propagate": False},
-    },
-}
-
-# (Optional) force tracebacks to bubble to logs even with DEBUG=False
-DEBUG_PROPAGATE_EXCEPTIONS = True
+LOGIN_REDIRECT_URL = 'profile'
+LOGOUT_REDIRECT_URL = 'home:home'
