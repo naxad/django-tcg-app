@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     'contact',
     'backoffice',
     'legal',
+    'grading.apps.GradingConfig',
 
 ]
 
